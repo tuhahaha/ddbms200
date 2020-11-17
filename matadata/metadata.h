@@ -24,8 +24,8 @@ using namespace Json;
 struct ColumnDef {
 	string name;
 	string type;
-	bool null;
-	bool key;
+	bool null=false;
+	bool key=false;
 	string desc;
 };
 // table 
@@ -49,12 +49,10 @@ struct Fragment {
 	vector<FragDef> frags;
 };
 
-class ZBase64
-{
+class ZBase64{
 private:
     //Base64编码解码表
     char* m_Base64_Table;
-
 public:
     //构造
     ZBase64();
@@ -77,15 +75,20 @@ string getTableFragCol(string tableName, int index);
 int getTableFragSize(string tableName,int index);
 int getTableFragSite(string tableName,int index);
 bool saveTableToEtcd(GDD table);
+GDD getTableFromEtcd(string tablename);
 bool saveFragToEtcd(Fragment frag);
+Fragment getFragFromEtcd(string tablename);
 string get_value_from_json(string &res);
-
-int etcd_set(char *key, char *value, char *token);
-int etcd_set2(char *key, char *value, char *token);
-string  Create_Dir(string &etcd_url,string &etcd_dir);  
+string toJson(string k);
 bool Insert_Attrvalue(string &key,string &value);
 string etcd_op(string &dt,string &op);
 size_t write_data(void *buffer, size_t size, size_t nmemb, void *stream);
+
+
+// int etcd_set(char *key, char *value, char *token);
+// int etcd_set2(char *key, char *value, char *token);
+// string  Create_Dir(string &etcd_url,string &etcd_dir);  
+
 // bool Save_Table(Table TableInfo);
 // bool Save_Fragment(Fragment table);
 // Fragment To_json(string &info,string &tablename);

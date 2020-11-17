@@ -116,78 +116,114 @@ vector<string> split2list(string info){
 
 vector<string> getTables(){
     //返回创建的所有表格
-    string dir = "/gdd_table";
-    string info  = etcd_op(dir,"GET");
-    vector<string> res = split2list(info);
-    return res;
+    string key = "/gdd_table";
+    string op = "GET";
+    key = toJson(key);
+    string res  = etcd_op(key,op);
+    string v = get_value_from_json(res);
+    vector<string> re = split2list(v);
+    return re;
 }
-// vector<string> getTableAttri(string tableName) {
-//     //返回表的attri
-//     string dir = "/gdd_table/"+tableName;
-//     string info  = etcd_op(dir,"GET");
-//     vector<string> res = split2list(info);
-//     return res;
-// }
-// string getTableAttriType(string tableName, string attriName){
-//     string dir = "/gdd_table/"+tableName+"/"+attriName;
-//     string info  = etcd_op(dir,"GET");
-//     return info;
-// }
-// string getTableAttriDesc(string tableName, string attriName){
-//     string dir = "/gdd_table/"+tableName+"/desc/"+attriName;
-//     string info  = etcd_op(dir,"GET");
-//     return info;
-// }
-// string getTableKey(string tableName){
-//     string dir = "/gdd_key/"+tableName;
-//     string info  = etcd_op(dir,"GET");
-//     return info;
-// }
-// string getTableFragType(string tableName){
-//     string dir = "/part_schema/"+tableName;
-//     string info  = etcd_op(dir,"GET");
-//     return info;
-// }
-// vector<string> getTableFragH(string tableName){
-//     string dir = "/part_schema/"+tableName+"/H";
-//     string info  = etcd_op(dir,"GET");
-//     vector<string> res = split2list(info);
-//     return res;
-// }
-// int getTableFragNum(string tableName){
-//     string dir = "/part_info/"+tableName;
-//     string info  = etcd_op(dir,"GET");
-//     char *p = (char*)info.c_str();
-//     return atoi(p);
-// }
-// string getTableFragCondition(string tableName, int index){
-//     string dir = "/part_info/"+tableName+"/"+tableName+"."+to_string(index);
-//     cout << dir << endl;
-//     string info  = etcd_op(dir,"GET");
-//     return info;
-// }
-// string getTableFragCol(string tableName, int index){
-//     string dir = "/part_column/"+tableName+"/"+tableName+"."+to_string(index);
-//     cout << dir << endl;
-//     string info  = etcd_op(dir,"GET");
-//     return info;
-// }
+vector<string> getTableAttri(string tableName) {
+    //返回表的attri
+    string key = "/gdd_table/"+tableName;
+    string op = "GET";
+    key = toJson(key);
+    string res  = etcd_op(key,op);
+    string v = get_value_from_json(res);
+    vector<string> re = split2list(v);
+    return re;
+}
+string getTableAttriType(string tableName, string attriName){
+    string key = "/gdd_table/"+tableName+"/"+attriName;
+    string op = "GET";
+    key = toJson(key);
+    string res  = etcd_op(key,op);
+    string v = get_value_from_json(res);
+    return v;
+}
+string getTableAttriDesc(string tableName, string attriName){
+    string key = "/gdd_table/"+tableName+"/desc/"+attriName;
+    string op = "GET";
+    key = toJson(key);
+    string res  = etcd_op(key,op);
+    string v = get_value_from_json(res);
+    return v;
+}
+string getTableKey(string tableName){
+    string key = "/gdd_key/"+tableName;
+    string op = "GET";
+    key = toJson(key);
+    string res  = etcd_op(key,op);
+    string v = get_value_from_json(res);
+    return v;
+}
+string getTableFragType(string tableName){
+    string key = "/part_schema/"+tableName;
+    string op = "GET";
+    key = toJson(key);
+    string res  = etcd_op(key,op);
+    string v = get_value_from_json(res);
+    return v;
+}
+vector<string> getTableFragH(string tableName){
+    string key = "/part_schema/"+tableName+"/H";
+    string op = "GET";
+    key = toJson(key);
+    string res  = etcd_op(key,op);
+    string v = get_value_from_json(res);
+    vector<string> re = split2list(v);
+    return re;
+}
+int getTableFragNum(string tableName){
+    string key = "/part_info/"+tableName;
+    string op = "GET";
+    key = toJson(key);
+    string res  = etcd_op(key,op);
+    string v = get_value_from_json(res);
+    char *p = (char*)v.c_str();
+    return atoi(p);
+}
+string getTableFragCondition(string tableName, int index){
+    string key = "/part_info/"+tableName+"/"+tableName+"."+to_string(index);
+    string op = "GET";
+    key = toJson(key);
+    string res  = etcd_op(key,op);
+    string v = get_value_from_json(res);
+    return v;
+}
+string getTableFragCol(string tableName, int index){
+    string key = "/part_column/"+tableName+"/"+tableName+"."+to_string(index);
+    string op = "GET";
+    key = toJson(key);
+    string res  = etcd_op(key,op);
+    string v = get_value_from_json(res);
+    return v;
+}
 
-// int getTableFragSize(string tableName,int index){
-//     string dir = "/part_size/"+tableName+"."+to_string(index);
-//     cout << dir << endl;
-//     string info  = etcd_op(dir,"GET");
-//     char *p = (char*)info.c_str();
-//     return atoi(p);
-// }
-// int getTableFragSite(string tableName,int index){
-//     string dir = "/part_site/"+tableName+"."+to_string(index);
-//     cout << dir << endl;
-//     string op = "GET";
-//     string info  = etcd_op(dir,op);
-//     char *p = (char*)info.c_str();
-//     return atoi(p);
-// }
+int getTableFragSize(string tableName,int index){
+    string key = "/part_size/"+tableName+"."+to_string(index);
+    string op = "GET";
+    key = toJson(key);
+    string res  = etcd_op(key,op);
+    string v = get_value_from_json(res);
+    char *p = (char*)v.c_str();
+    return atoi(p);
+}
+int getTableFragSite(string tableName,int index){
+    string key = "/part_site/"+tableName+"."+to_string(index);
+    string op = "GET";
+    key = toJson(key);
+    string res  = etcd_op(key,op);
+    string v = get_value_from_json(res);
+    char *p = (char*)v.c_str();
+    return atoi(p);
+}
+string toJson(string k){
+    ZBase64 base64;
+    string kk = "{\"key\":\""+base64.EncodeBase64(k)+"\"}";
+    return kk;
+}
 
 bool saveTableToEtcd(GDD table){
     // save table
@@ -280,10 +316,39 @@ string get_value_from_json(string &res){
 
 }
 
+GDD getTableFromEtcd(string tablename){
+    GDD tbl;
+    tbl.name = tablename;
+    string key = getTableKey(tablename);
+    vector<string> attri = getTableAttri(tablename);
+    for(int i=0; i<attri.size();i++){
+        string att = attri[i];
+        ColumnDef col;
+        col.name = att;
+        col.type = getTableAttriType(tablename,att);
+        col.desc = getTableAttriDesc(tablename,att);
+        if(att == "key"){
+            col.key=true;
+        }
+        tbl.cols.push_back(col);
+    }
+    
+
+    return tbl;
+}
+
+
 int main(){
     ZBase64 base64;
     int t1 = 0;
+    string t2 = "publisher";
+    // vector<string> r = getTableAttri(t2);
+    // cout << r[0] << endl;
 
+    GDD g = getTableFromEtcd(t2);
+    cout << g.name <<endl;
+    cout << g.cols[0].name <<"  "<< g.cols[0].type <<"  "<< g.cols[0].desc <<"  "<< g.cols[0].key <<"  "<< endl;
+    return 0;
     cout << base64.DecodeBase64("aWQ=")<< endl;
     if (t1==1){
         cout << "save table *********************************" << endl;

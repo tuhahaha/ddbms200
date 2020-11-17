@@ -3,11 +3,112 @@
 #define URL_MAX_LEN 50  
 #define VALUE_LEN 1024
 
+//etcd v3 json's key&value need to be base64
+//#include "http://www.cnblogs.com/src/utility/base64.h"
+ZBase64::ZBase64(){
+    //Base64编码表
+    this->m_Base64_Table="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+}
+string ZBase64::EncodeBase64(const string strSource){
+    /*
+    * 以下是操作二进制数时用到的
+    * 11111100   0xFC
+    * 11000000   0x3
+    * 11110000   0xF0
+    * 00001111   0xF
+    * 11000000   0xC0
+    * 00111111   0x3F
+    */
+
+    string strEncode;
+    char cTemp[4];
+
+    //行长,MIME规定Base64编码行长为76字节
+    int LineLength=0;
+
+    for(int i=0;i<strSource.size();i+=3)
+    {
+    memset(cTemp,0,4);
+
+    cTemp[0]=strSource[i];
+    cTemp[1]=strSource[i+1];
+    cTemp[2]=strSource[i+2];
+
+    int len=strlen(cTemp);
+    if(len==3)
+    {
+        strEncode+=this->m_Base64_Table[((int)cTemp[0] & 0xFC)>>2];
+        strEncode+=this->m_Base64_Table[((int)cTemp[0] & 0x3)<<4 | ((int)cTemp[1] & 0xF0)>>4];
+        strEncode+=this->m_Base64_Table[((int)cTemp[1] & 0xF)<<2 | ((int)cTemp[2] & 0xC0)>>6];
+        strEncode+=this->m_Base64_Table[(int)cTemp[2] & 0x3F];
+        if(LineLength+=4>=76) strEncode+="\r\n";
+    }
+    else if(len==2)
+    {
+        strEncode+=this->m_Base64_Table[((int)cTemp[0] & 0xFC)>>2];
+        strEncode+=this->m_Base64_Table[((int)cTemp[0] & 0x3 )<<4 | ((int)cTemp[1] & 0xF0 )>>4];
+        strEncode+=this->m_Base64_Table[((int)cTemp[1] & 0x0F)<<2];
+        if(LineLength+=4>=76) strEncode+="\r\n";
+        strEncode+="=";
+    }
+    else if(len==1)
+    {
+        strEncode+=this->m_Base64_Table[((int)cTemp[0] & 0xFC)>>2];
+        strEncode+=this->m_Base64_Table[((int)cTemp[0] & 0x3 )<<4];
+        if(LineLength+=4>=76) strEncode+="\r\n";
+        strEncode+="==";
+    }
+    memset(cTemp,0,4);
+    }
+    return strEncode;
+}
+
+string ZBase64::DecodeBase64(const string strSource){
+    //返回值
+    string strDecode;
+    char cTemp[5];
+
+    for(int i=0;i<strSource.size();i+=4)
+    {
+    memset(cTemp,0,5);
+
+    cTemp[0]=strSource[i];
+    cTemp[1]=strSource[i+1];
+    cTemp[2]=strSource[i+2];
+    cTemp[3]=strSource[i+3];
+
+    int asc[4];
+    for(int j=0;j<4;j++)
+    {
+        for(int k=0;k<(int)strlen(this->m_Base64_Table);k++)
+        {
+        if(cTemp[j]==this->m_Base64_Table[k]) asc[j]=k;
+        }
+    }
+    if('='==cTemp[2] && '='==cTemp[3])
+    {
+        strDecode+=(char)(int)(asc[0] << 2 | asc[1] << 2 >> 6);
+    }
+    else if('='==cTemp[3])
+    {
+        strDecode+=(char)(int)(asc[0] << 2 | asc[1] << 2 >> 6);
+        strDecode+=(char)(int)(asc[1] << 4 | asc[2] << 2 >> 4);
+    }
+    else
+    {
+        strDecode+=(char)(int)(asc[0] << 2 | asc[1] << 2 >> 6);
+        strDecode+=(char)(int)(asc[1] << 4 | asc[2] << 2 >> 4);
+        strDecode+=(char)(int)(asc[2] << 6 | asc[3] << 2 >> 2);
+    }  
+    }
+    return strDecode;
+}
+
 vector<string> split2list(string info){
     stringstream sstr(info);
     string token;
     vector<string> res;
-    while(getline(sstr,token,",")){
+    while(getline(sstr,token)){
         res.push_back(token);
     }
     return res;
@@ -20,84 +121,82 @@ vector<string> getTables(){
     vector<string> res = split2list(info);
     return res;
 }
-vector<string> getTableAttri(string: tableName) {
+vector<string> getTableAttri(string tableName) {
     //返回表的attri
     string dir = "/gdd_table/"+tableName;
     string info  = Search_Value(dir);
     vector<string> res = split2list(info);
     return res;
 }
-string getTableAttriType(string: tableName, string: attriName){
+string getTableAttriType(string tableName, string attriName){
     string dir = "/gdd_table/"+tableName+"/"+attriName;
     string info  = Search_Value(dir);
     return info;
 }
-string getTableAttriDesc(string: tableName, string:attriName){
+string getTableAttriDesc(string tableName, string attriName){
     string dir = "/gdd_table/"+tableName+"/desc/"+attriName;
     string info  = Search_Value(dir);
     return info;
 }
-string getTableKey(string: tableName){
+string getTableKey(string tableName){
     string dir = "/gdd_key/"+tableName;
     string info  = Search_Value(dir);
     return info;
 }
-string getTableFragType(string: tableName){
+string getTableFragType(string tableName){
     string dir = "/part_schema/"+tableName;
     string info  = Search_Value(dir);
     return info;
 }
-vector<string> getTableFragH(string: tableName){
+vector<string> getTableFragH(string tableName){
     string dir = "/part_schema/"+tableName+"/H";
     string info  = Search_Value(dir);
     vector<string> res = split2list(info);
     return res;
 }
-int getTableFragNum(string: tableName){
+int getTableFragNum(string tableName){
     string dir = "/part_info/"+tableName;
     string info  = Search_Value(dir);
     char *p = (char*)info.c_str();
     return atoi(p);
 }
-string getTableFragCondition(string: tableName, int index){
-    string dir = "/part_info/"+tableName+"/"+tableName+".";
-    dir.append(itoa(index));
+string getTableFragCondition(string tableName, int index){
+    string dir = "/part_info/"+tableName+"/"+tableName+"."+to_string(index);
     cout << dir << endl;
     string info  = Search_Value(dir);
     return info;
 }
-string getTableFragCol(string: tableName, int index){
-    string dir = "/part_column/"+tableName+"/"+tableName+".";
-    dir.append(itoa(index));
+string getTableFragCol(string tableName, int index){
+    string dir = "/part_column/"+tableName+"/"+tableName+"."+to_string(index);
     cout << dir << endl;
     string info  = Search_Value(dir);
     return info;
 }
 
-int getTableFragSize(string: tableName,int index){
-    string dir = "/part_size/"+tableName+".";
-    dir.append(itoa(index));
+int getTableFragSize(string tableName,int index){
+    string dir = "/part_size/"+tableName+"."+to_string(index);
     cout << dir << endl;
     string info  = Search_Value(dir);
     char *p = (char*)info.c_str();
     return atoi(p);
 }
-int getTableFragSite(string: tableName,int index){
-    string dir = "/part_site/"+tableName+".";
-    dir.append(itoa(index));
+int getTableFragSite(string tableName,int index){
+    string dir = "/part_site/"+tableName+"."+to_string(index);
     cout << dir << endl;
     string info  = Search_Value(dir);
     char *p = (char*)info.c_str();
     return atoi(p);
 }
 
-bool saveTableToEtcd(GDD table){
+bool saveTableToEtcd(GDD &table){
     // save table
-    string k = "/gdd_table/"+GDD.name;
+    string k = "/gdd_table/"+table.name;
     string v = "";
+    cout << typeid(table).name() << endl;
+    cout << table.cols.size() << endl;
     for (int i=0; i<table.cols.size(); i++){
-        v += table.cols[i].name
-        v += ","
+        v += table.cols[i].name;
+        v += ",";
     }
     v.pop_back();
     Insert_Attrvalue(k,v);
@@ -109,11 +208,11 @@ bool saveTableToEtcd(GDD table){
         Insert_Attrvalue(k1,v1);
 
         string k2 = k + "/desc/" + col.name;
-        string v1 = col.desc;
+        string v2 = col.desc;
         Insert_Attrvalue(k2,v2);
 
         if(col.key == true){
-            string k3 = "/gdd_key/"+GDD.name;
+            string k3 = "/gdd_key/"+table.name;
             string v3 = col.name;
             Insert_Attrvalue(k3,v3);
         }
@@ -121,50 +220,81 @@ bool saveTableToEtcd(GDD table){
     return true;
 }
 
-bool saveFragToEtcd(Fragment frag){
+bool saveFragToEtcd(Fragment &frag){
     // save frag info
     string k = "/part_schema/"+frag.name;
     string v = frag.fragtype;
     Insert_Attrvalue(k,v);
 
     k = "/part_info/"+frag.name;
-    v = atoi(frag.fragnum);
+    v = to_string(frag.fragnum);
     Insert_Attrvalue(k,v);
 
     for (int i=0; i < frag.fragnum; i++){
         FragDef fr = frag.frags[i];
-        string k1 = k+"/"+frag.name+"."+itoa(fr.id);
+        string k1 = k+"/"+frag.name+"."+to_string(fr.id);
         string v1 = fr.condition;
         Insert_Attrvalue(k1,v1);
 
-        k1 = "/part_site/"+frag.name+"."+itoa(fr.id);
-        v1 = itoa(fr.site);
+        k1 = "/part_site/"+frag.name+"."+to_string(fr.id);
+        v1 = to_string(fr.site);
         Insert_Attrvalue(k1,v1);
 
-        k1 = "/part_size/"+frag.name+"."+itoa(fr.id);
-        v1 = itoa(fr.size);
+        k1 = "/part_size/"+frag.name+"."+to_string(fr.id);
+        v1 = to_string(fr.size);
         Insert_Attrvalue(k1,v1);
 
-        k1 = "/part_column"+frag.name+"."+itoa(fr.id);
+        k1 = "/part_column"+frag.name+"."+to_string(fr.id);
         v1 = fr.column;
         Insert_Attrvalue(k1,v1);
     }
     return true;
 }
 
+int main(){
+    ZBase64 base64;
+    cout << "read *********************************" << endl;
+    string t = "{\"key\":\""+base64.EncodeBase64("tjh")+"\"}";
+    string res = Search_Value(t);
+    cout << "save table *********************************" << endl;
+    GDD tbl;
+    tbl.name = "publisher";
+    ColumnDef clm;
+    clm.name = "id";
+    clm.key = true;
+    clm.null = false;
+    clm.type = "int";
+    clm.desc = "desc of id";
+    tbl.cols.push_back(clm);
+    saveTableToEtcd(tbl);
+
+    t = "{\"key\":\""+base64.EncodeBase64("/gdd_table/publisher")+"\"}";
+    res = Search_Value(t);
+
+
+    return 0;
+    
+}
 string Search_Value(string &dir) //将全部数据合并返回
 {
-    string etcd_url = "http://127.0.0.1/v2/keys/"+dir+"?recursive=true";
+    string etcd_url = "http://localhost:2379/v3/kv/range";
+    // string etcd_url = "http://localhost:2379/v3/kv/put";
+    // string etcd_url = "http://localhost:2379/v2/keys/"+dir+"?recursive=true";
         char *ss=(char*)etcd_url.c_str();
      CURLcode return_code;  
+     cout << ss << endl;
+     cout << dir << endl;
     return_code = curl_global_init(CURL_GLOBAL_SSL);  
+    cout << "here1" << endl;
     if (CURLE_OK != return_code)  
     {  
+        cout << "here2" << endl;
         cerr << "init libcurl failed." << endl;  
         return "";  
     }  
     // 获取easy handle  
     CURL *easy_handle = curl_easy_init();  
+    cout << "here3" << endl;
     if (NULL == easy_handle)  
     {  
         cerr << "get a easy handle failed." << endl;  
@@ -172,11 +302,25 @@ string Search_Value(string &dir) //将全部数据合并返回
   
         return "";  
     }  
+    char szJsonData[1024]; 
+    strcpy(szJsonData, dir.c_str()); 
     char * buff_p = NULL;  
     char result[5000] = "";
     // 设置easy handle属性  
+    // struct curl_slist *headers = NULL;
+    // headers = curl_slist_append(headers, "Accept: */*");
+    // curl_easy_setopt(easy_handle, CURLOPT_HTTPHEADER, headers);//设置头
+    
+    // transfer type == json
+    curl_slist *plist = curl_slist_append(NULL,   
+                "Content-Type:application/json;charset=UTF-8");  
+    curl_easy_setopt(easy_handle, CURLOPT_HTTPHEADER, plist);
     curl_easy_setopt(easy_handle, CURLOPT_URL,ss);  
-    curl_easy_setopt(easy_handle, CURLOPT_PORT, 2379);  
+    curl_easy_setopt(easy_handle, CURLOPT_PORT, 2379); 
+    curl_easy_setopt(easy_handle, CURLOPT_POSTFIELDS, szJsonData);
+    // curl_easy_setopt(easy_handle, CURLOPT_CUSTOMREQUEST, "POST");
+    // curl_easy_setopt(easy_handle, CURLOPT_VERBOSE, 1L);
+
     curl_easy_setopt(easy_handle, CURLOPT_WRITEFUNCTION, &write_data);  
     curl_easy_setopt(easy_handle, CURLOPT_WRITEDATA, &result);  
   
@@ -187,8 +331,10 @@ string Search_Value(string &dir) //将全部数据合并返回
     curl_easy_cleanup(easy_handle);  
     curl_global_cleanup();  
     string info = result;
+    cout << info << endl;
     return info;
 }
+
 int etcd_set(char *key, char *value, char *token)  
 {  //向etcd创建dir数据
     CURLcode return_code;  
@@ -274,7 +420,8 @@ string Create_Dir(string &etcd_url,string &etcd_dir)
     string str=etcd_url+"/"+etcd_dir;
     cout<<str<<endl;
     char *p=(char*)str.c_str();
-    etcd_set(p, "true", NULL);  
+    char *data = "true";
+    etcd_set(p, data, NULL);  
     return str; 
 }
 bool Insert_Attrvalue(string &dir,string &value)
@@ -286,7 +433,189 @@ bool Insert_Attrvalue(string &dir,string &value)
     return true; 
       
 }
+size_t write_data(void *buffer, size_t size, size_t nmemb, void *stream) 
+//从etcd里面取得部分数据
+{ 
+    strncat((char*)stream,(char*)buffer,size*nmemb);
+    return nmemb*size; 
+} 
+// Fragment To_json(string &info,string &tablename)
+// //用json格式解析fragment的数据
+// {
+//     Value root;  
+//     Value node;
+//     Value node1;
+//     Value node2;  
+//     Reader reader;  
+//     FastWriter writer; 
+//     string json = info;
+    
+//      if(!reader.parse(json, root))  
+//     {  
+//         cout << "parse json error" << endl;   
 
+//     }  
+//     string nodeString = writer.write(root["node"]);  
+//     if(!reader.parse(nodeString, node))  
+//     {  
+//         cout << "parse json error" << endl;   
+ 
+//     }  
+
+//     Fragment f1;
+//     f1.tb_name=tablename;
+//     Value nodei;
+//         string table_name = writer.write(node["nodes"]);
+//         string nodestringi = writer.write(node["nodes"]);
+//         if(!reader.parse(nodestringi, nodei))  
+//         {  
+//         cout << "parse json error" << endl;   
+  
+//         }  
+//         f1.frag_count=nodei.size();
+//         for(int j = 0;j<f1.frag_count;j++)
+//         {
+//             Value nodej;
+//             string nodestringj = writer.write(nodei[j]["nodes"]);
+//             if(!reader.parse(nodestringj, nodej))  
+//             {  
+//             cout << "parse json error" << endl;   
+  
+//             } 
+            
+//             string text = writer.write(nodei[j]["key"]);
+//             regex pattern("\"/(.*)/(.*)/(.*)\"\n");
+//             smatch results;
+//             int indexID;
+//             if (regex_match(text, results, pattern)) {
+//                     string Dnum = results[3];
+//                     int DDum = atoi(Dnum.c_str());
+//                     indexID=DDum-1;
+//                     cout<<"fragment:"<<DDum<<endl;
+//                     cout<<"j:"<<j<<endl;
+//                     f1.fragment[indexID].DBnum=DDum;
+//                     cout<<"f1:"<<f1.fragment[indexID].DBnum<<endl;
+//             }
+//             else {
+//             cout << "match failed: " << text << endl;
+//             }
+
+//             for(int k =0;k<nodej.size();k++)
+//             {
+//                 Value nodek;
+//                 string nodestringk = writer.write(nodej[k]["nodes"]);
+//                 if(!reader.parse(nodestringk, nodek))  
+//                 {  
+//                 cout << "parse json error" << endl;   
+ 
+//                 } 
+            
+//                 for(int w = 0;w<nodek.size();w++)
+//                 {
+//                      Value nodew;
+//                     string nodestringw = writer.write(nodek[w]["nodes"]);
+//                     if(!reader.parse(nodestringw, nodew))  
+//                     {  
+//                     cout << "parse json error" << endl;   
+  
+//                     } 
+//                     if(nodestringw.size()==5)
+//                     {
+//                         f1.fragment[indexID].condition_v_count=nodek.size();
+//                         string sss = writer.write(nodek[w]["value"]);
+//                         string kkk = writer.write(nodek[w]["key"]);
+//                         cout<<kkk<<endl;
+//                         regex pattern1("\"/(.*)/(.*)/(.*)/(.*)/(.*)\"\n");
+//                         smatch results1;
+//                         string indexs;
+//                         if (regex_match(kkk, results1, pattern1)) {
+//                              indexs = results1[5];
+//                             }
+//                         else {
+//                                 cout << "match failed: " << text << endl;
+//                             }
+//                         cout<<"分片："<<indexs<<endl;
+//                         int v_index= stoi(indexs);
+//                         regex pattern("\"(.*)\"\n");
+//                         smatch results;
+//                         string Dnum;
+//                         if (regex_match(sss, results, pattern)) {
+//                              Dnum = results[1];
+
+//                             }
+//                         else {
+//                                 cout << "match failed: " << text << endl;
+//                             }
+                           
+//                         f1.fragment[indexID].condition_v[v_index]=Dnum;
+//                     }
+//                     else{
+//                         f1.fragment[indexID].condition_h_count=nodek.size();
+//                         for(int t=0;t<nodew.size();t++)
+//                         {
+//                            string attr_info1= "attr_name";
+//                            string attr_info2= "operation";
+//                            string attr_info3= "attr_value";
+//                            string s1 = writer.write(nodew[t]["key"]);
+//                            if(s1.find(attr_info1)<s1.length())
+//                            {    
+            
+//                                string sss = writer.write(nodew[t]["value"]);
+//                                regex pattern("\"(.*)\"\n");
+//                                 smatch results;
+//                                 string Dnum;
+//                                 if (regex_match(sss, results, pattern)) {
+//                                         Dnum = results[1];
+
+//                                 }
+//                                 else {
+//                                 cout << "match failed: " << text << endl;
+//                                 }
+//                                f1.fragment[indexID].condition_h[w].attr_name=Dnum; 
+                               
+//                            }
+//                             if(s1.find(attr_info2)<s1.length())
+//                            {
+//                                 string sss = writer.write(nodew[t]["value"]);
+//                                regex pattern("\"(.*)\"\n");
+//                                 smatch results;
+//                                 string Dnum;
+//                                 if (regex_match(sss, results, pattern)) {
+//                                         Dnum = results[1];
+
+//                                 }
+//                                 else {
+//                                 cout << "match failed: " << text << endl;
+//                                 }
+//                                f1.fragment[indexID].condition_h[w].operation=Dnum;
+                              
+//                            }
+//                             if(s1.find(attr_info3)<s1.length())
+//                            {
+//                                 string sss = writer.write(nodew[t]["value"]);
+//                                regex pattern("\"(.*)\"\n");
+//                                 smatch results;
+//                                 string Dnum;
+//                                 if (regex_match(sss, results, pattern)) {
+//                                       Dnum = results[1];
+//                                 }
+//                                 else {
+//                                 cout << "match failed: " << text << endl;
+//                                 }
+//                                f1.fragment[indexID].condition_h[w].attr_value=Dnum;
+                               
+//                            }
+
+//                         }
+//                     }                 
+//                 }
+               
+//             }
+//         }
+
+    
+//     return f1;   
+// }
 
 
 

@@ -2,7 +2,7 @@
 #ifndef _DDB_METADATA_H_
 #define _DDB_METADATA_H_
 #include <curl/curl.h> 
-// #include <json/json.h> 
+#include <json/json.h> 
 #include <iostream>  
 #include <string>
 #include <map> 
@@ -18,7 +18,7 @@
 
 
 using namespace std;
-// using namespace Json;
+using namespace Json;
 
 // column
 struct ColumnDef {
@@ -78,13 +78,13 @@ int getTableFragSize(string tableName,int index);
 int getTableFragSite(string tableName,int index);
 bool saveTableToEtcd(GDD table);
 bool saveFragToEtcd(Fragment frag);
+string get_value_from_json(string &res);
 
 int etcd_set(char *key, char *value, char *token);
 int etcd_set2(char *key, char *value, char *token);
 string  Create_Dir(string &etcd_url,string &etcd_dir);  
-bool Insert_Attrvalue(string &dir,string &value);
-string Search_Value(string &dir);
-
+bool Insert_Attrvalue(string &key,string &value);
+string etcd_op(string &dt,string &op);
 size_t write_data(void *buffer, size_t size, size_t nmemb, void *stream);
 // bool Save_Table(Table TableInfo);
 // bool Save_Fragment(Fragment table);

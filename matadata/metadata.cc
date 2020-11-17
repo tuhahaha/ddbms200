@@ -108,7 +108,7 @@ vector<string> split2list(string info){
     stringstream sstr(info);
     string token;
     vector<string> res;
-    while(getline(sstr,token)){
+    while(getline(sstr,token,',')){
         res.push_back(token);
     }
     return res;
@@ -117,82 +117,83 @@ vector<string> split2list(string info){
 vector<string> getTables(){
     //返回创建的所有表格
     string dir = "/gdd_table";
-    string info  = Search_Value(dir);
+    string info  = etcd_op(dir,"GET");
     vector<string> res = split2list(info);
     return res;
 }
-vector<string> getTableAttri(string tableName) {
-    //返回表的attri
-    string dir = "/gdd_table/"+tableName;
-    string info  = Search_Value(dir);
-    vector<string> res = split2list(info);
-    return res;
-}
-string getTableAttriType(string tableName, string attriName){
-    string dir = "/gdd_table/"+tableName+"/"+attriName;
-    string info  = Search_Value(dir);
-    return info;
-}
-string getTableAttriDesc(string tableName, string attriName){
-    string dir = "/gdd_table/"+tableName+"/desc/"+attriName;
-    string info  = Search_Value(dir);
-    return info;
-}
-string getTableKey(string tableName){
-    string dir = "/gdd_key/"+tableName;
-    string info  = Search_Value(dir);
-    return info;
-}
-string getTableFragType(string tableName){
-    string dir = "/part_schema/"+tableName;
-    string info  = Search_Value(dir);
-    return info;
-}
-vector<string> getTableFragH(string tableName){
-    string dir = "/part_schema/"+tableName+"/H";
-    string info  = Search_Value(dir);
-    vector<string> res = split2list(info);
-    return res;
-}
-int getTableFragNum(string tableName){
-    string dir = "/part_info/"+tableName;
-    string info  = Search_Value(dir);
-    char *p = (char*)info.c_str();
-    return atoi(p);
-}
-string getTableFragCondition(string tableName, int index){
-    string dir = "/part_info/"+tableName+"/"+tableName+"."+to_string(index);
-    cout << dir << endl;
-    string info  = Search_Value(dir);
-    return info;
-}
-string getTableFragCol(string tableName, int index){
-    string dir = "/part_column/"+tableName+"/"+tableName+"."+to_string(index);
-    cout << dir << endl;
-    string info  = Search_Value(dir);
-    return info;
-}
+// vector<string> getTableAttri(string tableName) {
+//     //返回表的attri
+//     string dir = "/gdd_table/"+tableName;
+//     string info  = etcd_op(dir,"GET");
+//     vector<string> res = split2list(info);
+//     return res;
+// }
+// string getTableAttriType(string tableName, string attriName){
+//     string dir = "/gdd_table/"+tableName+"/"+attriName;
+//     string info  = etcd_op(dir,"GET");
+//     return info;
+// }
+// string getTableAttriDesc(string tableName, string attriName){
+//     string dir = "/gdd_table/"+tableName+"/desc/"+attriName;
+//     string info  = etcd_op(dir,"GET");
+//     return info;
+// }
+// string getTableKey(string tableName){
+//     string dir = "/gdd_key/"+tableName;
+//     string info  = etcd_op(dir,"GET");
+//     return info;
+// }
+// string getTableFragType(string tableName){
+//     string dir = "/part_schema/"+tableName;
+//     string info  = etcd_op(dir,"GET");
+//     return info;
+// }
+// vector<string> getTableFragH(string tableName){
+//     string dir = "/part_schema/"+tableName+"/H";
+//     string info  = etcd_op(dir,"GET");
+//     vector<string> res = split2list(info);
+//     return res;
+// }
+// int getTableFragNum(string tableName){
+//     string dir = "/part_info/"+tableName;
+//     string info  = etcd_op(dir,"GET");
+//     char *p = (char*)info.c_str();
+//     return atoi(p);
+// }
+// string getTableFragCondition(string tableName, int index){
+//     string dir = "/part_info/"+tableName+"/"+tableName+"."+to_string(index);
+//     cout << dir << endl;
+//     string info  = etcd_op(dir,"GET");
+//     return info;
+// }
+// string getTableFragCol(string tableName, int index){
+//     string dir = "/part_column/"+tableName+"/"+tableName+"."+to_string(index);
+//     cout << dir << endl;
+//     string info  = etcd_op(dir,"GET");
+//     return info;
+// }
 
-int getTableFragSize(string tableName,int index){
-    string dir = "/part_size/"+tableName+"."+to_string(index);
-    cout << dir << endl;
-    string info  = Search_Value(dir);
-    char *p = (char*)info.c_str();
-    return atoi(p);
-}
-int getTableFragSite(string tableName,int index){
-    string dir = "/part_site/"+tableName+"."+to_string(index);
-    cout << dir << endl;
-    string info  = Search_Value(dir);
-    char *p = (char*)info.c_str();
-    return atoi(p);
-}
+// int getTableFragSize(string tableName,int index){
+//     string dir = "/part_size/"+tableName+"."+to_string(index);
+//     cout << dir << endl;
+//     string info  = etcd_op(dir,"GET");
+//     char *p = (char*)info.c_str();
+//     return atoi(p);
+// }
+// int getTableFragSite(string tableName,int index){
+//     string dir = "/part_site/"+tableName+"."+to_string(index);
+//     cout << dir << endl;
+//     string op = "GET";
+//     string info  = etcd_op(dir,op);
+//     char *p = (char*)info.c_str();
+//     return atoi(p);
+// }
 
-bool saveTableToEtcd(GDD &table){
+bool saveTableToEtcd(GDD table){
     // save table
     string k = "/gdd_table/"+table.name;
     string v = "";
-    cout << typeid(table).name() << endl;
+    // cout << typeid(table).name() << endl;
     cout << table.cols.size() << endl;
     for (int i=0; i<table.cols.size(); i++){
         v += table.cols[i].name;
@@ -250,60 +251,95 @@ bool saveFragToEtcd(Fragment &frag){
     }
     return true;
 }
+string get_value_from_json(string &res){
+    Value root; 
+    Value node;
+    Reader reader;  
+    FastWriter writer; 
+    string json = res;
+     if(!reader.parse(json, root)){  
+        cout << "parse json error" << endl;   
+    }
+    // cout << cout << typeid(root).name() << "       " << root["kvs"][0]["value"] << endl;
+
+    string nodeString = writer.write(root["kvs"]); 
+    nodeString.pop_back();
+    string nodeString1 = nodeString.substr(1);
+    if(!reader.parse(nodeString1, node)){
+        cout << "parse json error" << endl;
+    }
+    // cout << node["value"] << endl;
+
+    string v = writer.write(node["value"]);
+    v.pop_back();
+    v.pop_back();
+    string v1 = v.substr(1);
+    // cout << v1<< endl;
+    ZBase64 base64;
+    return base64.DecodeBase64(v1);
+
+}
 
 int main(){
     ZBase64 base64;
-    cout << "read *********************************" << endl;
-    string t = "{\"key\":\""+base64.EncodeBase64("tjh")+"\"}";
-    string res = Search_Value(t);
-    cout << "save table *********************************" << endl;
-    GDD tbl;
-    tbl.name = "publisher";
-    ColumnDef clm;
-    clm.name = "id";
-    clm.key = true;
-    clm.null = false;
-    clm.type = "int";
-    clm.desc = "desc of id";
-    tbl.cols.push_back(clm);
-    saveTableToEtcd(tbl);
+    int t1 = 0;
 
-    t = "{\"key\":\""+base64.EncodeBase64("/gdd_table/publisher")+"\"}";
-    res = Search_Value(t);
-
-
+    cout << base64.DecodeBase64("aWQ=")<< endl;
+    if (t1==1){
+        cout << "save table *********************************" << endl;
+        GDD tbl;
+        tbl.name = "publisher";
+        ColumnDef clm;
+        clm.name = "id";
+        clm.key = true;
+        clm.null = false;
+        clm.type = "int";
+        clm.desc = "desc of id";
+        tbl.cols.push_back(clm);
+        saveTableToEtcd(tbl);
+    }
+    
+    string t = "{\"key\":\""+base64.EncodeBase64("/gdd_table/publisher/id")+"\"}";
+    string op = "GET";
+    string res = etcd_op(t,op);  //res is json string
+    string v = get_value_from_json(res);
+    cout << v << endl;
     return 0;
     
 }
-string Search_Value(string &dir) //将全部数据合并返回
+//操作etcd 插入数据，或查询数据
+string etcd_op(string &dt,string &op) 
 {
-    string etcd_url = "http://localhost:2379/v3/kv/range";
-    // string etcd_url = "http://localhost:2379/v3/kv/put";
-    // string etcd_url = "http://localhost:2379/v2/keys/"+dir+"?recursive=true";
-        char *ss=(char*)etcd_url.c_str();
-     CURLcode return_code;  
-     cout << ss << endl;
-     cout << dir << endl;
+    string etcd_url = "http://localhost:2379/v3/kv/";
+    if(op == "PUT"){
+        etcd_url += "put";
+    }
+    else if(op == "GET"){
+        etcd_url+= "range";
+    }
+    else{
+        cout << "illegal opration !" << endl;
+        return "";
+    }
+    char *ss=(char*)etcd_url.c_str();
+    CURLcode return_code;  
+    cout << "data   " << dt << endl;
     return_code = curl_global_init(CURL_GLOBAL_SSL);  
-    cout << "here1" << endl;
     if (CURLE_OK != return_code)  
     {  
-        cout << "here2" << endl;
         cerr << "init libcurl failed." << endl;  
         return "";  
     }  
     // 获取easy handle  
     CURL *easy_handle = curl_easy_init();  
-    cout << "here3" << endl;
     if (NULL == easy_handle)  
     {  
         cerr << "get a easy handle failed." << endl;  
         curl_global_cleanup();   
-  
         return "";  
     }  
     char szJsonData[1024]; 
-    strcpy(szJsonData, dir.c_str()); 
+    strcpy(szJsonData, dt.c_str()); 
     char * buff_p = NULL;  
     char result[5000] = "";
     // 设置easy handle属性  
@@ -335,289 +371,18 @@ string Search_Value(string &dir) //将全部数据合并返回
     return info;
 }
 
-int etcd_set(char *key, char *value, char *token)  
-{  //向etcd创建dir数据
-    CURLcode return_code;  
-    char etcd_url[URL_MAX_LEN];  
-    char etcd_value[VALUE_LEN];   
-
-        return_code = curl_global_init(CURL_GLOBAL_SSL);  
-    if (CURLE_OK != return_code)  
-    {  
-        //cerr << "init libcurl failed." << endl;  
-        printf("init libcurl failed\n");  
-        return -1;  
-    }  
-  
-    sprintf(etcd_url, "http://127.0.0.1:2379/v2/keys%s", key);  
-    sprintf(etcd_value, "dir=%s", value);  
-    // 获取easy handle  
-    CURL *easy_handle = curl_easy_init();  
-    if (NULL == easy_handle)  
-    {  
-        //cerr << "get a easy handle failed." << endl;  
-        printf("get a easy handle failed.\n");  
-        curl_global_cleanup();   
-        return -1;  
-    }  
-    // 设置easy handle属性  
-    curl_easy_setopt(easy_handle, CURLOPT_URL, etcd_url);   
-    curl_easy_setopt(easy_handle, CURLOPT_POST, 1);  
-    curl_easy_setopt(easy_handle, CURLOPT_POSTFIELDS, etcd_value);  
-    curl_easy_setopt(easy_handle, CURLOPT_CUSTOMREQUEST, "PUT");  
-   
-    // 执行数据请求  
-    curl_easy_perform(easy_handle);   
-  
-    // 释放资源  
-    curl_easy_cleanup(easy_handle);  
-    curl_global_cleanup();  
-    return 0;  
-} 
-int etcd_set2(char *key, char *value, char *token)  
-//向etcd存储value数据
-{    
-   
-    CURLcode return_code;   
-    char etcd_value[VALUE_LEN];   
-      
-    return_code = curl_global_init(CURL_GLOBAL_SSL);  
-    if (CURLE_OK != return_code)  
-    {  
-        //cerr << "init libcurl failed." << endl;  
-        printf("init libcurl failed\n");  
-        return -1;  
-    }  
-    string a = key;
-    string str = "http://127.0.0.1:2379/v2/keys"+a;
-    char *ss=(char*)str.c_str();
-    sprintf(etcd_value, "value=%s", value);  
-    // 获取easy handle  
-    CURL *easy_handle = curl_easy_init();  
-    if (NULL == easy_handle)  
-    {  
-        //cerr << "get a easy handle failed." << endl;  
-        printf("get a easy handle failed.\n");  
-        curl_global_cleanup();   
-        return -1;  
-    }  
-    // 设置easy handle属性  
-    curl_easy_setopt(easy_handle, CURLOPT_URL, ss);   
-    curl_easy_setopt(easy_handle, CURLOPT_POST, 1);  
-    curl_easy_setopt(easy_handle, CURLOPT_POSTFIELDS, etcd_value);  
-    curl_easy_setopt(easy_handle, CURLOPT_CUSTOMREQUEST, "PUT");  
-   
-    // 执行数据请求  
-    curl_easy_perform(easy_handle);   
-  
-    // 释放资源  
-    curl_easy_cleanup(easy_handle);  
-    curl_global_cleanup();  
-    return 0;  
-}  
-string Create_Dir(string &etcd_url,string &etcd_dir)
-{ //在etcd里面创建dir
-    string str=etcd_url+"/"+etcd_dir;
-    cout<<str<<endl;
-    char *p=(char*)str.c_str();
-    char *data = "true";
-    etcd_set(p, data, NULL);  
-    return str; 
-}
-bool Insert_Attrvalue(string &dir,string &value)
-{  //调用存储数据的etcd接口  
-    string str=dir;
-    char *p=(char*)str.c_str();
-    char *data=(char*)value.c_str();
-    etcd_set2(p, data, NULL);  
+bool Insert_Attrvalue(string &key,string &value)
+{  //调用存储数据的etcd接口 
+    ZBase64 base64; 
+    string data = "{\"key\": \""+base64.EncodeBase64(key)+"\", \"value\": \""+base64.EncodeBase64(value)+"\"}";
+    string op = "PUT";
+    etcd_op(data,op);
+    cout << "Saved!" << endl;
     return true; 
-      
 }
 size_t write_data(void *buffer, size_t size, size_t nmemb, void *stream) 
-//从etcd里面取得部分数据
+//curl 返回的数据流
 { 
     strncat((char*)stream,(char*)buffer,size*nmemb);
     return nmemb*size; 
 } 
-// Fragment To_json(string &info,string &tablename)
-// //用json格式解析fragment的数据
-// {
-//     Value root;  
-//     Value node;
-//     Value node1;
-//     Value node2;  
-//     Reader reader;  
-//     FastWriter writer; 
-//     string json = info;
-    
-//      if(!reader.parse(json, root))  
-//     {  
-//         cout << "parse json error" << endl;   
-
-//     }  
-//     string nodeString = writer.write(root["node"]);  
-//     if(!reader.parse(nodeString, node))  
-//     {  
-//         cout << "parse json error" << endl;   
- 
-//     }  
-
-//     Fragment f1;
-//     f1.tb_name=tablename;
-//     Value nodei;
-//         string table_name = writer.write(node["nodes"]);
-//         string nodestringi = writer.write(node["nodes"]);
-//         if(!reader.parse(nodestringi, nodei))  
-//         {  
-//         cout << "parse json error" << endl;   
-  
-//         }  
-//         f1.frag_count=nodei.size();
-//         for(int j = 0;j<f1.frag_count;j++)
-//         {
-//             Value nodej;
-//             string nodestringj = writer.write(nodei[j]["nodes"]);
-//             if(!reader.parse(nodestringj, nodej))  
-//             {  
-//             cout << "parse json error" << endl;   
-  
-//             } 
-            
-//             string text = writer.write(nodei[j]["key"]);
-//             regex pattern("\"/(.*)/(.*)/(.*)\"\n");
-//             smatch results;
-//             int indexID;
-//             if (regex_match(text, results, pattern)) {
-//                     string Dnum = results[3];
-//                     int DDum = atoi(Dnum.c_str());
-//                     indexID=DDum-1;
-//                     cout<<"fragment:"<<DDum<<endl;
-//                     cout<<"j:"<<j<<endl;
-//                     f1.fragment[indexID].DBnum=DDum;
-//                     cout<<"f1:"<<f1.fragment[indexID].DBnum<<endl;
-//             }
-//             else {
-//             cout << "match failed: " << text << endl;
-//             }
-
-//             for(int k =0;k<nodej.size();k++)
-//             {
-//                 Value nodek;
-//                 string nodestringk = writer.write(nodej[k]["nodes"]);
-//                 if(!reader.parse(nodestringk, nodek))  
-//                 {  
-//                 cout << "parse json error" << endl;   
- 
-//                 } 
-            
-//                 for(int w = 0;w<nodek.size();w++)
-//                 {
-//                      Value nodew;
-//                     string nodestringw = writer.write(nodek[w]["nodes"]);
-//                     if(!reader.parse(nodestringw, nodew))  
-//                     {  
-//                     cout << "parse json error" << endl;   
-  
-//                     } 
-//                     if(nodestringw.size()==5)
-//                     {
-//                         f1.fragment[indexID].condition_v_count=nodek.size();
-//                         string sss = writer.write(nodek[w]["value"]);
-//                         string kkk = writer.write(nodek[w]["key"]);
-//                         cout<<kkk<<endl;
-//                         regex pattern1("\"/(.*)/(.*)/(.*)/(.*)/(.*)\"\n");
-//                         smatch results1;
-//                         string indexs;
-//                         if (regex_match(kkk, results1, pattern1)) {
-//                              indexs = results1[5];
-//                             }
-//                         else {
-//                                 cout << "match failed: " << text << endl;
-//                             }
-//                         cout<<"分片："<<indexs<<endl;
-//                         int v_index= stoi(indexs);
-//                         regex pattern("\"(.*)\"\n");
-//                         smatch results;
-//                         string Dnum;
-//                         if (regex_match(sss, results, pattern)) {
-//                              Dnum = results[1];
-
-//                             }
-//                         else {
-//                                 cout << "match failed: " << text << endl;
-//                             }
-                           
-//                         f1.fragment[indexID].condition_v[v_index]=Dnum;
-//                     }
-//                     else{
-//                         f1.fragment[indexID].condition_h_count=nodek.size();
-//                         for(int t=0;t<nodew.size();t++)
-//                         {
-//                            string attr_info1= "attr_name";
-//                            string attr_info2= "operation";
-//                            string attr_info3= "attr_value";
-//                            string s1 = writer.write(nodew[t]["key"]);
-//                            if(s1.find(attr_info1)<s1.length())
-//                            {    
-            
-//                                string sss = writer.write(nodew[t]["value"]);
-//                                regex pattern("\"(.*)\"\n");
-//                                 smatch results;
-//                                 string Dnum;
-//                                 if (regex_match(sss, results, pattern)) {
-//                                         Dnum = results[1];
-
-//                                 }
-//                                 else {
-//                                 cout << "match failed: " << text << endl;
-//                                 }
-//                                f1.fragment[indexID].condition_h[w].attr_name=Dnum; 
-                               
-//                            }
-//                             if(s1.find(attr_info2)<s1.length())
-//                            {
-//                                 string sss = writer.write(nodew[t]["value"]);
-//                                regex pattern("\"(.*)\"\n");
-//                                 smatch results;
-//                                 string Dnum;
-//                                 if (regex_match(sss, results, pattern)) {
-//                                         Dnum = results[1];
-
-//                                 }
-//                                 else {
-//                                 cout << "match failed: " << text << endl;
-//                                 }
-//                                f1.fragment[indexID].condition_h[w].operation=Dnum;
-                              
-//                            }
-//                             if(s1.find(attr_info3)<s1.length())
-//                            {
-//                                 string sss = writer.write(nodew[t]["value"]);
-//                                regex pattern("\"(.*)\"\n");
-//                                 smatch results;
-//                                 string Dnum;
-//                                 if (regex_match(sss, results, pattern)) {
-//                                       Dnum = results[1];
-//                                 }
-//                                 else {
-//                                 cout << "match failed: " << text << endl;
-//                                 }
-//                                f1.fragment[indexID].condition_h[w].attr_value=Dnum;
-                               
-//                            }
-
-//                         }
-//                     }                 
-//                 }
-               
-//             }
-//         }
-
-    
-//     return f1;   
-// }
-
-
-
-
-

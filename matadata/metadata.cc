@@ -193,10 +193,11 @@ string getTableFragCondition(string tableName, int index){
     return v;
 }
 string getTableFragCol(string tableName, int index){
-    string key = "/part_column/"+tableName+"/"+tableName+"."+to_string(index);
+    string key = "/part_column/"+tableName+"."+to_string(index);
     string op = "GET";
     key = toJson(key);
     string res  = etcd_op(key,op);
+    cout << res << endl;
     string v = get_value_from_json(res);
     return v;
 }
@@ -257,7 +258,7 @@ bool saveTableToEtcd(GDD table){
     return true;
 }
 
-bool saveFragToEtcd(Fragment &frag){
+bool saveFragToEtcd(Fragment frag){
     // save frag info
     string k = "/part_schema/"+frag.name;
     string v = frag.fragtype;
@@ -281,7 +282,7 @@ bool saveFragToEtcd(Fragment &frag){
         v1 = to_string(fr.size);
         Insert_Attrvalue(k1,v1);
 
-        k1 = "/part_column"+frag.name+"."+to_string(fr.id);
+        k1 = "/part_column/"+frag.name+"."+to_string(fr.id);
         v1 = fr.column;
         Insert_Attrvalue(k1,v1);
     }
@@ -336,20 +337,43 @@ GDD getTableFromEtcd(string tablename){
 
     return tbl;
 }
-
+Fragment getFragFromEtcd(string tablename){
+    Fragment fmt;
+    fmt.name = tablename;
+    fmt.fragtype = getTableFragType(tablename);
+    fmt.fragnum = getTableFragNum(tablename);
+    for(int i=1;i<=fmt.fragnum;i++){
+        FragDef df;
+        df.column = getTableFragCol(tablename,i);
+        df.condition = getTableFragCondition(tablename,i);
+        df.id = i;
+        df.site = getTableFragSite(tablename,i);
+        df.size = getTableFragSize(tablename,i);
+        fmt.frags.push_back(df);
+        // cout << df.condition << endl;
+    }
+    return fmt;
+}
 
 int main(){
     ZBase64 base64;
-    int t1 = 0;
-    string t2 = "publisher";
+    
+    // string t2 = "publisher";
     // vector<string> r = getTableAttri(t2);
     // cout << r[0] << endl;
 
+    string t2 = "publisher";
     GDD g = getTableFromEtcd(t2);
     cout << g.name <<endl;
     cout << g.cols[0].name <<"  "<< g.cols[0].type <<"  "<< g.cols[0].desc <<"  "<< g.cols[0].key <<"  "<< endl;
+    
+    Fragment f = getFragFromEtcd(t2);
+    cout << f.name <<"  "<< f.fragnum <<"  "<< f.fragtype << endl;
+    cout << f.frags[0].column <<"  "<< f.frags[0].condition <<"  "<< f.frags[0].id <<"  "<< f.frags[0].site <<"  "<< f.frags[0].size;
+    
     return 0;
-    cout << base64.DecodeBase64("aWQ=")<< endl;
+    // cout << base64.DecodeBase64("aWQ=")<< endl;
+    int t1 = 0;
     if (t1==1){
         cout << "save table *********************************" << endl;
         GDD tbl;
@@ -363,8 +387,24 @@ int main(){
         tbl.cols.push_back(clm);
         saveTableToEtcd(tbl);
     }
+    if (t1==2){
+        cout << "save frag *********************************" << endl;
+        Fragment fmt;
+        fmt.name = "publisher";
+        fmt.fragtype = "V";
+        fmt.fragnum = 1;
+        
+        FragDef fd;
+        fd.id = 1;
+        fd.site = 1;
+        fd.size = 0;
+        fd.column = "id,nation";
+        fd.condition = "id < 104000 AND nation=’PRC’";
+        fmt.frags.push_back(fd);
+        saveFragToEtcd(fmt);
+    }
     
-    string t = "{\"key\":\""+base64.EncodeBase64("/gdd_table/publisher/id")+"\"}";
+    string t = "{\"key\":\""+base64.EncodeBase64("/part_column/publisher.1")+"\"}";
     string op = "GET";
     string res = etcd_op(t,op);  //res is json string
     string v = get_value_from_json(res);
@@ -388,7 +428,7 @@ string etcd_op(string &dt,string &op)
     }
     char *ss=(char*)etcd_url.c_str();
     CURLcode return_code;  
-    cout << "data   " << dt << endl;
+    // cout << "data   " << dt << endl;
     return_code = curl_global_init(CURL_GLOBAL_SSL);  
     if (CURLE_OK != return_code)  
     {  
@@ -432,7 +472,7 @@ string etcd_op(string &dt,string &op)
     curl_easy_cleanup(easy_handle);  
     curl_global_cleanup();  
     string info = result;
-    cout << info << endl;
+    // cout << info << endl;
     return info;
 }
 

@@ -29,6 +29,10 @@ mysql_secure_installation
 ## functions
 * to be continued...
 ## run the code
+* first you should enter root user by `su`, then start the mysql database by this command:
+```
+service mysql restart
+```
 * you can complile the file mysql_connector.cpp by (please pay attention to changing the file path in main funtion):
 ```
 g++ mysql_connector.cpp `mysql_config --cflags --libs` -o mysql_connector

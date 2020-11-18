@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <mysql/mysql.h>
 #include <string>
+#include <vector>
+#include <typeinfo> /* 为了调试 */
 
 using namespace std;
 
@@ -8,6 +10,21 @@ using namespace std;
 #define USERNAME "root"
 #define PASSWORD "rootroot"
 #define DATABASE "test"  // here the name should be changed to our databases
+
+
+// 元信息结构定义
+#define MAX_COLUMN 10
+typedef struct ColumnDef {
+    string name;
+    string type;
+    bool null;
+    bool key;
+    string desc;
+} ColumnDef;
+typedef struct GDD {
+    string name; /*表名*/
+    ColumnDef col[MAX_COLUMN];
+} GDD;
 
 // mysql自己定义了查询结果的结构
 // 但是我们的结构最好不要有指针，所以我重新定义为 —— 既然可以有指针，我怀疑这个是否还需要
@@ -84,7 +101,8 @@ typedef struct my_mysql_res {
 
 string local_Insert_Delete(string sql);
 string local_Load(string sql_create, string sql_load);
-MY_MYSQL_RES query_sql(string sql, string table);
+MY_MYSQL_RES Local_Select(string sql, string table);
+string Local_Tmp_Load(MY_MYSQL_RES tmp_data, string tmp_data_name);
 void my_mysql_res_print(MY_MYSQL_RES my_res);
 // // 本地执行删除函数
 // string localExecuteDelete(string sql_statement){
@@ -112,16 +130,51 @@ void my_mysql_res_print(MY_MYSQL_RES my_res);
 //     return result, time_spend;
 // }
 
+/* 先固定一个元信息实例 */
+ColumnDef field1;
+ColumnDef field2;
+ColumnDef field3;
+ColumnDef field4;
+ColumnDef field5;
+GDD book_meta;
 
 
 int main(int argc,char *argv[])
 {
-    string res_str_out;
+    /* 先固定一个元信息实例 */
+    field1.name = "id";
+    field1.type = "int(6)";
+    field1.key = true;
+    field2.name = "title";
+    field2.type = "char(100)";
+    field3.name = "authors";
+    field3.type = "char(200)";
+    field4.name = "publisher_id";
+    field4.type = "int(6)";
+    field5.name = "copies";
+    field5.type = "int(5)";
+    book_meta.col[0] = field1;
+    book_meta.col[1] = field2;
+    book_meta.col[2] = field3;
+    book_meta.col[3] = field4;
+    book_meta.col[4] = field5;
+    book_meta.name = "book";
+    // book_meta.col = col;
+ 
+    // string res_str_out;
     // res_str_out = local_Insert_Delete("delete from test where name='user'");
-    res_str_out = local_Load("create table book(id int(6), title char(100), authors char(200), publisher_id int(6), copies int(5), key(id) )", "load data local infile '/home/roy/ddbms/rawdata/book.tsv' into table book");
-    const char* p = res_str_out.data();
-    printf("%s\n", p);
-    MY_MYSQL_RES res_data_out = query_sql("select * from book where id<=200005", "book");
+    // insert into test values('user','123456')
+    // res_str_out = local_Insert_Delete("insert into test values('user','123456')");
+    // res_str_out = local_Load("create table book(id int(6), title char(100), authors char(200), publisher_id int(6), copies int(5), key(id) )", "load data local infile '/home/roy/ddbms/rawdata/book.tsv' into table book");
+    // const char* p = res_str_out.data();
+    // printf("%s\n", p);
+    /* 存成临时表 */
+    MY_MYSQL_RES res_data_out = Local_Select("select * from book where id<=200005", "book");
+    string res_tmp_out = Local_Tmp_Load(res_data_out, "tmp_table_1");
+    const char* p = res_tmp_out.data();
+    printf("tmp table stored: %s\n", p);
+    /* 把临时表查出来并且打印 */
+    res_data_out = Local_Select("select * from tmp_table_1", "book");
     my_mysql_res_print(res_data_out);
 
     return 0;
@@ -188,17 +241,120 @@ string local_Load(string sql_create, string sql_load)
     }       
 }
 
-MY_MYSQL_RES query_sql(string sql, string table) 
+string Local_Tmp_Load(MY_MYSQL_RES tmp_data, string tmp_data_name)
+{
+    MYSQL conn;
+    int res;
+    int res_load;
+    /* 接下来本应从etcd读取元信息，但调试阶段我把元信息写死在代码里了，即全局变量book_meta*/
+    /* 现在开始构建create语句的sql，这一部分之后应该会拆分出来成为单独的函数，输入是一堆GDD和MY_MYSQL_RES，输出是create的sql语句*/
+    int i, j, flag; /*只是控制循环的两个变量和一个标记变量*/
+    string sql_create = "create table ";
+    sql_create = sql_create.append(tmp_data_name);
+    sql_create = sql_create.append("(");
+    MYSQL_RES *res_ptr; /*指向查询结果的指针*/
+    res_ptr = tmp_data.res_ptr;
+    int row, column; /*查询返回的行数和列数*/
+    MYSQL_FIELD *fields; /*字段结构数组的指针*/
+    column = mysql_num_fields(res_ptr);
+    fields = mysql_fetch_fields(res_ptr);
+    /* 遍历结果集中的字段名 */
+    for(i = 0; i < column; i++)
+    {
+        flag = 0;
+        sql_create = sql_create.append(fields[i].name); //id
+        sql_create = sql_create.append(" ");
+        for(j = 0; j < MAX_COLUMN; j++)
+        {
+            /* 从元信息中找出对应的类型定义 */
+            string target_name = fields[i].name;
+            string source_name = book_meta.col[j].name;
+            if(target_name == source_name){
+                sql_create = sql_create.append(book_meta.col[j].type); //int(6)
+                sql_create = sql_create.append(", ");
+                flag = 1;
+                break;
+            }
+        }
+        if(flag == 0){
+            mysql_close(&conn);
+            return "Fields error!";
+        }
+    }
+    sql_create = sql_create.substr(0,sql_create.length()-2); //删掉最后一个", "
+    sql_create = sql_create.append(")");
+    /* create语句构造完毕 */
+    mysql_init(&conn);
+    if(mysql_real_connect(&conn, HOST, USERNAME, PASSWORD, DATABASE, 0, NULL,0))
+    {
+        printf("connect success!\n");        
+        const char* p = sql_create.data();
+        res=mysql_query(&conn,p);
+        if(res) /*创建数据表失败*/
+        {
+            mysql_close(&conn);
+            return "FAILED";
+        }
+        else /*创建数据表成功*/
+        {
+            /* 开始一条一条存数据, e.g. insert into test values('user', '123456')*/
+            /*取得結果的行列数*/
+            column = mysql_num_fields(res_ptr);
+            row = mysql_num_rows(res_ptr);
+            MYSQL_ROW result_row; /*按行返回的查询信息*/
+            /*按行插入結果*/
+            for (i = 1; i < row; i++)
+            {
+                /* 开始构造insert语句 */
+                string sql_load = "insert into ";
+                sql_load = sql_load.append(tmp_data_name);
+                sql_load = sql_load.append(" values(\'");
+                result_row = mysql_fetch_row(res_ptr);
+                for (j = 0; j < column; j++)
+                {
+                    sql_load = sql_load.append(result_row[j]);
+                    sql_load = sql_load.append("\', \'");
+                }
+                sql_load = sql_load.substr(0,sql_load.length()-3); //删掉最后一个", \'"
+                sql_load = sql_load.append(")");
+                /* insert语句构造完毕 */
+                p = sql_load.data();
+                res_load = mysql_query(&conn,p);
+                if(res_load) /*导入数据失败*/
+                {
+                    mysql_close(&conn);
+                    return "FAILED";
+                }
+                else{
+                    continue;
+                }   
+            }
+            mysql_close(&conn);
+            /* 如果全部成功插入 */
+            if(i == row){
+                return "OK";
+            }
+            else{
+                return "FAILED";
+            }
+            
+        }
+        
+    }           
+
+}
+
+MY_MYSQL_RES Local_Select(string sql, string table) 
 {
     MYSQL my_connection; /*这是一个数据库连接*/
     int res; /*执行sql語句后的返回标志*/
     MYSQL_RES *res_ptr; /*指向查询结果的指针*/
-    MYSQL_FIELD *field; /*字段结构指针*/
-    MYSQL_ROW result_row; /*按行返回的查询信息*/
+    // MYSQL_FIELD *field; /*字段结构指针*/
+    // MYSQL_ROW result_row; /*按行返回的查询信息*/
     MY_MYSQL_RES my_res; /*需要返回的查询结果*/
 
-    int row, column; /*查询返回的行数和列数*/
-    int i, j; /*只是控制循环的两个变量*/
+    // int row, column; /*查询返回的行数和列数*/
+    // int i, j; /*只是控制循环的两个变量*/
  
     /*初始化mysql连接my_connection*/
     mysql_init(&my_connection);
@@ -287,5 +443,12 @@ void my_mysql_res_print(MY_MYSQL_RES my_res)
     {
         printf("Empty!");
     }
-    
+    mysql_free_result(res_ptr);
 }
+
+/* res_ptr = mysql_store_result(&my_connection)用于分配内存并把指针返回
+   mysql_free_result(res_ptr)则用于释放被分配的内存
+   一般来说子站点返回结果集之后就应当释放，但不知道RPC如何反应，
+   我暂且先写在executor的transfer后面吧，加上注释，一开始的测试通过以后再尝试取消注释能不能继续跑通*/
+/* mysql_library_end()用于彻底释放，按理来说mysql_free_result如果有，这个也应当有，
+   但是它并不指定是哪一个连接，我觉得多线程的时候有些危险，所以不打算放上去*/

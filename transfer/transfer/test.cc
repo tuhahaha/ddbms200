@@ -3,7 +3,7 @@
 #include <string>
 use namespace std;
 
-static  byte[]   StructToBytes(object structObj)
+static  byte[]  StructToBytes(object structObj)
 {
     int   size   =     Marshal.SizeOf(structObj);   
     IntPtr   buffer   =   Marshal.AllocHGlobal(size);   
@@ -20,12 +20,6 @@ static  byte[]   StructToBytes(object structObj)
     }   
    
 }
-
-struct GDD{
-  string name;
-  int id;
-  int res;
-};
 
 int main(){
     GDD test;

@@ -20,7 +20,8 @@ class TransferFileClient
 {
 public:
     TransferFileClient(std::shared_ptr<Channel> channel) : stub_(TransferFile::NewStub(channel)){};
-    void Upload();private:
+    void Upload();
+private:
     std::unique_ptr<TransferFile::Stub> stub_;
 };
 

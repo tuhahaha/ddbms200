@@ -25,10 +25,10 @@ vpath %.proto $(PROTOS_PATH)
 
 all: TransferFileClient TransferFileImpl
 
-TransferFileClient: transfer_file.pb.o transfer_file.grpc.pb.o TransferFileImpl.o
+TransferFileImpl: transfer_file.pb.o transfer_file.grpc.pb.o TransferFileImpl.o
 	$(CXX) $^ $(LDFLAGS) -o $@
 
-TransferFileImpl: transfer_file.pb.o transfer_file.grpc.pb.o TransferFileClient.o
+TransferFileClient: transfer_file.pb.o transfer_file.grpc.pb.o TransferFileClient.o
 	$(CXX) $^ $(LDFLAGS) -o $@
 
 %.grpc.pb.cc: %.proto

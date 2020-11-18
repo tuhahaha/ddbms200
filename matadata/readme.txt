@@ -22,6 +22,9 @@ int getTableFragSite(string tableName,int index);
 
 //具体数据类型请看metadata.h
 
-Todos:
-1，部分函数未实现
-2，后续需要站点互相访问时再聚到一起部署环境，建议先将表格信息写死到strct里直接使用。
+***********11-18
+1，ETCD访问接口已全部完成
+2，根据set_etcd.sh可以部署好4 sites
+
+
+3，后续需要站点互相访问时再聚到一起部署环境，建议先将表格信息写死到strct里直接使用。

@@ -12,5 +12,3 @@ int main() {
     Traverse(TableList);
     return 0;
 }
-
-

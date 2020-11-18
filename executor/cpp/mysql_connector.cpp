@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <typeinfo> /* 为了调试 */
+#include "../../matadata/metadata.h"
 
 using namespace std;
 
@@ -12,19 +13,19 @@ using namespace std;
 #define DATABASE "test"  // here the name should be changed to our databases
 
 
-// 元信息结构定义
-#define MAX_COLUMN 10
-typedef struct ColumnDef {
-    string name;
-    string type;
-    bool null;
-    bool key;
-    string desc;
-} ColumnDef;
-typedef struct GDD {
-    string name; /*表名*/
-    ColumnDef col[MAX_COLUMN];
-} GDD;
+// // 元信息结构定义
+// #define MAX_COLUMN 10
+// typedef struct ColumnDef {
+//     string name;
+//     string type;
+//     bool null;
+//     bool key;
+//     string desc;
+// } ColumnDef;
+// typedef struct GDD {
+//     string name; /*表名*/
+//     ColumnDef col[MAX_COLUMN];
+// } GDD;
 
 // mysql自己定义了查询结果的结构
 // 但是我们的结构最好不要有指针，所以我重新定义为 —— 既然可以有指针，我怀疑这个是否还需要
@@ -153,11 +154,11 @@ int main(int argc,char *argv[])
     field4.type = "int(6)";
     field5.name = "copies";
     field5.type = "int(5)";
-    book_meta.col[0] = field1;
-    book_meta.col[1] = field2;
-    book_meta.col[2] = field3;
-    book_meta.col[3] = field4;
-    book_meta.col[4] = field5;
+    book_meta.cols[0] = field1;
+    book_meta.cols[1] = field2;
+    book_meta.cols[2] = field3;
+    book_meta.cols[3] = field4;
+    book_meta.cols[4] = field5;
     book_meta.name = "book";
     // book_meta.col = col;
  

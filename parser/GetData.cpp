@@ -95,8 +95,15 @@ vector<DataGroupByTable> GetDataGroupByTable(string sql_statement) {
     }
     return data_group_by_table;
 }
+
 vector<string> FirstPi(string sql_statement) {
     vector<string> Command4FirstPi;
     vector<DataGroupByTable> data_group_by_Table = GetDataGroupByTable(sql_statement);
+    for (int i = 0; i < data_group_by_Table.size(); i++) {
+        for (int j = 0; j < data_group_by_Table[i].columns.size(); j++) {
+            int id = data_group_by_Table[i].columns[j].id;
+            int site = data_group_by_Table[i].columns[j].site;
+        }
+    }
     return Command4FirstPi;
 }

@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <vector>
 #include <string>
-#include "../matadata/metadata.h"
+// #include "../matadata/metadata.h"
 using namespace std;
 
 
@@ -24,9 +24,9 @@ vector<string> GetAllData(string sql_statement);
 int GetTCLoc(string table, string column);
 string GetPureColumnFromColumn(string column);
 // Need metadata 
-int GetIdFromTC(string table, string column);
-int GetSiteFromTC(string table, string column);
-vector<int> PushBackUnique(vector<int> original, int input);
+// int GetIdFromTC(string table, string column);
+// int GetSiteFromTC(string table, string column);
+// vector<int> PushBackUnique(vector<int> original, int input);
 
 
 
@@ -167,36 +167,36 @@ string GetPureColumnFromColumn(string column) {
     string pure_column = column.substr(pure_column_loc, column.size() - pure_column_loc);
     return pure_column;
 }
-int GetIdFromTC(string table, string column) {
-    Fragment FragmentOfTable;
-    FragmentOfTable = getFragFromEtcd(table);
-    vector<FragDef> frags = FragmentOfTable.frags;
-    for (int i = 0; i < frags.size(); i++ ){
-        if (frags[i].column == GetPureColumnFromColumn(column)) {
-            return frags[i].id;
-        }
-    }
-    cout << "ERROR IN GetIdFromTC " << endl;
-    return -1;
-}
-int GetSiteFromTC(string table, string column) {
-    Fragment FragmentOfTable;
-    FragmentOfTable = getFragFromEtcd(table);
-    vector<FragDef> frags = FragmentOfTable.frags;
-    for (int i = 0; i < frags.size(); i++ ){
-        if (frags[i].column == GetPureColumnFromColumn(column)) {
-            return frags[i].id;
-        }
-    }
-    cout << "ERROR IN GetSiteFromTC " << endl;
-    return -1;
-}
-vector<int> PushBackUnique(vector<int> original, int input) {
-    for(int i = 0; i < original.size(); i++) {
-        if (input == original[i]) {
-            return original;
-        }
-    }
-    original.push_back(input);
-    return original;
-}
+// int GetIdFromTC(string table, string column) {
+//     Fragment FragmentOfTable;
+//     FragmentOfTable = getFragFromEtcd(table);
+//     vector<FragDef> frags = FragmentOfTable.frags;
+//     for (int i = 0; i < frags.size(); i++ ){
+//         if (frags[i].column == GetPureColumnFromColumn(column)) {
+//             return frags[i].id;
+//         }
+//     }
+//     cout << "ERROR IN GetIdFromTC " << endl;
+//     return -1;
+// }
+// int GetSiteFromTC(string table, string column) {
+//     Fragment FragmentOfTable;
+//     FragmentOfTable = getFragFromEtcd(table);
+//     vector<FragDef> frags = FragmentOfTable.frags;
+//     for (int i = 0; i < frags.size(); i++ ){
+//         if (frags[i].column == GetPureColumnFromColumn(column)) {
+//             return frags[i].id;
+//         }
+//     }
+//     cout << "ERROR IN GetSiteFromTC " << endl;
+//     return -1;
+// }
+// vector<int> PushBackUnique(vector<int> original, int input) {
+//     for(int i = 0; i < original.size(); i++) {
+//         if (input == original[i]) {
+//             return original;
+//         }
+//     }
+//     original.push_back(input);
+//     return original;
+// }

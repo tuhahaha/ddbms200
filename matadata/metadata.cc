@@ -362,18 +362,18 @@ int main(){
     // vector<string> r = getTableAttri(t2);
     // cout << r[0] << endl;
 
-    string t2 = "publisher";
-    GDD g = getTableFromEtcd(t2);
-    cout << g.name <<endl;
-    cout << g.cols[0].name <<"  "<< g.cols[0].type <<"  "<< g.cols[0].desc <<"  "<< g.cols[0].key <<"  "<< endl;
+    // string t2 = "publisher";
+    // GDD g = getTableFromEtcd(t2);
+    // cout << g.name <<endl;
+    // cout << g.cols[0].name <<"  "<< g.cols[0].type <<"  "<< g.cols[0].desc <<"  "<< g.cols[0].key <<"  "<< endl;
     
-    Fragment f = getFragFromEtcd(t2);
-    cout << f.name <<"  "<< f.fragnum <<"  "<< f.fragtype << endl;
-    cout << f.frags[0].column <<"  "<< f.frags[0].condition <<"  "<< f.frags[0].id <<"  "<< f.frags[0].site <<"  "<< f.frags[0].size;
+    // Fragment f = getFragFromEtcd(t2);
+    // cout << f.name <<"  "<< f.fragnum <<"  "<< f.fragtype << endl;
+    // cout << f.frags[0].column <<"  "<< f.frags[0].condition <<"  "<< f.frags[0].id <<"  "<< f.frags[0].site <<"  "<< f.frags[0].size;
     
-    return 0;
+    // return 0;
     // cout << base64.DecodeBase64("aWQ=")<< endl;
-    int t1 = 0;
+    int t1 = 2;
     if (t1==1){
         cout << "save table *********************************" << endl;
         GDD tbl;
@@ -415,7 +415,7 @@ int main(){
 //操作etcd 插入数据，或查询数据
 string etcd_op(string &dt,string &op) 
 {
-    string etcd_url = "http://localhost:2379/v3/kv/";
+    string etcd_url = "http://10.77.70.190:2379/v3/kv/";
     if(op == "PUT"){
         etcd_url += "put";
     }

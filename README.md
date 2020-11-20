@@ -1,6 +1,6 @@
 # ddbms200 in 2020
 
-In this repo you can find a demo for a Ditributed DatabBase Managment System. The repo can mainly devided into 3 part, and each one of the team is responsible to one part of the project.
+In this repo you can find a demo for a Ditributed DatabBase Managment System. The repo can mainly devided into 3 parts, and each one of the team is responsible to one part of the project.
 
 The three parts are
 - metadata (Jianhong Tu)

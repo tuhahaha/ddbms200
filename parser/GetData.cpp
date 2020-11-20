@@ -43,7 +43,7 @@ int main(){
     vector<string> ColumnList = GetAllColumnList(sql_statement);
     vector<string> ConditionList = GetConditionList(sql_statement);
     vector<string> SelectColumnList = GetSelectColumnList(sql_statement);
-    int id = getTableFragNum(TableList[0]);
+    // int id = getTableFragNum(TableList[0]);
     // for (int i = 0; i < ColumnList.size(); i++) {
     //     string column = ColumnList[i];
     //     string table = GetTableFromColumn(column);

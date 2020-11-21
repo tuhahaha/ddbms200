@@ -20,6 +20,8 @@ useradd -g mysql -d /home/mysql mysql
 ```
 cd /home
 mkdir mysql1
+cd mysql1
+<!-- note:maybe different path -->
 cp -r ~/mysql-5.7.16-linux-glibc2.5-x86_64/. ./
 mkdir data
 chown -R mysql:mysql /home/mysql1/
@@ -43,12 +45,14 @@ user = mysql
 socket=/home/mysql1/mysql.sock
 [client]
 default-character-set=utf8
+
+
 ```
 * Step5: initialize mysql1 by the following commands:
 ```
 cd /home/mysql1
 ./bin/mysqld --defaults-file=/etc/my1.cnf  --user=mysql --basedir=/home/mysql1 --datadir=/home/mysql1/data  --initialize
-```
+```#6.1_NG1bQ9z
 * and remember the keyword it generates for you, it will look like this and you should take down the `yX*xq/ye4bK+`:
 ```
 [Note] A temporary password is generated for root@localhost: yX*xq/ye4bK+
@@ -61,6 +65,9 @@ cd /home/mysql1
 ```
 mysql -u root -S /home/mysql1/mysql.sock -p
 ```
+<!-- maybe need to download Mysql client --> 
+apt install mysql-client-core-8.0
+
 * here enter the password you just took down and you can enter the mysql shell, change the password in the shell by:
 ```
 alter user 'root'@'localhost' identified by 'rootroot';

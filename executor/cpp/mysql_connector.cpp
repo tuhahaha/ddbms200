@@ -1,157 +1,97 @@
-#include <stdio.h>
-#include <mysql/mysql.h>
-#include <string>
-#include <vector>
-#include <typeinfo> /* 为了调试 */
-#include "../../metadata/metadata.h"
+// #include <stdio.h>
+// #include <mysql/mysql.h>
+// #include <string>
+// #include <vector>
+// #include <typeinfo> /* 为了调试 */
+// #include "../../metadata/metadata.h"
+#include "./mysql_connector.h"
 
-using namespace std;
+// using namespace std;
 
-#define HOST "localhost"
-#define USERNAME "root"
-#define PASSWORD "rootroot"
-#define DATABASE "test"  // here the name should be changed to our databases
-#define PORT 7654  // here the site1, it can be changed to 7655 for site2
-#define UNIX_SOCKET "/home/mysql1/mysql.sock" // here the site1, later can be changed to "home/mysql2/mysql.sock" for site2
+// #define HOST "localhost"
+// #define USERNAME "root"
+// #define PASSWORD "rootroot"
+// #define DATABASE "test"  // here the name should be changed to our databases
+// #define PORT 7654  // here the site1, it can be changed to 7655 for site2
+// #define UNIX_SOCKET "/home/mysql1/mysql.sock" // here the site1, later can be changed to "home/mysql2/mysql.sock" for site2
 
 
-// // 元信息结构定义
-// struct ColumnDef {
-// 	string name;
-// 	string type;
-// 	bool null=false;
-// 	bool key=false;
-// 	string desc;
-// };
-// // table 
-// struct GDD {
-// 	string name;
-// 	vector<ColumnDef> cols;
-// };
 
-// mysql自己定义了查询结果的结构
-// 但是我们的结构最好不要有指针，所以我重新定义为 —— 既然可以有指针，我怀疑这个是否还需要
-// #define MAX_COLUMN=10;
-// typedef struct my_mysql_res {
-//     string global_table;                 // 结果集来源的表名
-//     int row_count;                       // 结果集的行数
-//     unsigned int field_count;            // 结果集的列数
-//     MY_MYSQL_COL col[MAX_COLUMN];        // 结果集的数据，按列存储
-// } MY_MYSQL_RES; // 结果集
-
-// typedef struct st_mysql_field {
-//     string name;                         // 列名
-//     string values;                       // 列值，"\t"分隔
-// }  MY_MYSQL_COL; // 结果集的列
-
-// 取自mysql自己定义的查询结果的结构
-// typedef struct st_mysql_res {
-//   my_ulonglong row_count;                               // 结果集的行数
-//   unsigned int field_count, current_field;            // 结果集的列数，当前列
-//   MYSQL_FIELD *fields;                                    // 结果集的列信息
-//   MYSQL_DATA *data;                                      // 结果集的数据
-//   MYSQL_ROWS *data_cursor;                        // 结果集的光标
-//   MEM_ROOT field_alloc;                                   // 内存结构
-//   MYSQL_ROW row;                                         // 非缓冲的时候用到
-//   MYSQL_ROW current_row;                           //mysql_store_result时会用到。当前行
-//   unsigned long *lengths;                                //每列的长度
-//   MYSQL *handle;                                           // mysql_use_result会用。
-//   my_bool eof;                                                 //是否为行尾
-// } MYSQL_RES;
-// typedef char ** MYSQL_ROW; /* 返回的每一行的值，全部用字符串来表示*/
-// typedef struct st_mysql_rows {
-//   struct st_mysql_rows *next; /* list of rows */
-//   MYSQL_ROW data;
-// }  MYSQL_ROWS;        //mysql的数据的链表节点。可见mysql的结果集是链表结构
-// typedef struct st_mysql_data {
-//   my_ulonglong rows;
-//   unsigned int fields;
-//   MYSQL_ROWS *data;
-//   MEM_ROOT alloc;
-// }  MYSQL_DATA; // 数据集的结构
-// typedef struct st_mysql_field {
-//   char *name;  /* Name of column */
-//   char *table;                                            /* Table of column if column was a field */
-//   char *def;                                               /* Default value (set by mysql_list_fields) */
-//   enum enum_field_types type;                /* Type of field. Se mysql_com.h for types */
-//   unsigned int length;                               /* Width of column */
-//   unsigned int max_length;                       /* Max width of selected set */
-//   unsigned int flags;                                  /* Div flags */
-//   unsigned int decimals;                            /* Number of decimals in field */
-// }  MYSQL_FIELD;  //列信息的结构
-// typedef struct st_used_mem { /* struct for once_alloc */
-//   struct st_used_mem *next; /* Next block in use */
-//   unsigned int left; /* memory left in block  */
-//   unsigned int size; /* Size of block */
-// } USED_MEM; //内存结构
-// typedef struct st_mem_root {
-//   USED_MEM *free;
-//   USED_MEM *used;
-//   USED_MEM *pre_alloc;
-//   unsigned int min_malloc;
-//   unsigned int block_size;
-//   void (*error_handler)(void);
-// } MEM_ROOT;  //内存结构
 
 
 // 目前我自己定义的返回结果的形式
-typedef struct my_mysql_res {
-    vector<string> global_tables; /* 结果集来源的表名 */
-    MYSQL_RES *res_ptr; /*指向查询结果的指针*/
-} MY_MYSQL_RES; /* 结果集 */
+// typedef struct my_mysql_res {
+//     vector<string> global_tables; /* 结果集来源的表名 */
+//     MYSQL_RES *res_ptr; /*指向查询结果的指针*/
+// } MY_MYSQL_RES; /* 结果集 */
 	
 
-/* 本地执行插入和删除函数，输入SQL语句，返回执行结果(OK or FAIL) */
-string local_Insert_Delete(string sql);
+// /* 本地执行插入和删除函数，输入SQL语句，返回执行结果(OK or FAIL) */
+// string local_Insert_Delete(string sql);
 
-/* 本地执行文件导入函数，输入创建表的SQL语句和导入文件的SQL语句，返回执行结果(OK or FAIL)
-   例子：以Book表为例
-   local_Load("create table book(id int(6), title char(100), authors char(200), publisher_id int(6), copies int(5), key(id) )", "load data local infile '/home/roy/ddbms/rawdata/book.tsv' into table book"); */
-string local_Load(string sql_create, string sql_load);
+// /* 本地执行文件导入函数，输入创建表的SQL语句和导入文件的SQL语句，返回执行结果(OK or FAIL)
+//    例子：以Book表为例
+//    local_Load("create table book(id int(6), title char(100), authors char(200), publisher_id int(6), copies int(5), key(id) )", "load data local infile '/home/roy/ddbms/rawdata/book.tsv' into table book"); */
+// string local_Load(string sql_create, string sql_load);
 
-/* 本地执行查询函数，输入SQL语句，和返回结果集所来源的一组全局表名，返回执行结果(MY_MYSQL_RES结构) */
-MY_MYSQL_RES Local_Select(string sql, vector<string> tables);
+// /* 本地执行查询函数，输入SQL语句，和返回结果集所来源的一组全局表名，返回执行结果(MY_MYSQL_RES结构) */
+// MY_MYSQL_RES Local_Select(string sql, vector<string> tables);
 
-/* 本地执行临时表存储函数，输入待存的数据(MY_MYSQL_RES结构)和临时表表名，返回执行结果(OK or FAIL) */
-string Local_Tmp_Load(MY_MYSQL_RES tmp_data, string tmp_data_name);
+// /* 本地执行临时表存储函数，输入待存的数据(MY_MYSQL_RES结构)和临时表表名，返回执行结果(OK or FAIL) */
+// string Local_Tmp_Load(MY_MYSQL_RES tmp_data, string tmp_data_name);
 
-/* 打印MY_MYSQL_RES结构的数据
-   输出样例为：
-查询到 2 行 
-id      title   authors publisher_id    copies
-200001  Book #200001    H. Johnston     100366  7231
-200002  Book #200002    L. Houghton     101543  694 */
-void my_mysql_res_print(MY_MYSQL_RES my_res);
+// /* 打印MY_MYSQL_RES结构的数据
+//    输出样例为：
+// 查询到 2 行 
+// id      title   authors publisher_id    copies
+// 200001  Book #200001    H. Johnston     100366  7231
+// 200002  Book #200002    L. Houghton     101543  694 */
+// void my_mysql_res_print(MY_MYSQL_RES my_res);
 
 
-int main(int argc,char *argv[])
-{
-    // string res_str_out;
-    // res_str_out = local_Insert_Delete("delete from test where name='user'");
-    // insert into test values('user','123456')
-    // res_str_out = local_Insert_Delete("insert into test values('user','123456')");
-    // res_str_out = local_Load("create table book(id int(6), title char(100), authors char(200), publisher_id int(6), copies int(5), key(id) )", "load data local infile '/home/roy/ddbms/rawdata/book.tsv' into table book");
-    // const char* p = res_str_out.data();
-    // printf("%s\n", p);
-    /* 存成临时表 */
-    vector<string> tables = {"Book"};
-    MY_MYSQL_RES res_data_out = Local_Select("select * from book where id<=200005", tables);
-    string res_tmp_out = Local_Tmp_Load(res_data_out, "tmp_table_1");
-    const char* p = res_tmp_out.data();
-    printf("tmp table stored: %s\n", p);
-    /* 把临时表查出来并且打印 */
-    vector<string> tablenames;
-    tablenames.push_back("book");
-    res_data_out = Local_Select("select * from tmp_table_1", tablenames);
-    my_mysql_res_print(res_data_out);
+// int main(int argc,char *argv[])
+// {
+//     // string res_str_out;
+//     // res_str_out = local_Insert_Delete("delete from test where name='user'");
+//     // insert into test values('user','123456')
+//     // res_str_out = local_Insert_Delete("insert into test values('user','123456')");
+//     // res_str_out = local_Load("create table book(id int(6), title char(100), authors char(200), publisher_id int(6), copies int(5), key(id) )", "load data local infile '/home/roy/ddbms/rawdata/book.tsv' into table book");
+//     // const char* p = res_str_out.data();
+//     // printf("%s\n", p);
+//     /* 存成临时表 */
+//     // vector<string> tables = {"Book"};
+//     // MY_MYSQL_RES res_data_out = Local_Select("select * from book where id<=200005", tables);
+//     // string res_tmp_out = Local_Tmp_Load(res_data_out, "tmp_table_1");
+//     // const char* p = res_tmp_out.data();
+//     // printf("tmp table stored: %s\n", p);
+//     /* 把临时表查出来并且打印 */
+//     vector<string> tablenames;
+//     tablenames.push_back("Book");
+//     MY_MYSQL_RES res_data_out;
+//     res_data_out = Local_Select("select * from tmp_table_1", tablenames, "s3");
+//     my_mysql_res_print(res_data_out);
 
-    return 0;
-}
+//     return 0;
+// }
 
-string local_Insert_Delete(string sql) // 即只返回成功与否的所有sql语句都可以用这个，测试完毕
+string local_Insert_Delete(string sql, string site) // 即只返回成功与否的所有sql语句都可以用这个，测试完毕
 {
     MYSQL conn;
     int res;
+
+    int PORT;
+    const char* UNIX_SOCKET;
+
+    /* 通过站点名称判断使用哪个连接 */
+    if(site == "s4"){
+        PORT = 7655;
+        UNIX_SOCKET = "/home/mysql2/mysql.sock";
+    }
+    else{
+        PORT = 7654;
+        UNIX_SOCKET = "/home/mysql1/mysql.sock";
+    } // 此处如果输入了没出现过的站点应当报警但我没写
+
     mysql_init(&conn);
     if(mysql_real_connect(&conn, HOST, USERNAME, PASSWORD, DATABASE, PORT, UNIX_SOCKET,0))
     {
@@ -173,11 +113,25 @@ string local_Insert_Delete(string sql) // 即只返回成功与否的所有sql�
     }   
 }
 
-string local_Load(string sql_create, string sql_load)
+string local_Load(string sql_create, string sql_load, string site)
 {
     MYSQL conn;
     int res;
     int res_load;
+
+    int PORT;
+    const char* UNIX_SOCKET;
+
+    /* 通过站点名称判断使用哪个连接 */
+    if(site == "s4"){
+        PORT = 7655;
+        UNIX_SOCKET = "/home/mysql2/mysql.sock";
+    }
+    else{
+        PORT = 7654;
+        UNIX_SOCKET = "/home/mysql1/mysql.sock";
+    } // 此处如果输入了没出现过的站点应当报警但我没写
+
     mysql_init(&conn);
     if(mysql_real_connect(&conn, HOST, USERNAME, PASSWORD, DATABASE, PORT, UNIX_SOCKET,0))
     {
@@ -209,7 +163,7 @@ string local_Load(string sql_create, string sql_load)
     }       
 }
 
-string Local_Tmp_Load(MY_MYSQL_RES tmp_data, string tmp_data_name)
+string Local_Tmp_Load(MY_MYSQL_RES tmp_data, string tmp_data_name, string site)
 {
     MYSQL conn;
     int res;
@@ -281,6 +235,20 @@ string Local_Tmp_Load(MY_MYSQL_RES tmp_data, string tmp_data_name)
     sql_create = sql_create.append(")");
     // printf("creat sentence is %s", sql_create.data());
     /* create语句构造完毕 */
+
+    int PORT;
+    const char* UNIX_SOCKET;
+
+    /* 通过站点名称判断使用哪个连接 */
+    if(site == "s4"){
+        PORT = 7655;
+        UNIX_SOCKET = "/home/mysql2/mysql.sock";
+    }
+    else{
+        PORT = 7654;
+        UNIX_SOCKET = "/home/mysql1/mysql.sock";
+    } // 此处如果输入了没出现过的站点应当报警但我没写
+
     mysql_init(&conn);
     if(mysql_real_connect(&conn, HOST, USERNAME, PASSWORD, DATABASE, PORT, UNIX_SOCKET,0))
     {
@@ -341,7 +309,7 @@ string Local_Tmp_Load(MY_MYSQL_RES tmp_data, string tmp_data_name)
 
 }
 
-MY_MYSQL_RES Local_Select(string sql, vector<string> tables) 
+MY_MYSQL_RES Local_Select(string sql, vector<string> tables, string site) 
 {
     MYSQL my_connection; /*这是一个数据库连接*/
     int res; /*执行sql語句后的返回标志*/
@@ -352,6 +320,19 @@ MY_MYSQL_RES Local_Select(string sql, vector<string> tables)
 
     // int row, column; /*查询返回的行数和列数*/
     // int i, j; /*只是控制循环的两个变量*/
+
+    int PORT;
+    const char* UNIX_SOCKET;
+
+    /* 通过站点名称判断使用哪个连接 */
+    if(site == "s4"){
+        PORT = 7655;
+        UNIX_SOCKET = "/home/mysql2/mysql.sock";
+    }
+    else{
+        PORT = 7654;
+        UNIX_SOCKET = "/home/mysql1/mysql.sock";
+    } // 此处如果输入了没出现过的站点应当报警但我没写
  
     /*初始化mysql连接my_connection*/
     mysql_init(&my_connection);

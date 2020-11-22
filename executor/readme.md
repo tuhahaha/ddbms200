@@ -85,7 +85,7 @@ quit;
 cd ~
 sudo apt install libmysqlclient-dev
 ```
-* Step9: if you are going to intall 2 mysql instances on your WSL (here is tutu), please go over the step4 to step7 by replacing every "mysql1" with "mysql2" and when editing the file my2.cnf, set the port to 7655. I also prepare one complete version here:
+* Step9: if you are going to intall 2 mysql instances on your WSL (here is lyq), please go over the step4 to step7 by replacing every "mysql1" with "mysql2" and when editing the file my2.cnf, set the port to 7655. I also prepare one complete version here:
 ```
 cd /home
 mkdir mysql2
@@ -133,16 +133,44 @@ quit;
 
 # Connector
 ## functions
-* to be continued...
+* these are functions for connector:
+```
+/* 本地执行插入和删除函数，输入SQL语句，返回执行结果(OK or FAIL) */
+string local_Insert_Delete(string sql);
+
+/* 本地执行文件导入函数，输入创建表的SQL语句和导入文件的SQL语句，返回执行结果(OK or FAIL)
+   例子：以Book表为例
+   local_Load("create table book(id int(6), title char(100), authors char(200), publisher_id int(6), copies int(5), key(id) )", "load data local infile '/home/roy/ddbms/rawdata/book.tsv' into table book"); */
+string local_Load(string sql_create, string sql_load);
+
+/* 本地执行查询函数，输入SQL语句，和返回结果集所来源的一组全局表名，返回执行结果(MY_MYSQL_RES结构) */
+MY_MYSQL_RES Local_Select(string sql, vector<string> tables);
+
+/* 本地执行临时表存储函数，输入待存的数据(MY_MYSQL_RES结构)和临时表表名，返回执行结果(OK or FAIL) */
+string Local_Tmp_Load(MY_MYSQL_RES tmp_data, string tmp_data_name);
+
+/* 打印MY_MYSQL_RES结构的数据
+   输出样例为：
+查询到 2 行 
+id      title   authors publisher_id    copies
+200001  Book #200001    H. Johnston     100366  7231
+200002  Book #200002    L. Houghton     101543  694 */
+void my_mysql_res_print(MY_MYSQL_RES my_res);
+```
 ## run the code
 * first you should enter root user , then start the mysql database by this command:
 ```
 cd /home/mysql1
 ./bin/mysqld --defaults-file=/etc/my1.cnf --user=mysql --basedir=/home/mysql1 --datadir=/home/mysql1/data
 ```
-* you can complile the file mysql_connector.cpp by (please pay attention to changing the file path in main funtion):
+* then you should open another terminal and start local (here local is for test) etcd the following commands, note that the metadata has been saved to etcd.
 ```
-g++ mysql_connector.cpp `mysql_config --cflags --libs` -o mysql_connector
+cd /mnt/d/tool
+etcd
+```
+* you should complile the file mysql_connector.cpp accompanied with metadata.cc (for use of etcd) by (please pay attention to changing the file path in main funtion):
+```
+g++ mysql_connector.cpp `mysql_config --cflags --libs` ../../metadata/metadata.cc -lcurl -ljson -o mysql_connector
 ```
 * then execute by command:
 ```

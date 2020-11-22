@@ -52,7 +52,7 @@ default-character-set=utf8
 ```
 cd /home/mysql1
 ./bin/mysqld --defaults-file=/etc/my1.cnf  --user=mysql --basedir=/home/mysql1 --datadir=/home/mysql1/data  --initialize
-```#6.1_NG1bQ9z
+```
 * and remember the keyword it generates for you, it will look like this and you should take down the `yX*xq/ye4bK+`:
 ```
 [Note] A temporary password is generated for root@localhost: yX*xq/ye4bK+

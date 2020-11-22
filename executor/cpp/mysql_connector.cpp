@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 #include <typeinfo> /* 为了调试 */
-#include "../../matadata/metadata.h"
+#include "../../metadata/metadata.h"
 
 using namespace std;
 
@@ -11,21 +11,23 @@ using namespace std;
 #define USERNAME "root"
 #define PASSWORD "rootroot"
 #define DATABASE "test"  // here the name should be changed to our databases
+#define PORT 7654  // here the site1, it can be changed to 7655 for site2
+#define UNIX_SOCKET "/home/mysql1/mysql.sock" // here the site1, later can be changed to "home/mysql2/mysql.sock" for site2
 
 
 // // 元信息结构定义
-// #define MAX_COLUMN 10
-// typedef struct ColumnDef {
-//     string name;
-//     string type;
-//     bool null;
-//     bool key;
-//     string desc;
-// } ColumnDef;
-// typedef struct GDD {
-//     string name; /*表名*/
-//     ColumnDef col[MAX_COLUMN];
-// } GDD;
+// struct ColumnDef {
+// 	string name;
+// 	string type;
+// 	bool null=false;
+// 	bool key=false;
+// 	string desc;
+// };
+// // table 
+// struct GDD {
+// 	string name;
+// 	vector<ColumnDef> cols;
+// };
 
 // mysql自己定义了查询结果的结构
 // 但是我们的结构最好不要有指针，所以我重新定义为 —— 既然可以有指针，我怀疑这个是否还需要
@@ -94,74 +96,36 @@ using namespace std;
 
 // 目前我自己定义的返回结果的形式
 typedef struct my_mysql_res {
-    string global_table; // 结果集来源的表名
+    vector<string> global_tables; /* 结果集来源的表名 */
     MYSQL_RES *res_ptr; /*指向查询结果的指针*/
-} MY_MYSQL_RES; // 结果集
+} MY_MYSQL_RES; /* 结果集 */
 	
 
-
+/* 本地执行插入和删除函数，输入SQL语句，返回执行结果(OK or FAIL) */
 string local_Insert_Delete(string sql);
-string local_Load(string sql_create, string sql_load);
-MY_MYSQL_RES Local_Select(string sql, string table);
-string Local_Tmp_Load(MY_MYSQL_RES tmp_data, string tmp_data_name);
-void my_mysql_res_print(MY_MYSQL_RES my_res);
-// // 本地执行删除函数
-// string localExecuteDelete(string sql_statement){
-//     // 输入SQL语句，返回执行结果(OK or FAIL)与所需时间(s)
-//     return result;
-// }
-// // 本地执行查询函数
-// string localExecuteQuery(string sql_statement){
-//     // 输入SQL语句，返回执行结果(MY_MYSQL_RES结构)与所需时间(s)
-//     return result, time_spend;
-// } 
-// // 本地执行插入函数
-// string localInsertFileToTable(string sql_statement){
-//     // 输入SQL语句，返回执行结果(OK or FAIL)与所需时间(s)
-//     return result, time_spend;
-// }
-// // 本地执行文件导入函数
-// string localLoadFileToTable(string sql_statement){
-//     // 输入SQL语句，返回执行结果与所需时间（s）
-//     return result, time_spend;
-// }
-// // 本地执行临时表存储函数
-// string localMY_MYSQL_RESToTable(MY_MYSQL_RES tmp_data, string tmp_data_name){
-//     // 输入要存入临时表的数据与表名，返回执行结果(OK or FAIL)与所需时间（s）
-//     return result, time_spend;
-// }
 
-/* 先固定一个元信息实例 */
-ColumnDef field1;
-ColumnDef field2;
-ColumnDef field3;
-ColumnDef field4;
-ColumnDef field5;
-GDD book_meta;
+/* 本地执行文件导入函数，输入创建表的SQL语句和导入文件的SQL语句，返回执行结果(OK or FAIL)
+   例子：以Book表为例
+   local_Load("create table book(id int(6), title char(100), authors char(200), publisher_id int(6), copies int(5), key(id) )", "load data local infile '/home/roy/ddbms/rawdata/book.tsv' into table book"); */
+string local_Load(string sql_create, string sql_load);
+
+/* 本地执行查询函数，输入SQL语句，和返回结果集所来源的一组全局表名，返回执行结果(MY_MYSQL_RES结构) */
+MY_MYSQL_RES Local_Select(string sql, vector<string> tables);
+
+/* 本地执行临时表存储函数，输入待存的数据(MY_MYSQL_RES结构)和临时表表名，返回执行结果(OK or FAIL) */
+string Local_Tmp_Load(MY_MYSQL_RES tmp_data, string tmp_data_name);
+
+/* 打印MY_MYSQL_RES结构的数据
+   输出样例为：
+查询到 2 行 
+id      title   authors publisher_id    copies
+200001  Book #200001    H. Johnston     100366  7231
+200002  Book #200002    L. Houghton     101543  694 */
+void my_mysql_res_print(MY_MYSQL_RES my_res);
 
 
 int main(int argc,char *argv[])
 {
-    /* 先固定一个元信息实例 */
-    field1.name = "id";
-    field1.type = "int(6)";
-    field1.key = true;
-    field2.name = "title";
-    field2.type = "char(100)";
-    field3.name = "authors";
-    field3.type = "char(200)";
-    field4.name = "publisher_id";
-    field4.type = "int(6)";
-    field5.name = "copies";
-    field5.type = "int(5)";
-    book_meta.cols[0] = field1;
-    book_meta.cols[1] = field2;
-    book_meta.cols[2] = field3;
-    book_meta.cols[3] = field4;
-    book_meta.cols[4] = field5;
-    book_meta.name = "book";
-    // book_meta.col = col;
- 
     // string res_str_out;
     // res_str_out = local_Insert_Delete("delete from test where name='user'");
     // insert into test values('user','123456')
@@ -170,12 +134,15 @@ int main(int argc,char *argv[])
     // const char* p = res_str_out.data();
     // printf("%s\n", p);
     /* 存成临时表 */
-    MY_MYSQL_RES res_data_out = Local_Select("select * from book where id<=200005", "book");
+    vector<string> tables = {"Book"};
+    MY_MYSQL_RES res_data_out = Local_Select("select * from book where id<=200005", tables);
     string res_tmp_out = Local_Tmp_Load(res_data_out, "tmp_table_1");
     const char* p = res_tmp_out.data();
     printf("tmp table stored: %s\n", p);
     /* 把临时表查出来并且打印 */
-    res_data_out = Local_Select("select * from tmp_table_1", "book");
+    vector<string> tablenames;
+    tablenames.push_back("book");
+    res_data_out = Local_Select("select * from tmp_table_1", tablenames);
     my_mysql_res_print(res_data_out);
 
     return 0;
@@ -186,7 +153,7 @@ string local_Insert_Delete(string sql) // 即只返回成功与否的所有sql�
     MYSQL conn;
     int res;
     mysql_init(&conn);
-    if(mysql_real_connect(&conn, HOST, USERNAME, PASSWORD, DATABASE, 0, NULL,0))
+    if(mysql_real_connect(&conn, HOST, USERNAME, PASSWORD, DATABASE, PORT, UNIX_SOCKET,0))
     {
         printf("connect success!\n");
         const char* p = sql.data(); 
@@ -212,7 +179,7 @@ string local_Load(string sql_create, string sql_load)
     int res;
     int res_load;
     mysql_init(&conn);
-    if(mysql_real_connect(&conn, HOST, USERNAME, PASSWORD, DATABASE, 0, NULL,0))
+    if(mysql_real_connect(&conn, HOST, USERNAME, PASSWORD, DATABASE, PORT, UNIX_SOCKET,0))
     {
         printf("connect success!\n");
         const char* p = sql_create.data(); 
@@ -247,9 +214,19 @@ string Local_Tmp_Load(MY_MYSQL_RES tmp_data, string tmp_data_name)
     MYSQL conn;
     int res;
     int res_load;
-    /* 接下来本应从etcd读取元信息，但调试阶段我把元信息写死在代码里了，即全局变量book_meta*/
-    /* 现在开始构建create语句的sql，这一部分之后应该会拆分出来成为单独的函数，输入是一堆GDD和MY_MYSQL_RES，输出是create的sql语句*/
-    int i, j, flag; /*只是控制循环的两个变量和一个标记变量*/
+    /* 接下来从etcd读取GDD格式的元信息*/
+    vector<string> table_names = tmp_data.global_tables;
+    // printf("tablename is %s\n", table_name.data());
+    vector<GDD> table_metas;
+    for (int i = 0; i < table_names.size(); i++){
+        string table_name = table_names[i];
+        GDD book_meta = getTableFromEtcd(table_name);
+        table_metas.push_back(book_meta);
+    }
+    // printf("GDD Name is %s\n", book_meta.name.data());
+    /* 现在开始构建create语句的sql，这一部分之后应该会拆分出来成为单独的函数，输入是vector<GDD>和MY_MYSQL_RES，输出是create的sql语句*/
+    /* 我们内部的每个属性名字是唯一的，所以可以全局遍历来匹配 */
+    int i, j, k, flag; /*只是控制循环的三个变量和一个标记变量*/
     string sql_create = "create table ";
     sql_create = sql_create.append(tmp_data_name);
     sql_create = sql_create.append("(");
@@ -257,6 +234,13 @@ string Local_Tmp_Load(MY_MYSQL_RES tmp_data, string tmp_data_name)
     res_ptr = tmp_data.res_ptr;
     int row, column; /*查询返回的行数和列数*/
     MYSQL_FIELD *fields; /*字段结构数组的指针*/
+    int max_GDD; /* 数据所来源的全局表数量 */
+    GDD book_meta; /* 循环时候用到的单个GDD变量 */
+    int max_num; /* 单个GDD里面列的数量 */
+    string target_name; /* 待匹配的目标列名，来自于数据 */
+    string source_name; /* 元信息中的列名，来自于GDD */
+
+
     column = mysql_num_fields(res_ptr);
     fields = mysql_fetch_fields(res_ptr);
     /* 遍历结果集中的字段名 */
@@ -265,18 +249,29 @@ string Local_Tmp_Load(MY_MYSQL_RES tmp_data, string tmp_data_name)
         flag = 0;
         sql_create = sql_create.append(fields[i].name); //id
         sql_create = sql_create.append(" ");
-        for(j = 0; j < MAX_COLUMN; j++)
-        {
-            /* 从元信息中找出对应的类型定义 */
-            string target_name = fields[i].name;
-            string source_name = book_meta.col[j].name;
-            if(target_name == source_name){
-                sql_create = sql_create.append(book_meta.col[j].type); //int(6)
-                sql_create = sql_create.append(", ");
-                flag = 1;
+        /* 遍历所有GDD格式的元信息 */
+        max_GDD = table_metas.size();
+        for(k = 0; k < max_GDD; k++){
+            book_meta = table_metas[k];
+            /* 在每个GDD里面遍历列名进行匹配 */
+            max_num = book_meta.cols.size();
+            for(j = 0; j < max_num; j++)
+            {
+                /* 从元信息中找出对应的类型定义 */
+                target_name = fields[i].name;
+                source_name = book_meta.cols[j].name;
+                if(target_name == source_name){
+                    sql_create = sql_create.append(book_meta.cols[j].type); //int(6)
+                    sql_create = sql_create.append(", ");
+                    flag = 1;
+                    break;
+                }
+            }
+            if(flag == 1){
                 break;
             }
         }
+        
         if(flag == 0){
             mysql_close(&conn);
             return "Fields error!";
@@ -284,9 +279,10 @@ string Local_Tmp_Load(MY_MYSQL_RES tmp_data, string tmp_data_name)
     }
     sql_create = sql_create.substr(0,sql_create.length()-2); //删掉最后一个", "
     sql_create = sql_create.append(")");
+    // printf("creat sentence is %s", sql_create.data());
     /* create语句构造完毕 */
     mysql_init(&conn);
-    if(mysql_real_connect(&conn, HOST, USERNAME, PASSWORD, DATABASE, 0, NULL,0))
+    if(mysql_real_connect(&conn, HOST, USERNAME, PASSWORD, DATABASE, PORT, UNIX_SOCKET,0))
     {
         printf("connect success!\n");        
         const char* p = sql_create.data();
@@ -345,7 +341,7 @@ string Local_Tmp_Load(MY_MYSQL_RES tmp_data, string tmp_data_name)
 
 }
 
-MY_MYSQL_RES Local_Select(string sql, string table) 
+MY_MYSQL_RES Local_Select(string sql, vector<string> tables) 
 {
     MYSQL my_connection; /*这是一个数据库连接*/
     int res; /*执行sql語句后的返回标志*/
@@ -362,7 +358,7 @@ MY_MYSQL_RES Local_Select(string sql, string table)
 
     /*这里就是用了mysql.h里的一个函数，用我们之前定义的那些宏建立mysql连接，并
      *     返回一个值，返回不为空证明连接是成功的*/
-    if (mysql_real_connect(&my_connection, HOST, USERNAME, PASSWORD, DATABASE, 0, NULL, 0)) 
+    if (mysql_real_connect(&my_connection, HOST, USERNAME, PASSWORD, DATABASE, PORT, UNIX_SOCKET, 0)) 
     {
         /*连接成功*/
         printf("数据库查询query_sql连接成功！\n");
@@ -377,7 +373,7 @@ MY_MYSQL_RES Local_Select(string sql, string table)
         if (res) 
         {   /*现在就代表执行失败了*/
             printf("Error： mysql_query !\n");
-            my_res.global_table = "Error";  // 将表名置为Error
+            // my_res.global_tables = "Error";  // 将表名保留为空
         }
         else 
         { 
@@ -387,13 +383,14 @@ MY_MYSQL_RES Local_Select(string sql, string table)
             /*如果结果不为空，就把结果返回*/
             if (res_ptr)
             {
-                my_res.global_table = table;
+                my_res.global_tables = tables;
                 my_res.res_ptr = res_ptr;
             }
-            /* 如果结果为空，就把table名字置为empty*/
+            /* 如果结果为空，就把table名字置为empty */
             else
             {
-                my_res.global_table = "Empty";
+                vector<string> empty = {"Empty"};
+                my_res.global_tables = empty;  // 将表名列表第一位置为"Empty"
             }
         /*不要忘了关闭连接*/  
         mysql_close(&my_connection);
@@ -429,7 +426,7 @@ void my_mysql_res_print(MY_MYSQL_RES my_res)
         printf("\n");
 
         /*按行输出結果*/
-        for (i = 1; i < row; i++)
+        for (i = 1; i <= row; i++)
         {
             result_row = mysql_fetch_row(res_ptr);
             for (j = 0; j < column; j++)

@@ -19,18 +19,7 @@ void Traversefrags(vector<FragDef> frags);
 void TraverseFragment(Fragment);
 
 int main() {
-<<<<<<< HEAD
     // Create table
-    // string sql_statement = "CREATE TABLE Pulisher[ id int(24) key,name char(100),nation char(100)];"; 
-    // vector<string> sql_statement_list;
-    // sql_statement_list.push_back(sql_statement);
-    // sql_statement = "CREATE TABLE Customer[ id int(24) key,name char(100),rank char(100)];";
-    // sql_statement_list.push_back(sql_statement);
-    // sql_statement = "CREATE TABLE Book[ id int(24) key,title char(100),authors char(100),publisher_id int(24),copies int(24)];";
-    // sql_statement_list.push_back(sql_statement);
-    // sql_statement = "CREATE TABLE Orders[ customer_id int(24) key,Book_id int(24) key,quantity int(24)];";
-    // sql_statement_list.push_back(sql_statement);
-=======
     string sql_statement = "CREATE TABLE Pulisher[ id int(24) key,name char(100),nation char(100)];"; 
     vector<string> sql_statement_list;
     sql_statement_list.push_back(sql_statement);
@@ -40,24 +29,20 @@ int main() {
     sql_statement_list.push_back(sql_statement);
     sql_statement = "CREATE TABLE Orders[ customer_id int(24) key,Book_id int(24) key,quantity int(24)];";
     sql_statement_list.push_back(sql_statement);
->>>>>>> e90ee96bccfe8d57d105dff87d18aa3810ae443b
-    // GDD gdd_tmp;
-    // gdd_tmp.name = InitGetTableCreateTable(sql_statement);
-    // gdd_tmp.cols = InitGetColumnsCreateTable(sql_statement);
-    // TraverseGDD(gdd_tmp);
-<<<<<<< HEAD
-    // for (int i = 0; i < sql_statement_list.size(); i++) {
-    //     gdd_tmp = InitGetGDDCreateTable(sql_statement_list[i]);
-    //     TraverseGDD(gdd_tmp);
-    // }
-=======
+    GDD gdd_tmp;
+    gdd_tmp.name = InitGetTableCreateTable(sql_statement);
+    gdd_tmp.cols = InitGetColumnsCreateTable(sql_statement);
+    TraverseGDD(gdd_tmp);
+    for (int i = 0; i < sql_statement_list.size(); i++) {
+        gdd_tmp = InitGetGDDCreateTable(sql_statement_list[i]);
+        TraverseGDD(gdd_tmp);
+    }
     for (int i = 0; i < sql_statement_list.size(); i++) {
         GDD gdd_tmp;
         gdd_tmp = InitGetGDDCreateTable(sql_statement_list[i]);
         TraverseGDD(gdd_tmp);
         saveTableToEtcd(gdd_tmp);
     }
->>>>>>> e90ee96bccfe8d57d105dff87d18aa3810ae443b
     // saveTableToEtcd(gdd_tmp);
     
     // Create Fragment 

@@ -6,44 +6,49 @@
 #include "../metadata/metadata.h"
 
 using namespace std;
-
+// Create table
 string InitGetTableCreateTable(string sql_statement);
 vector<ColumnDef> InitGetColumnsCreateTable(string sql_statement);
 GDD InitGetGDDCreateTable(string sql_statement);
+void TraverseGDD(GDD gdd);
+// Create Fragment
 string InitGetTableCreateFragmentation(string sql_statement);
 string InitGetFragmentTypeCreateFragmentation(string sql_statement);
 vector<FragDef> InitGetFragDefCreateFragmentation(string sql_statement);
-void TraverseGDD(GDD gdd);
+void Traversefrags(vector<FragDef> frags);
+void TraverseFragment(Fragment);
 
 int main() {
-    string sql_statement = "CREATE TABLE Pulisher[ id int(24) key,name char(100),nation char(100)];"; 
-    vector<string> sql_statement_list;
-    sql_statement_list.push_back(sql_statement);
-    sql_statement = "CREATE TABLE Customer[ id int(24) key,name char(100),rank char(100)];";
-    sql_statement_list.push_back(sql_statement);
-    sql_statement = "CREATE TABLE Book[ id int(24) key,title char(100),authors char(100),publisher_id int(24),copies int(24)];";
-    sql_statement_list.push_back(sql_statement);
-    sql_statement = "CREATE TABLE Orders[ customer_id int(24) key,Book_id int(24) key,quantity int(24)];";
-    sql_statement_list.push_back(sql_statement);
-    GDD gdd_tmp;
+    // Create table
+    // string sql_statement = "CREATE TABLE Pulisher[ id int(24) key,name char(100),nation char(100)];"; 
+    // vector<string> sql_statement_list;
+    // sql_statement_list.push_back(sql_statement);
+    // sql_statement = "CREATE TABLE Customer[ id int(24) key,name char(100),rank char(100)];";
+    // sql_statement_list.push_back(sql_statement);
+    // sql_statement = "CREATE TABLE Book[ id int(24) key,title char(100),authors char(100),publisher_id int(24),copies int(24)];";
+    // sql_statement_list.push_back(sql_statement);
+    // sql_statement = "CREATE TABLE Orders[ customer_id int(24) key,Book_id int(24) key,quantity int(24)];";
+    // sql_statement_list.push_back(sql_statement);
+    // GDD gdd_tmp;
     // gdd_tmp.name = InitGetTableCreateTable(sql_statement);
     // gdd_tmp.cols = InitGetColumnsCreateTable(sql_statement);
     // TraverseGDD(gdd_tmp);
-    for (int i = 0; i < sql_statement_list.size(); i++) {
-        gdd_tmp = InitGetGDDCreateTable(sql_statement_list[i]);
-        TraverseGDD(gdd_tmp);
-    }
+    // for (int i = 0; i < sql_statement_list.size(); i++) {
+    //     gdd_tmp = InitGetGDDCreateTable(sql_statement_list[i]);
+    //     TraverseGDD(gdd_tmp);
+    // }
     // saveTableToEtcd(gdd_tmp);
-
-    // Fragment fragment_tmp;
-    // string sql_statement = "CREATE FRAGMENTATION Publisher ( H,1 id<104000ANDnation='PRC' 1,2 id<104000ANDnation='PRC' 2,3 id>=104000ANDnation='USA' 3,4 id>=104000ANDnation='USA' 4 );";
-    // fragment_tmp.name = InitGetTableCreateFragmentation(sql_statement);
-    // cout << InitGetTableCreateFragmentation(sql_statement) << endl;
-    // fragment_tmp.fragtype = InitGetFragmentTypeCreateFragmentation(sql_statement);
-    // cout << InitGetFragmentTypeCreateFragmentation(sql_statement) << endl;
-    // InitGetFragDefCreateFragmentation(sql_statement);
+    
+    // Create Fragment 
+    Fragment fragment_tmp;
+    string sql_statement = "CREATE FRAGMENTATION Publisher ( H,1 Publisher.id<104000ANDPublisher.nation='PRC' 1,2 Publisher.id<104000ANDPublisher.nation='PRC' 2,3 Publisher.id>=104000ANDPublisher.nation='USA' 3,4 Publisher.id>=104000ANDPublisher.nation='USA' 4 );";
+    fragment_tmp.name = InitGetTableCreateFragmentation(sql_statement);
+    fragment_tmp.fragtype = InitGetFragmentTypeCreateFragmentation(sql_statement);
+    fragment_tmp.frags = InitGetFragDefCreateFragmentation(sql_statement);
     return 0;
 }
+
+// Create table
 string InitGetTableCreateTable(string sql_statement) {
     return GetBetween(sql_statement, "CREATE TABLE", "[");
 }
@@ -71,6 +76,17 @@ GDD InitGetGDDCreateTable(string sql_statement) {
     gdd.cols = InitGetColumnsCreateTable(sql_statement);
     return gdd;
 }
+void TraverseGDD(GDD gdd) {
+    cout << "TABLE NAME : " << gdd.name << endl;
+    cout << "THE SIZE OF GDD.COLS IS " << gdd.cols.size() << endl;
+    for (int i = 0; i < gdd.cols.size(); i++) {
+        cout << "   " << gdd.cols[i].name << endl;
+        cout << "   " << gdd.cols[i].type << endl;
+        cout << "   " << gdd.cols[i].key << endl;
+    }
+}
+
+// Create Fragment
 string InitGetTableCreateFragmentation(string sql_statement) {
     return GetBetween(sql_statement, "CREATE FRAGMENTATION", "(");
 }
@@ -83,35 +99,40 @@ string InitGetFragmentTypeCreateFragmentation(string sql_statement) {
 vector<FragDef> InitGetFragDefCreateFragmentation(string sql_statement) {
     string fragment_line = GetBetween(sql_statement, "(", ")");
     vector<string> fragment_list = GetList(fragment_line,",",")");
-    // Traverse(fragment_list);
     vector<FragDef> frags;
     for (int i = 1; i < fragment_list.size(); i++) {
         string fragement_tmp = fragment_list[i];
-        cout << "== " << fragement_tmp << " ==" << endl;
         vector<string> fragment_tmp_list = GetList(fragement_tmp, " ", ")");
-        // Traverse(fragment_tmp_list);
-        cout << fragment_tmp_list[0] << endl;
-        cout << fragment_tmp_list[2] << endl;
-        // FragDef frags_tmp;
-        // vector<string> condition_list = GetList(fragment_tmp_list[1]," AND ", ")");
-        // Traverse(condition_list);
-        // vector<string> TableList;
-        // TableList.push_back(InitGetFragmentTypeCreateFragmentation(sql_statement));
-        // frags_tmp.column = GetColumnListFromConditionList(condition_list, TableList);
-        // frags_tmp.condition = fragment_tmp_list[1];
-        // frags_tmp.id = int(fragment_tmp_list[0]);
-        // frags_tmp.site = int(fragment_tmp_list[2]);
-        // frags_tmp.size = -1;
-        // frags.push_back(frags_tmp);
+        FragDef frags_tmp;
+        
+        frags_tmp.condition = fragment_tmp_list[1];
+        frags_tmp.id = stoi(fragment_tmp_list[0]);
+        frags_tmp.site = stoi(fragment_tmp_list[2]);
+        frags_tmp.size = 0;
+
+        vector<string> condition_list = GetList(fragment_tmp_list[1],"AND", ")");
+        Traverse(condition_list);
+        vector<string> TableList;
+        TableList.push_back(InitGetTableCreateFragmentation(sql_statement));
+        vector<string> column_list = GetColumnListFromConditionList(condition_list, TableList);
+        Traverse(column_list);
+        frags.push_back(frags_tmp);
     }
     return frags;
 }
-void TraverseGDD(GDD gdd) {
-    cout << "TABLE NAME : " << gdd.name << endl;
-    cout << "THE SIZE OF GDD.COLS IS " << gdd.cols.size() << endl;
-    for (int i = 0; i < gdd.cols.size(); i++) {
-        cout << "   " << gdd.cols[i].name << endl;
-        cout << "   " << gdd.cols[i].type << endl;
-        cout << "   " << gdd.cols[i].key << endl;
+
+void Traversefrags(vector<FragDef> frags) {
+    for (int i = 0; i < frags.size(); i++) {
+        cout << frags[i].column << endl;
+        cout << frags[i].condition << endl;
+        cout << frags[i].id << endl;
+        cout << frags[i].site << endl;
+        cout << frags[i].size << endl;
     }
+}
+void TraverseFragment(Fragment fragment) {
+    cout << fragment.name << endl;
+    cout << fragment.fragtype << endl;
+    cout << fragment.fragnum << endl;
+    Traversefrags(fragment.frags);
 }

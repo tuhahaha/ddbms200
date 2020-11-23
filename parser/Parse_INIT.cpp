@@ -25,13 +25,15 @@ int main() {
     sql_statement_list.push_back(sql_statement);
     sql_statement = "CREATE TABLE Orders[ customer_id int(24) key,Book_id int(24) key,quantity int(24)];";
     sql_statement_list.push_back(sql_statement);
-    GDD gdd_tmp;
+    // GDD gdd_tmp;
     // gdd_tmp.name = InitGetTableCreateTable(sql_statement);
     // gdd_tmp.cols = InitGetColumnsCreateTable(sql_statement);
     // TraverseGDD(gdd_tmp);
     for (int i = 0; i < sql_statement_list.size(); i++) {
+        GDD gdd_tmp;
         gdd_tmp = InitGetGDDCreateTable(sql_statement_list[i]);
         TraverseGDD(gdd_tmp);
+        saveTableToEtcd(gdd_tmp);
     }
     // saveTableToEtcd(gdd_tmp);
 

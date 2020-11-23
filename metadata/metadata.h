@@ -1,8 +1,8 @@
 //metadata managemant
 #ifndef _DDB_METADATA_H_
 #define _DDB_METADATA_H_
-// #include <curl/curl.h> 
-// #include <json/json.h> 
+#include <curl/curl.h> 
+#include <json/json.h> 
 #include <iostream>  
 #include <string>
 #include <map> 
@@ -18,7 +18,7 @@
 
 
 using namespace std;
-// using namespace Json;
+using namespace Json;
 
 // column
 struct ColumnDef {

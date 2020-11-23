@@ -11,6 +11,7 @@ string GetBetween(string sql_statement, string start, string end);
 string GetAfter(string sql_statement, string start);
 vector<string> GetList(string line, string split, string stop);
 void Traverse(vector<string> input);
+string Link(vector<string> input, string devide);
 string GetTableName(string sql_statement);
 vector<string> GetTableList(string TableName);
 string GetSelectColumnName(string sql_statement);
@@ -69,6 +70,13 @@ void Traverse(vector<string> input) {
     for (int i = 0; i < size; i++) {
         cout << input[i] << endl;
     }
+}
+string Link(vector<string> input, string devide) {
+    string link = input[0];
+    for (int i = 1; i < input.size(); i++) {
+        link += devide + input[i];
+    }
+    return link;
 }
 string GetTableName(string sql_statement) {
     return GetBetween(sql_statement, "FROM", "WHERE");

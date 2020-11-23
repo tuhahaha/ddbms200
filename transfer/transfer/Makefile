@@ -5,12 +5,12 @@ CXX = g++
 CPPFLAGS += `pkg-config --cflags protobuf grpc`
 CXXFLAGS += -std=c++11
 ifeq ($(SYSTEM),Darwin)
-LDFLAGS += -L/usr/local/lib `pkg-config --libs protobuf grpc++`\
+LDFLAGS += -L/usr/local/lib `pkg-config --libs protobuf grpc++` `mysql_config --cflags --libs`\
 					 -pthread\
            -lgrpc++_reflection\
            -ldl
 else
-LDFLAGS += -L/usr/local/lib `pkg-config --libs protobuf grpc++`\
+LDFLAGS += -L/usr/local/lib `pkg-config --libs protobuf grpc++` `mysql_config --cflags --libs`\
            -pthread\
            -Wl,--no-as-needed -lgrpc++_reflection -Wl,--as-needed\
            -ldl
@@ -23,12 +23,12 @@ PROTOS_PATH = ../protos
 
 vpath %.proto $(PROTOS_PATH)
 
-all: TransferFileClient TransferFileImpl
+all: client server
 
-TransferFileImpl: transfer_file.pb.o transfer_file.grpc.pb.o TransferFileImpl.o
+server: transfer.pb.o transfer.grpc.pb.o server.o ../../executor/cpp/mysql_connector.o
 	$(CXX) $^ $(LDFLAGS) -o $@
 
-TransferFileClient: transfer_file.pb.o transfer_file.grpc.pb.o TransferFileClient.o
+client: transfer.pb.o transfer.grpc.pb.o client.o ../../executor/cpp/mysql_connector.o
 	$(CXX) $^ $(LDFLAGS) -o $@
 
 %.grpc.pb.cc: %.proto
@@ -38,8 +38,5 @@ TransferFileClient: transfer_file.pb.o transfer_file.grpc.pb.o TransferFileClien
 	$(PROTOC) -I $(PROTOS_PATH) --cpp_out=. $<
 
 clean:
-	rm -f *.o *.pb.cc *.pb.h TransferFileClient TransferFileImpl
+	rm -f *.o *.pb.cc *.pb.h client server
 
-
-# The following is to test your system and ensure a smoother experience.
-# They are by no means necessary to actually compile a grpc-enabled software.

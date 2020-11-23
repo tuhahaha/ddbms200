@@ -14,7 +14,6 @@ tar -xzvf  mysql-5.7.16-linux-glibc2.5-x86_64.tar.gz
 ```
 * Step3: groupadd mysql by the following command, note that you can just ignore the message "user 'mysql' already exists". This exception is only because you has intalled one mysql on your WSL before, which won't have influence on our later installation.
 ```
-groupadd mysql
 useradd -g mysql -d /home/mysql mysql
 ```
 * Step4: a sequence of configrations, mysql1 means the first mysql, which indicates later mysql2, mysql3, etc.

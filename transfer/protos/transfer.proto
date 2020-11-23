@@ -1,0 +1,25 @@
+syntax = "proto3";
+package transfer;
+service Transfer {
+    rpc L_I_D(Stmt1) returns (Reply) {}
+    rpc L_L(Stmt2) returns (Reply) {}
+   
+}
+message Stmt1 {
+    string sql = 1;
+    int32 site = 2;
+}
+message Stmt2 {
+    string sql1 = 1;
+    string sql2 = 2;
+    int32 site = 3;
+}
+message Reply {
+    string done = 1;
+}
+
+
+
+
+
+

@@ -51,10 +51,10 @@
 
 // int main(int argc,char *argv[])
 // {
-//     // string res_str_out;
+//     string res_str_out;
 //     // res_str_out = local_Insert_Delete("delete from test where name='user'");
 //     // insert into test values('user','123456')
-//     // res_str_out = local_Insert_Delete("insert into test values('user','123456')");
+//     res_str_out = local_Insert_Delete("create table book(id int(6), title char(100), authors char(200), publisher_id int(6), copies int(5), key(id) )","3");
 //     // res_str_out = local_Load("create table book(id int(6), title char(100), authors char(200), publisher_id int(6), copies int(5), key(id) )", "load data local infile '/home/roy/ddbms/rawdata/book.tsv' into table book");
 //     // const char* p = res_str_out.data();
 //     // printf("%s\n", p);
@@ -65,11 +65,11 @@
 //     // const char* p = res_tmp_out.data();
 //     // printf("tmp table stored: %s\n", p);
 //     /* 把临时表查出来并且打印 */
-//     vector<string> tablenames;
-//     tablenames.push_back("Book");
-//     MY_MYSQL_RES res_data_out;
-//     res_data_out = Local_Select("select * from tmp_table_1", tablenames, "s3");
-//     my_mysql_res_print(res_data_out);
+//     // vector<string> tablenames;
+//     // tablenames.push_back("Book");
+//     // MY_MYSQL_RES res_data_out;
+//     // res_data_out = Local_Select("select * from tmp_table_1", tablenames, "s3");
+//     // my_mysql_res_print(res_data_out);
 
 //     return 0;
 // }
@@ -163,151 +163,151 @@ string local_Load(string sql_create, string sql_load, string site)
     }       
 }
 
-string Local_Tmp_Load(MY_MYSQL_RES tmp_data, string tmp_data_name, string site)
-{
-    MYSQL conn;
-    int res;
-    int res_load;
-    /* 接下来从etcd读取GDD格式的元信息*/
-    vector<string> table_names = tmp_data.global_tables;
-    // printf("tablename is %s\n", table_name.data());
-    vector<GDD> table_metas;
-    for (int i = 0; i < table_names.size(); i++){
-        string table_name = table_names[i];
-        GDD book_meta = getTableFromEtcd(table_name);
-        table_metas.push_back(book_meta);
-    }
-    // printf("GDD Name is %s\n", book_meta.name.data());
-    /* 现在开始构建create语句的sql，这一部分之后应该会拆分出来成为单独的函数，输入是vector<GDD>和MY_MYSQL_RES，输出是create的sql语句*/
-    /* 我们内部的每个属性名字是唯一的，所以可以全局遍历来匹配 */
-    int i, j, k, flag; /*只是控制循环的三个变量和一个标记变量*/
-    string sql_create = "create table ";
-    sql_create = sql_create.append(tmp_data_name);
-    sql_create = sql_create.append("(");
-    MYSQL_RES *res_ptr; /*指向查询结果的指针*/
-    res_ptr = tmp_data.res_ptr;
-    int row, column; /*查询返回的行数和列数*/
-    MYSQL_FIELD *fields; /*字段结构数组的指针*/
-    int max_GDD; /* 数据所来源的全局表数量 */
-    GDD book_meta; /* 循环时候用到的单个GDD变量 */
-    int max_num; /* 单个GDD里面列的数量 */
-    string target_name; /* 待匹配的目标列名，来自于数据 */
-    string source_name; /* 元信息中的列名，来自于GDD */
+// string Local_Tmp_Load(MY_MYSQL_RES tmp_data, string tmp_data_name, string site)
+// {
+//     MYSQL conn;
+//     int res;
+//     int res_load;
+//     /* 接下来从etcd读取GDD格式的元信息*/
+//     vector<string> table_names = tmp_data.global_tables;
+//     // printf("tablename is %s\n", table_name.data());
+//     vector<GDD> table_metas;
+//     for (int i = 0; i < table_names.size(); i++){
+//         string table_name = table_names[i];
+//         GDD book_meta = getTableFromEtcd(table_name);
+//         table_metas.push_back(book_meta);
+//     }
+//     // printf("GDD Name is %s\n", book_meta.name.data());
+//     /* 现在开始构建create语句的sql，这一部分之后应该会拆分出来成为单独的函数，输入是vector<GDD>和MY_MYSQL_RES，输出是create的sql语句*/
+//     /* 我们内部的每个属性名字是唯一的，所以可以全局遍历来匹配 */
+//     int i, j, k, flag; /*只是控制循环的三个变量和一个标记变量*/
+//     string sql_create = "create table ";
+//     sql_create = sql_create.append(tmp_data_name);
+//     sql_create = sql_create.append("(");
+//     MYSQL_RES *res_ptr; /*指向查询结果的指针*/
+//     res_ptr = tmp_data.res_ptr;
+//     int row, column; /*查询返回的行数和列数*/
+//     MYSQL_FIELD *fields; /*字段结构数组的指针*/
+//     int max_GDD; /* 数据所来源的全局表数量 */
+//     GDD book_meta; /* 循环时候用到的单个GDD变量 */
+//     int max_num; /* 单个GDD里面列的数量 */
+//     string target_name; /* 待匹配的目标列名，来自于数据 */
+//     string source_name; /* 元信息中的列名，来自于GDD */
 
 
-    column = mysql_num_fields(res_ptr);
-    fields = mysql_fetch_fields(res_ptr);
-    /* 遍历结果集中的字段名 */
-    for(i = 0; i < column; i++)
-    {
-        flag = 0;
-        sql_create = sql_create.append(fields[i].name); //id
-        sql_create = sql_create.append(" ");
-        /* 遍历所有GDD格式的元信息 */
-        max_GDD = table_metas.size();
-        for(k = 0; k < max_GDD; k++){
-            book_meta = table_metas[k];
-            /* 在每个GDD里面遍历列名进行匹配 */
-            max_num = book_meta.cols.size();
-            for(j = 0; j < max_num; j++)
-            {
-                /* 从元信息中找出对应的类型定义 */
-                target_name = fields[i].name;
-                source_name = book_meta.cols[j].name;
-                if(target_name == source_name){
-                    sql_create = sql_create.append(book_meta.cols[j].type); //int(6)
-                    sql_create = sql_create.append(", ");
-                    flag = 1;
-                    break;
-                }
-            }
-            if(flag == 1){
-                break;
-            }
-        }
+//     column = mysql_num_fields(res_ptr);
+//     fields = mysql_fetch_fields(res_ptr);
+//     /* 遍历结果集中的字段名 */
+//     for(i = 0; i < column; i++)
+//     {
+//         flag = 0;
+//         sql_create = sql_create.append(fields[i].name); //id
+//         sql_create = sql_create.append(" ");
+//         /* 遍历所有GDD格式的元信息 */
+//         max_GDD = table_metas.size();
+//         for(k = 0; k < max_GDD; k++){
+//             book_meta = table_metas[k];
+//             /* 在每个GDD里面遍历列名进行匹配 */
+//             max_num = book_meta.cols.size();
+//             for(j = 0; j < max_num; j++)
+//             {
+//                 /* 从元信息中找出对应的类型定义 */
+//                 target_name = fields[i].name;
+//                 source_name = book_meta.cols[j].name;
+//                 if(target_name == source_name){
+//                     sql_create = sql_create.append(book_meta.cols[j].type); //int(6)
+//                     sql_create = sql_create.append(", ");
+//                     flag = 1;
+//                     break;
+//                 }
+//             }
+//             if(flag == 1){
+//                 break;
+//             }
+//         }
         
-        if(flag == 0){
-            mysql_close(&conn);
-            return "Fields error!";
-        }
-    }
-    sql_create = sql_create.substr(0,sql_create.length()-2); //删掉最后一个", "
-    sql_create = sql_create.append(")");
-    // printf("creat sentence is %s", sql_create.data());
-    /* create语句构造完毕 */
+//         if(flag == 0){
+//             mysql_close(&conn);
+//             return "Fields error!";
+//         }
+//     }
+//     sql_create = sql_create.substr(0,sql_create.length()-2); //删掉最后一个", "
+//     sql_create = sql_create.append(")");
+//     // printf("creat sentence is %s", sql_create.data());
+//     /* create语句构造完毕 */
 
-    int PORT;
-    const char* UNIX_SOCKET;
+//     int PORT;
+//     const char* UNIX_SOCKET;
 
-    /* 通过站点名称判断使用哪个连接 */
-    if(site == "s4"){
-        PORT = 7655;
-        UNIX_SOCKET = "/home/mysql2/mysql.sock";
-    }
-    else{
-        PORT = 7654;
-        UNIX_SOCKET = "/home/mysql1/mysql.sock";
-    } // 此处如果输入了没出现过的站点应当报警但我没写
+//     /* 通过站点名称判断使用哪个连接 */
+//     if(site == "s4"){
+//         PORT = 7655;
+//         UNIX_SOCKET = "/home/mysql2/mysql.sock";
+//     }
+//     else{
+//         PORT = 7654;
+//         UNIX_SOCKET = "/home/mysql1/mysql.sock";
+//     } // 此处如果输入了没出现过的站点应当报警但我没写
 
-    mysql_init(&conn);
-    if(mysql_real_connect(&conn, HOST, USERNAME, PASSWORD, DATABASE, PORT, UNIX_SOCKET,0))
-    {
-        printf("connect success!\n");        
-        const char* p = sql_create.data();
-        res=mysql_query(&conn,p);
-        if(res) /*创建数据表失败*/
-        {
-            mysql_close(&conn);
-            return "FAILED";
-        }
-        else /*创建数据表成功*/
-        {
-            /* 开始一条一条存数据, e.g. insert into test values('user', '123456')*/
-            /*取得結果的行列数*/
-            column = mysql_num_fields(res_ptr);
-            row = mysql_num_rows(res_ptr);
-            MYSQL_ROW result_row; /*按行返回的查询信息*/
-            /*按行插入結果*/
-            for (i = 1; i < row; i++)
-            {
-                /* 开始构造insert语句 */
-                string sql_load = "insert into ";
-                sql_load = sql_load.append(tmp_data_name);
-                sql_load = sql_load.append(" values(\'");
-                result_row = mysql_fetch_row(res_ptr);
-                for (j = 0; j < column; j++)
-                {
-                    sql_load = sql_load.append(result_row[j]);
-                    sql_load = sql_load.append("\', \'");
-                }
-                sql_load = sql_load.substr(0,sql_load.length()-3); //删掉最后一个", \'"
-                sql_load = sql_load.append(")");
-                /* insert语句构造完毕 */
-                p = sql_load.data();
-                res_load = mysql_query(&conn,p);
-                if(res_load) /*导入数据失败*/
-                {
-                    mysql_close(&conn);
-                    return "FAILED";
-                }
-                else{
-                    continue;
-                }   
-            }
-            mysql_close(&conn);
-            /* 如果全部成功插入 */
-            if(i == row){
-                return "OK";
-            }
-            else{
-                return "FAILED";
-            }
+//     mysql_init(&conn);
+//     if(mysql_real_connect(&conn, HOST, USERNAME, PASSWORD, DATABASE, PORT, UNIX_SOCKET,0))
+//     {
+//         printf("connect success!\n");        
+//         const char* p = sql_create.data();
+//         res=mysql_query(&conn,p);
+//         if(res) /*创建数据表失败*/
+//         {
+//             mysql_close(&conn);
+//             return "FAILED";
+//         }
+//         else /*创建数据表成功*/
+//         {
+//             /* 开始一条一条存数据, e.g. insert into test values('user', '123456')*/
+//             /*取得結果的行列数*/
+//             column = mysql_num_fields(res_ptr);
+//             row = mysql_num_rows(res_ptr);
+//             MYSQL_ROW result_row; /*按行返回的查询信息*/
+//             /*按行插入結果*/
+//             for (i = 1; i < row; i++)
+//             {
+//                 /* 开始构造insert语句 */
+//                 string sql_load = "insert into ";
+//                 sql_load = sql_load.append(tmp_data_name);
+//                 sql_load = sql_load.append(" values(\'");
+//                 result_row = mysql_fetch_row(res_ptr);
+//                 for (j = 0; j < column; j++)
+//                 {
+//                     sql_load = sql_load.append(result_row[j]);
+//                     sql_load = sql_load.append("\', \'");
+//                 }
+//                 sql_load = sql_load.substr(0,sql_load.length()-3); //删掉最后一个", \'"
+//                 sql_load = sql_load.append(")");
+//                 /* insert语句构造完毕 */
+//                 p = sql_load.data();
+//                 res_load = mysql_query(&conn,p);
+//                 if(res_load) /*导入数据失败*/
+//                 {
+//                     mysql_close(&conn);
+//                     return "FAILED";
+//                 }
+//                 else{
+//                     continue;
+//                 }   
+//             }
+//             mysql_close(&conn);
+//             /* 如果全部成功插入 */
+//             if(i == row){
+//                 return "OK";
+//             }
+//             else{
+//                 return "FAILED";
+//             }
             
-        }
+//         }
         
-    }           
+//     }           
 
-}
+// }
 
 MY_MYSQL_RES Local_Select(string sql, vector<string> tables, string site) 
 {

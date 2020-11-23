@@ -1,3 +1,8 @@
 *.o
 metadata/m
 metadata/t
+parser/Parse_INIT.cpp
+parser/a.out
+metadata/metadata.h
+metadata/metadata.cc
+metadata/metadata.cc

@@ -130,6 +130,10 @@ alter user 'root'@'localhost' identified by 'rootroot';
 create database test;
 quit;
 ```
+* step10 create the temporary directory for data transfer by:
+```
+mkdir /mnt/d/ddbms200tmp
+```
 
 # Connector
 ## functions

@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 #include <typeinfo> /* 为了调试 */
-#include "../../metadata/metadata.h"
+// #include "../../metadata/metadata.h"
 
 using namespace std;
 
@@ -13,6 +13,7 @@ using namespace std;
 #define DATABASE "test"  // here the name should be changed to our databases
 // #define PORT 7654  // here the site1, it can be changed to 7655 for site2
 // #define UNIX_SOCKET "/home/mysql1/mysql.sock" // here the site1, later can be changed to "home/mysql2/mysql.sock" for site2
+#define TMPPATH "/mnt/d/ddbms200tmp/"
 
 
 // // 元信息结构定义
@@ -93,11 +94,8 @@ using namespace std;
 // } MEM_ROOT;  //内存结构
 
 
-// 目前我自己定义的返回结果的形式
-typedef struct my_mysql_res {
-    vector<string> global_tables; /* 结果集来源的表名 */
-    MYSQL_RES *res_ptr; /*指向查询结果的指针*/
-} MY_MYSQL_RES; /* 结果集 */
+// 目前我自己定义的返回结果的形式 
+// - 现在改成sql文件形式传输了，要求是每个查询树的每个节点所代表的数据表名称（编号）唯一
 	
 
 /* 本地执行插入和删除函数，输入SQL语句和站点名称（s1, s2, s3, s4），返回执行结果(OK or FAIL) */
@@ -108,16 +106,16 @@ string local_Insert_Delete(string sql, string site);
    local_Load("create table book(id int(6), title char(100), authors char(200), publisher_id int(6), copies int(5), key(id) )", "load data local infile '/home/roy/ddbms/rawdata/book.tsv' into table book"); */
 string local_Load(string sql_create, string sql_load, string site);
 
-/* 本地执行查询函数，输入SQL语句，和返回结果集所来源的一组全局表名，和站点名称（s1, s2, s3, s4）,返回执行结果(MY_MYSQL_RES结构) */
-MY_MYSQL_RES Local_Select(string sql, vector<string> tables, string site);
+/* 本地执行查询函数，输入SQL语句，和指定返回结果集名称（唯一），和站点名称（s1, s2, s3, s4）,返回执行结果表名(全局唯一), 或者"Empty!" */
+string Local_Select(string sql, string res_name, string site);
 
-/* 本地执行临时表存储函数，输入待存的数据(MY_MYSQL_RES结构)和临时表表名，和站点名称（s1, s2, s3, s4）,返回执行结果(OK or FAIL) */
-string Local_Tmp_Load(MY_MYSQL_RES tmp_data, string tmp_data_name, string site);
+/* 本地执行临时表存储函数，输入待存的数据表名，和站点名称（s1, s2, s3, s4）,返回执行结果(OK or FAIL) */
+string Local_Tmp_Load(string tmp_data, string site);
 
-/* 打印MY_MYSQL_RES结构的数据
+/* 相当于打印sql文件里的数据
    输出样例为：
 查询到 2 行 
 id      title   authors publisher_id    copies
 200001  Book #200001    H. Johnston     100366  7231
 200002  Book #200002    L. Houghton     101543  694 */
-void my_mysql_res_print(MY_MYSQL_RES my_res);
+void my_mysql_res_print(string my_res);

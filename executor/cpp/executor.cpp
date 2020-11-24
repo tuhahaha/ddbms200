@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include "./mysql_connector.h"
 
 // 现在定义一下时间和数据传输量记录的结构
 // 也用树结构记录每个节点花费的时间和数据传输量
@@ -13,4 +14,8 @@ struct exec_tree{
     int tree_id; // 应当与它执行的树的ID一致
     vector<exec_node> nodes; // 应当与它执行的树的node数量一致
 };
+
+string Data_Load_Execute(string create_sql, string load_sql, vector<string> sitenames, vector<string> sqls, vector<string> table_names){
+    return "x rows imported, y seconds used."
+}
 

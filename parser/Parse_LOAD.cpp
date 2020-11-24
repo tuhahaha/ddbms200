@@ -24,46 +24,46 @@ string GetSelectSqlFromLoadLocalData(string sql_statement);
 string GetToTable(string sql_statement);
 
 
-int main() {
-    // H
-    // string sql_statement;
-    // sql_statement = "LOCAL CREATE TABLE Publisher (id int(6) key, name char(100), nation char(3)) ON SITE 1;";
-    // int site = GetSite(sql_statement);
-    // string sql_localcreate = GetLocalCreate(sql_statement);
-    // cout << site << endl;
-    // cout << sql_localcreate << endl;
-    // sql_statement = "LOCAL LOAD ALLDATA TO TABLE Publisher FROM LOCAL FILE the path;";
-    // string table_name = GetTableFromLocalLoad(sql_statement);
-    // string path = GetPathFromLocalLoad(sql_statement);
-    // cout << table_name << endl;
-    // cout << path << endl;
-    // sql_statement = "LOCAL LOAD LOCALDATA TABLE Publisher BY H WITH ( id<104000 nation='PRC') TO Publiser.1 ON SITE 1;";
-    // string select_sql;
-    // select_sql = GetSelectSqlFromLoadLocalData(sql_statement);
-    // string to_table; 
-    // to_table = GetToTable(sql_statement);
-    // cout << to_table << endl;
+// int main() {
+//     // H
+//     // string sql_statement;
+//     // sql_statement = "LOCAL CREATE TABLE Publisher (id int(6) key, name char(100), nation char(3)) ON SITE 1;";
+//     // int site = GetSite(sql_statement);
+//     // string sql_localcreate = GetLocalCreate(sql_statement);
+//     // cout << site << endl;
+//     // cout << sql_localcreate << endl;
+//     // sql_statement = "LOCAL LOAD ALLDATA TO TABLE Publisher FROM LOCAL FILE the path;";
+//     // string table_name = GetTableFromLocalLoad(sql_statement);
+//     // string path = GetPathFromLocalLoad(sql_statement);
+//     // cout << table_name << endl;
+//     // cout << path << endl;
+//     // sql_statement = "LOCAL LOAD LOCALDATA TABLE Publisher BY H WITH ( id<104000 nation='PRC') TO Publiser.1 ON SITE 1;";
+//     // string select_sql;
+//     // select_sql = GetSelectSqlFromLoadLocalData(sql_statement);
+//     // string to_table; 
+//     // to_table = GetToTable(sql_statement);
+//     // cout << to_table << endl;
     
-    // V
-    string sql_statement;
-    sql_statement = "LOCAL CREATE TABLE Customer (id int(6) key, name char(100), rank int(6)) ON SITE 1;";
-    int site = GetSite(sql_statement);
-    string sql_localcreate = GetLocalCreate(sql_statement);
-    cout << site << endl;
-    cout << sql_localcreate << endl;
-    sql_statement = "LOCAL LOAD ALLDATA TO TABLE Customer FROM LOCAL FILE the path;";
-    string table_name = GetTableFromLocalLoad(sql_statement);
-    string path = GetPathFromLocalLoad(sql_statement);
-    cout << table_name << endl;
-    cout << path << endl;
-    sql_statement = "LOCAL LOAD LOCALDATA TABLE Customer BY V WITH ( id name) TO Customer.1 ON SITE 1;";
-    string select_sql;
-    select_sql = GetSelectSqlFromLoadLocalData(sql_statement);
-    string to_table; 
-    to_table = GetToTable(sql_statement);
-    cout << to_table << endl;
-    return 0;
-}
+//     // V
+//     string sql_statement;
+//     sql_statement = "LOCAL CREATE TABLE Customer (id int(6) key, name char(100), rank int(6)) ON SITE 1;";
+//     int site = GetSite(sql_statement);
+//     string sql_localcreate = GetLocalCreate(sql_statement);
+//     cout << site << endl;
+//     cout << sql_localcreate << endl;
+//     sql_statement = "LOCAL LOAD ALLDATA TO TABLE Customer FROM LOCAL FILE the path;";
+//     string table_name = GetTableFromLocalLoad(sql_statement);
+//     string path = GetPathFromLocalLoad(sql_statement);
+//     cout << table_name << endl;
+//     cout << path << endl;
+//     sql_statement = "LOCAL LOAD LOCALDATA TABLE Customer BY V WITH ( id name) TO Customer.1 ON SITE 1;";
+//     string select_sql;
+//     select_sql = GetSelectSqlFromLoadLocalData(sql_statement);
+//     string to_table; 
+//     to_table = GetToTable(sql_statement);
+//     cout << to_table << endl;
+//     return 0;
+// }
 // local create 
 int GetSite(string sql_statement) {
     int site = stoi(GetBetween(sql_statement, "SITE", ";"));
@@ -86,7 +86,6 @@ string GetFragType(string sql_statement){
     type = GetBetween(sql_statement, "BY", "WITH");
     return type.substr(0,1);
 }
-
 // local load local data
 string GetSelectSqlFromLoadLocalData(string sql_statement) {
     string frag_type = GetFragType(sql_statement);

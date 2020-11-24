@@ -16,7 +16,8 @@ int main() {
     vector<string> column_list = GetList(column_name,",",";");
     Traverse(column_list);
     Fragment fragment = getFragFromEtcd(table_name);
-    string type = fragment.fragtype;
+    // string type = fragment.fragtype;
+    string type = "H";
     vector<FragDef> frags = fragment.frags;
     if (type == "H"){
         for (int i = 0; i < frags.size(); i++){

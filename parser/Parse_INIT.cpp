@@ -20,43 +20,43 @@ void Traversefrags(vector<FragDef> frags);
 void TraverseFragment(Fragment);
 Fragment InitGetFragmentCreateFragment(string sql_statement);
 
-int main() {
-    // Create table
-    string sql_statement;
-    vector<string> sql_statement_list;
-    sql_statement = "CREATE TABLE Pulisher[ id int(24) key,name char(100),nation char(100)];"; 
-    sql_statement_list.push_back(sql_statement);
-    sql_statement = "CREATE TABLE Customer[ id int(24) key,name char(100),rank char(100)];";
-    sql_statement_list.push_back(sql_statement);
-    sql_statement = "CREATE TABLE Book[ id int(24) key,title char(100),authors char(100),publisher_id int(24),copies int(24)];";
-    sql_statement_list.push_back(sql_statement);
-    sql_statement = "CREATE TABLE Orders[ customer_id int(24) key,Book_id int(24) key,quantity int(24)];";
-    sql_statement_list.push_back(sql_statement);
-    GDD gdd_tmp;
-    for (int i = 0; i < sql_statement_list.size(); i++) {
-        gdd_tmp = InitGetGDDCreateTable(sql_statement_list[i]);
-        // TraverseGDD(gdd_tmp);
-        // saveTableToEtcd(gdd_tmp);
-    }
+// int main() {
+//     // Create table
+//     string sql_statement;
+//     vector<string> sql_statement_list;
+//     sql_statement = "CREATE TABLE Pulisher[ id int(24) key,name char(100),nation char(100)];"; 
+//     sql_statement_list.push_back(sql_statement);
+//     sql_statement = "CREATE TABLE Customer[ id int(24) key,name char(100),rank char(100)];";
+//     sql_statement_list.push_back(sql_statement);
+//     sql_statement = "CREATE TABLE Book[ id int(24) key,title char(100),authors char(100),publisher_id int(24),copies int(24)];";
+//     sql_statement_list.push_back(sql_statement);
+//     sql_statement = "CREATE TABLE Orders[ customer_id int(24) key,Book_id int(24) key,quantity int(24)];";
+//     sql_statement_list.push_back(sql_statement);
+//     GDD gdd_tmp;
+//     for (int i = 0; i < sql_statement_list.size(); i++) {
+//         gdd_tmp = InitGetGDDCreateTable(sql_statement_list[i]);
+//         // TraverseGDD(gdd_tmp);
+//         // saveTableToEtcd(gdd_tmp);
+//     }
     
-    // Create Fragment 
-    vector<string> sql_statement_list2;
-    sql_statement = "CREATE FRAGMENTATION Publisher ( H,1 Publisher.id<104000ANDPublisher.nation='PRC' 1,2 Publisher.id<104000ANDPublisher.nation='PRC' 2,3 Publisher.id>=104000ANDPublisher.nation='USA' 3,4 Publisher.id>=104000ANDPublisher.nation='USA' 4 );";
-    sql_statement_list2.push_back(sql_statement);
-    sql_statement = "CREATE FRAGMENTATION Book ( H,1 Book.id<205000 1,2 Book.id>=205000ANDid<210000 2,3 Book.id>=210000 3);";
-    sql_statement_list2.push_back(sql_statement);
-    sql_statement = "CREATE FRAGMENTATION Customer ( V,1 Customer.idANDCustomer.name 1,2 Customer.idANDCusomer.rank 2);";
-    sql_statement_list2.push_back(sql_statement);
-    sql_statement = "CREATE FRAGMENTATION Orders ( H,1 Orders.customer_id<307000ANDOrders.customer_id<215000 1,2 Orders.customer_id<307000ANDOrders.book_id>=215000 2,3 Orders.customer_id>=307000ANDOrders.book_id<215000 3,4 Orders.cusomer_id>=307000ANDOrders.book_id>=215000 4);";
-    sql_statement_list2.push_back(sql_statement);
-    Fragment fragment_tmp;
-    for (int i = 0; i < sql_statement_list2.size(); i++) {
-        cout << i << " =="<< endl;
-        fragment_tmp = InitGetFragmentCreateFragment(sql_statement_list2[i]);
-        // saveFragToEtcd(fragment_tmp);
-    }
-    return 0;
-}
+//     // Create Fragment 
+//     vector<string> sql_statement_list2;
+//     sql_statement = "CREATE FRAGMENTATION Publisher ( H,1 Publisher.id<104000ANDPublisher.nation='PRC' 1,2 Publisher.id<104000ANDPublisher.nation='PRC' 2,3 Publisher.id>=104000ANDPublisher.nation='USA' 3,4 Publisher.id>=104000ANDPublisher.nation='USA' 4 );";
+//     sql_statement_list2.push_back(sql_statement);
+//     sql_statement = "CREATE FRAGMENTATION Book ( H,1 Book.id<205000 1,2 Book.id>=205000ANDid<210000 2,3 Book.id>=210000 3);";
+//     sql_statement_list2.push_back(sql_statement);
+//     sql_statement = "CREATE FRAGMENTATION Customer ( V,1 Customer.idANDCustomer.name 1,2 Customer.idANDCusomer.rank 2);";
+//     sql_statement_list2.push_back(sql_statement);
+//     sql_statement = "CREATE FRAGMENTATION Orders ( H,1 Orders.customer_id<307000ANDOrders.customer_id<215000 1,2 Orders.customer_id<307000ANDOrders.book_id>=215000 2,3 Orders.customer_id>=307000ANDOrders.book_id<215000 3,4 Orders.cusomer_id>=307000ANDOrders.book_id>=215000 4);";
+//     sql_statement_list2.push_back(sql_statement);
+//     Fragment fragment_tmp;
+//     for (int i = 0; i < sql_statement_list2.size(); i++) {
+//         cout << i << " =="<< endl;
+//         fragment_tmp = InitGetFragmentCreateFragment(sql_statement_list2[i]);
+//         // saveFragToEtcd(fragment_tmp);
+//     }
+//     return 0;
+// }
 
 // Create table
 string InitGetTableCreateTable(string sql_statement) {

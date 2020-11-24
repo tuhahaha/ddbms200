@@ -3,8 +3,8 @@
 #include "Parse_INIT.h"
 #include "Parse_LOAD.h"
 
-using namespace std;
 
+using namespace std;
 /*
 The parser mainly contains 6 functions
 SelectObject Parse_SELECT(string sql_statement);
@@ -40,12 +40,14 @@ int main() {
     string sql_statement;
     sql_statement = "CREATE TABLE Pulisher[ id int(24) key,name char(100),nation char(100)];"; 
     if (sql_statement.find("CREATE TABLE") != -1) {
+        cout << "CREATE TABLE " << endl;
         GDD gdd = InitGetGDDCreateTable(sql_statement);
         // TraverseGDD(gdd);
         // cout << gdd.name << endl;
         // saveTableToEtcd(gdd);
     }
     else if (sql_statement.find("CREATE FRAGMENTATION") != -1) {
+        cout << "CREATE FRAGMENTATION" << endl;
         // Fragment fragment = InitGetFragmentCreateFragment(sql_statement);
         // saveFragToEtcd(fragment);
     }

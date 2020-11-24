@@ -174,3 +174,10 @@ string GetPureColumnFromColumn(string column) {
 //     original.push_back(input);
 //     return original;
 // }
+
+// int main() {
+//     string a = "The day is a beautiful day!";
+//     // cout << GetBetween(a,"The", " is");
+//     cout << GetAfter(a,"The");
+//     return 0;
+// }

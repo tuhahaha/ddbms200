@@ -1,15 +1,21 @@
 # ddbms200 in 2020
 
-In this repo you can find a demo for a Ditributed DatabBase Managment System. The repo can mainly devided into 3 parts, and each one of the team is responsible to one part of the project.
+In this repo you can find a demo for a Ditributed DatabBase Managment System. The repo can mainly devided into 4 parts.
 
-The three parts are
+The 4 parts are
 - metadata (Jianhong Tu)
+- transfer (Jianhong Tu)
 - parser (Xiaotong Li)
 - executor (Yinqing Luo)
 
-## Some details about these three parts
+## Some details about these 4 parts
 
 ### metadata
+- ETCD to manage metadata
+- cluster: 4 sites
+
+### metadata
+- gRPC to transfer object/data
 
 ### parser
 

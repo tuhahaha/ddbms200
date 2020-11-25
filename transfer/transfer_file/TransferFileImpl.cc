@@ -24,7 +24,7 @@ public:
 
 Status TransferFileImpl::Upload(ServerContext* context, ServerReader<Chunk>* reader, Reply* reply) {
     Chunk chunk;
-    const char *filename = "book_tmp.tsv";
+    const char *filename = "test1.sql";
     std::ofstream outfile;
     const char *data;
     outfile.open(filename, std::ofstream::out | std::ofstream::trunc | std::ofstream::binary);

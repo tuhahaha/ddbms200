@@ -3,6 +3,8 @@ package transfer;
 service Transfer {
     rpc L_I_D(Stmt1) returns (Reply) {}
     rpc L_L(Stmt2) returns (Reply) {}
+    rpc L_S(Stmt2) returns (stream Chunk) {}
+    rpc L_T_L(stream Chunk) returns (Reply) {}
    
 }
 message Stmt1 {
@@ -17,6 +19,10 @@ message Stmt2 {
 message Reply {
     string done = 1;
 }
+message Chunk {
+    bytes buffer = 1;
+}
+
 
 
 

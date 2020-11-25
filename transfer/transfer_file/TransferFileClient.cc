@@ -31,7 +31,7 @@ void TransferFileClient::Upload()
     char data[CHUNK_SIZE];
     Reply stats;
     ClientContext context;
-    const char *filename = "book.tsv";
+    const char *filename = "test.sql";
     std::ifstream infile;
     int len = 0;
     struct timeval start, end;

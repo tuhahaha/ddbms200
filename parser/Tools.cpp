@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <vector>
 #include <string>
+// #include "../metadata/metadata.h"
 using namespace std;
 
 string GetBetween(string sql_statement, string start, string end) {
@@ -141,6 +142,13 @@ string GetPureColumnFromColumn(string column) {
     string pure_column = column.substr(pure_column_loc, column.size() - pure_column_loc);
     return pure_column;
 }
+string Link(vector<string> input, string devide) {
+    string output = input[0];
+    for (int i = 1; i < input.size(); i++) {
+        output += devide + input[i];
+    }
+    return output;
+}
 // int GetIdFromTC(string table, string column) {
 //     Fragment FragmentOfTable;
 //     FragmentOfTable = getFragFromEtcd(table);
@@ -175,9 +183,9 @@ string GetPureColumnFromColumn(string column) {
 //     return original;
 // }
 
-// int main() {
-//     string a = "The day is a beautiful day!";
-//     // cout << GetBetween(a,"The", " is");
-//     cout << GetAfter(a,"The");
-//     return 0;
-// }
+int main() {
+    string a = "The day is a beautiful day!";
+    // cout << GetBetween(a,"The", " is");
+    cout << GetAfter(a,"The");
+    return 0;
+}

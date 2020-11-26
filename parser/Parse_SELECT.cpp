@@ -6,6 +6,17 @@
 
 using namespace std;
 
+struct NODE {
+    int id;
+    int child1;
+    int child2;
+    int child3;
+    int child4;
+    int parent;
+    string sql_statement;
+};
+vector<NODE> TREE;
+vector<string> GetTC(string table_name, vector<string> ColumnList);
 int main() {
     string sql_statement = "SELECT Customer.name,Book.title,Publisher.name,Orders.quantity FROM Customer,Book,Publisher,Orders WHERE Customer.id=Orders.customer_id and Book.id=Orders.book_id and Book.publisher_id=Publisher.id and Customer.id>308000 and Book.copies>100 and Orders.quantity>1 and Publisher.nation='PRC';";
     vector<string> TableList = GetTableList(sql_statement);
@@ -15,5 +26,11 @@ int main() {
     Traverse(TableList);
     cout << "COLUMN LIST " << endl;
     Traverse(ColumnList);
+    
     return 0;
+}
+vector<string> GetTC(string table_name, vector<string> ColumnList) {
+    // Get the table_name's column
+    vector<string> TC;
+    return TC;
 }

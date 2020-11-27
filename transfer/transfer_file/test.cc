@@ -33,15 +33,3 @@ int main(){
 
 }
 
-
-
-//以数据流方式传输
-// bytes encodeObj(object){
-//     //将object编码成bytes数据流
-//     return bytes
-// }
-// object decodeObj(bytes){
-//     //将bytes解码为数据对象
-//     return object
-// }
-

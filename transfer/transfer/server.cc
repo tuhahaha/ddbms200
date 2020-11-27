@@ -21,6 +21,7 @@ using grpc::Status;
 using transfer::Stmt1;
 using transfer::Stmt2;
 using transfer::Chunk;
+using transfer::TMPFile;
 using transfer::Reply;
 using transfer::Transfer;
 
@@ -32,7 +33,7 @@ public:
     Status L_I_D(ServerContext* context, const Stmt1* stmt,Reply* re);
     Status L_L(ServerContext* context, const Stmt2* stmt,Reply* re);
     Status L_S(ServerContext* context, const Stmt2* stmt,ServerWriter<Chunk>* writer);
-    Status L_T_L(ServerContext* context, ServerReader<Chunk>* reader, Reply* re);
+    Status L_T_L(ServerContext* context, ServerReader<TMPFile>* reader, Reply* re);
     
 };
 
@@ -82,16 +83,26 @@ Status TransferImpl::L_S(ServerContext* context, const Stmt2* stmt,ServerWriter<
     cout <<  (end.tv_sec-start.tv_sec)+ (double)(end.tv_usec-start.tv_usec)/1000000 << endl;
     return Status::OK;
 }
-Status TransferImpl::L_T_L(ServerContext* context, ServerReader<Chunk>* reader, Reply* re){
-    Chunk chunk;
-    const char *filename = "test111.sql"; //此处filename该怎么定？
+Status TransferImpl::L_T_L(ServerContext* context, ServerReader<TMPFile>* reader, Reply* re){
+    TMPFile fi;
     ofstream outfile;
     const char *data;
-    outfile.open(filename, ofstream::out | ofstream::trunc | ofstream::binary);
-    while (reader->Read(&chunk)) {
-        data = chunk.buffer().c_str();
-        outfile.write(data, chunk.buffer().length());
+    int i = 0;
+    while (reader->Read(&fi)){
+        if(i==0){
+            i += 1;
+            string file_name = TMPPATH + fi.cfg().sql() + "4.sql";
+            const char *filename = file_name.c_str();
+            outfile.open(filename, ofstream::out | ofstream::trunc | ofstream::binary);
+        }
+        data = fi.chk().buffer().c_str();
+        outfile.write(data, fi.chk().buffer().length());
     }
+    // outfile.open(filename, ofstream::out | ofstream::trunc | ofstream::binary);
+    // while (reader->Read(&chunk)) {
+    //     data = chunk.buffer().c_str();
+    //     outfile.write(data, chunk.buffer().length());
+    // }
     long pos = outfile.tellp();
     cout << "length: " << pos << endl;
     re->set_done("OK");

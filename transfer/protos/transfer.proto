@@ -4,7 +4,8 @@ service Transfer {
     rpc L_I_D(Stmt1) returns (Reply) {}
     rpc L_L(Stmt2) returns (Reply) {}
     rpc L_S(Stmt2) returns (stream Chunk) {}
-    rpc L_T_L(stream Chunk) returns (Reply) {}
+    // rpc L_T_L(stream Chunk) returns (Reply) {}
+    rpc L_T_L(stream TMPFile) returns (Reply) {}
    
 }
 message Stmt1 {
@@ -21,6 +22,10 @@ message Reply {
 }
 message Chunk {
     bytes buffer = 1;
+}
+message TMPFile {
+    Stmt1 cfg = 1;
+    Chunk chk = 2;
 }
 
 

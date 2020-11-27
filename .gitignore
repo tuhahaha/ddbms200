@@ -1,4 +1,5 @@
 *.o
+*.grpc.pb.*
 metadata/m
 metadata/t
 parser/Parse_INIT.cpp

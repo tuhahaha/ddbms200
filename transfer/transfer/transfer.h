@@ -21,6 +21,7 @@ using transfer::Stmt1;
 using transfer::Stmt2;
 using transfer::Reply;
 using transfer::Chunk;
+using transfer::TMPFile;
 using transfer::Transfer;
 
 using namespace std;

@@ -80,6 +80,12 @@ string TransferClient::local_S(string sql,string file_name, int site){
     }
 }
 string TransferClient::local_T_L(string tmp_data, int site){
+    TMPFile fi;
+    Stmt1 st;
+    st.set_sql(tmp_data);
+    st.set_site(site);
+    fi.mutable_cfg()->CopyFrom(st);
+
     //读取文件，传输给server    
     string fl = TMPPATH + tmp_data +".sql";
     const char *filename = fl.c_str();
@@ -95,11 +101,12 @@ string TransferClient::local_T_L(string tmp_data, int site){
     gettimeofday(&start, NULL);
 
     infile.open(filename, ifstream::in | ifstream::binary);
-    std::unique_ptr<ClientWriter<Chunk>> writer(stub_->L_T_L(&context, &re));
+    std::unique_ptr<ClientWriter<TMPFile>> writer(stub_->L_T_L(&context, &re));
     while (!infile.eof()) {
       infile.read(data, CHUNK_SIZE);
       chunk.set_buffer(data, infile.gcount());
-      if (!writer->Write(chunk)) {
+      fi.mutable_chk()->CopyFrom(chunk);
+      if (!writer->Write(fi)) {
         // Broken stream.
         break;
       }

@@ -47,7 +47,7 @@ struct TableStruct_transfer_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxiliaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[4]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[5]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -67,12 +67,16 @@ extern Stmt1DefaultTypeInternal _Stmt1_default_instance_;
 class Stmt2;
 class Stmt2DefaultTypeInternal;
 extern Stmt2DefaultTypeInternal _Stmt2_default_instance_;
+class TMPFile;
+class TMPFileDefaultTypeInternal;
+extern TMPFileDefaultTypeInternal _TMPFile_default_instance_;
 }  // namespace transfer
 PROTOBUF_NAMESPACE_OPEN
 template<> ::transfer::Chunk* Arena::CreateMaybeMessage<::transfer::Chunk>(Arena*);
 template<> ::transfer::Reply* Arena::CreateMaybeMessage<::transfer::Reply>(Arena*);
 template<> ::transfer::Stmt1* Arena::CreateMaybeMessage<::transfer::Stmt1>(Arena*);
 template<> ::transfer::Stmt2* Arena::CreateMaybeMessage<::transfer::Stmt2>(Arena*);
+template<> ::transfer::TMPFile* Arena::CreateMaybeMessage<::transfer::TMPFile>(Arena*);
 PROTOBUF_NAMESPACE_CLOSE
 namespace transfer {
 
@@ -692,6 +696,172 @@ class Chunk PROTOBUF_FINAL :
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_transfer_2eproto;
 };
+// -------------------------------------------------------------------
+
+class TMPFile PROTOBUF_FINAL :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:transfer.TMPFile) */ {
+ public:
+  inline TMPFile() : TMPFile(nullptr) {}
+  virtual ~TMPFile();
+
+  TMPFile(const TMPFile& from);
+  TMPFile(TMPFile&& from) noexcept
+    : TMPFile() {
+    *this = ::std::move(from);
+  }
+
+  inline TMPFile& operator=(const TMPFile& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline TMPFile& operator=(TMPFile&& from) noexcept {
+    if (GetArena() == from.GetArena()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const TMPFile& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const TMPFile* internal_default_instance() {
+    return reinterpret_cast<const TMPFile*>(
+               &_TMPFile_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    4;
+
+  friend void swap(TMPFile& a, TMPFile& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(TMPFile* other) {
+    if (other == this) return;
+    if (GetArena() == other->GetArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(TMPFile* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline TMPFile* New() const final {
+    return CreateMaybeMessage<TMPFile>(nullptr);
+  }
+
+  TMPFile* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<TMPFile>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const TMPFile& from);
+  void MergeFrom(const TMPFile& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(TMPFile* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "transfer.TMPFile";
+  }
+  protected:
+  explicit TMPFile(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_transfer_2eproto);
+    return ::descriptor_table_transfer_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kCfgFieldNumber = 1,
+    kChkFieldNumber = 2,
+  };
+  // .transfer.Stmt1 cfg = 1;
+  bool has_cfg() const;
+  private:
+  bool _internal_has_cfg() const;
+  public:
+  void clear_cfg();
+  const ::transfer::Stmt1& cfg() const;
+  ::transfer::Stmt1* release_cfg();
+  ::transfer::Stmt1* mutable_cfg();
+  void set_allocated_cfg(::transfer::Stmt1* cfg);
+  private:
+  const ::transfer::Stmt1& _internal_cfg() const;
+  ::transfer::Stmt1* _internal_mutable_cfg();
+  public:
+  void unsafe_arena_set_allocated_cfg(
+      ::transfer::Stmt1* cfg);
+  ::transfer::Stmt1* unsafe_arena_release_cfg();
+
+  // .transfer.Chunk chk = 2;
+  bool has_chk() const;
+  private:
+  bool _internal_has_chk() const;
+  public:
+  void clear_chk();
+  const ::transfer::Chunk& chk() const;
+  ::transfer::Chunk* release_chk();
+  ::transfer::Chunk* mutable_chk();
+  void set_allocated_chk(::transfer::Chunk* chk);
+  private:
+  const ::transfer::Chunk& _internal_chk() const;
+  ::transfer::Chunk* _internal_mutable_chk();
+  public:
+  void unsafe_arena_set_allocated_chk(
+      ::transfer::Chunk* chk);
+  ::transfer::Chunk* unsafe_arena_release_chk();
+
+  // @@protoc_insertion_point(class_scope:transfer.TMPFile)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::transfer::Stmt1* cfg_;
+  ::transfer::Chunk* chk_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_transfer_2eproto;
+};
 // ===================================================================
 
 
@@ -1065,9 +1235,181 @@ inline void Chunk::set_allocated_buffer(std::string* buffer) {
   // @@protoc_insertion_point(field_set_allocated:transfer.Chunk.buffer)
 }
 
+// -------------------------------------------------------------------
+
+// TMPFile
+
+// .transfer.Stmt1 cfg = 1;
+inline bool TMPFile::_internal_has_cfg() const {
+  return this != internal_default_instance() && cfg_ != nullptr;
+}
+inline bool TMPFile::has_cfg() const {
+  return _internal_has_cfg();
+}
+inline void TMPFile::clear_cfg() {
+  if (GetArena() == nullptr && cfg_ != nullptr) {
+    delete cfg_;
+  }
+  cfg_ = nullptr;
+}
+inline const ::transfer::Stmt1& TMPFile::_internal_cfg() const {
+  const ::transfer::Stmt1* p = cfg_;
+  return p != nullptr ? *p : *reinterpret_cast<const ::transfer::Stmt1*>(
+      &::transfer::_Stmt1_default_instance_);
+}
+inline const ::transfer::Stmt1& TMPFile::cfg() const {
+  // @@protoc_insertion_point(field_get:transfer.TMPFile.cfg)
+  return _internal_cfg();
+}
+inline void TMPFile::unsafe_arena_set_allocated_cfg(
+    ::transfer::Stmt1* cfg) {
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(cfg_);
+  }
+  cfg_ = cfg;
+  if (cfg) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:transfer.TMPFile.cfg)
+}
+inline ::transfer::Stmt1* TMPFile::release_cfg() {
+  
+  ::transfer::Stmt1* temp = cfg_;
+  cfg_ = nullptr;
+  if (GetArena() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+  return temp;
+}
+inline ::transfer::Stmt1* TMPFile::unsafe_arena_release_cfg() {
+  // @@protoc_insertion_point(field_release:transfer.TMPFile.cfg)
+  
+  ::transfer::Stmt1* temp = cfg_;
+  cfg_ = nullptr;
+  return temp;
+}
+inline ::transfer::Stmt1* TMPFile::_internal_mutable_cfg() {
+  
+  if (cfg_ == nullptr) {
+    auto* p = CreateMaybeMessage<::transfer::Stmt1>(GetArena());
+    cfg_ = p;
+  }
+  return cfg_;
+}
+inline ::transfer::Stmt1* TMPFile::mutable_cfg() {
+  // @@protoc_insertion_point(field_mutable:transfer.TMPFile.cfg)
+  return _internal_mutable_cfg();
+}
+inline void TMPFile::set_allocated_cfg(::transfer::Stmt1* cfg) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArena();
+  if (message_arena == nullptr) {
+    delete cfg_;
+  }
+  if (cfg) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+      ::PROTOBUF_NAMESPACE_ID::Arena::GetArena(cfg);
+    if (message_arena != submessage_arena) {
+      cfg = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, cfg, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  cfg_ = cfg;
+  // @@protoc_insertion_point(field_set_allocated:transfer.TMPFile.cfg)
+}
+
+// .transfer.Chunk chk = 2;
+inline bool TMPFile::_internal_has_chk() const {
+  return this != internal_default_instance() && chk_ != nullptr;
+}
+inline bool TMPFile::has_chk() const {
+  return _internal_has_chk();
+}
+inline void TMPFile::clear_chk() {
+  if (GetArena() == nullptr && chk_ != nullptr) {
+    delete chk_;
+  }
+  chk_ = nullptr;
+}
+inline const ::transfer::Chunk& TMPFile::_internal_chk() const {
+  const ::transfer::Chunk* p = chk_;
+  return p != nullptr ? *p : *reinterpret_cast<const ::transfer::Chunk*>(
+      &::transfer::_Chunk_default_instance_);
+}
+inline const ::transfer::Chunk& TMPFile::chk() const {
+  // @@protoc_insertion_point(field_get:transfer.TMPFile.chk)
+  return _internal_chk();
+}
+inline void TMPFile::unsafe_arena_set_allocated_chk(
+    ::transfer::Chunk* chk) {
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(chk_);
+  }
+  chk_ = chk;
+  if (chk) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:transfer.TMPFile.chk)
+}
+inline ::transfer::Chunk* TMPFile::release_chk() {
+  
+  ::transfer::Chunk* temp = chk_;
+  chk_ = nullptr;
+  if (GetArena() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+  return temp;
+}
+inline ::transfer::Chunk* TMPFile::unsafe_arena_release_chk() {
+  // @@protoc_insertion_point(field_release:transfer.TMPFile.chk)
+  
+  ::transfer::Chunk* temp = chk_;
+  chk_ = nullptr;
+  return temp;
+}
+inline ::transfer::Chunk* TMPFile::_internal_mutable_chk() {
+  
+  if (chk_ == nullptr) {
+    auto* p = CreateMaybeMessage<::transfer::Chunk>(GetArena());
+    chk_ = p;
+  }
+  return chk_;
+}
+inline ::transfer::Chunk* TMPFile::mutable_chk() {
+  // @@protoc_insertion_point(field_mutable:transfer.TMPFile.chk)
+  return _internal_mutable_chk();
+}
+inline void TMPFile::set_allocated_chk(::transfer::Chunk* chk) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArena();
+  if (message_arena == nullptr) {
+    delete chk_;
+  }
+  if (chk) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+      ::PROTOBUF_NAMESPACE_ID::Arena::GetArena(chk);
+    if (message_arena != submessage_arena) {
+      chk = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, chk, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  chk_ = chk;
+  // @@protoc_insertion_point(field_set_allocated:transfer.TMPFile.chk)
+}
+
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

@@ -59,14 +59,15 @@ class Transfer final {
     std::unique_ptr< ::grpc::ClientAsyncReaderInterface< ::transfer::Chunk>> PrepareAsyncL_S(::grpc::ClientContext* context, const ::transfer::Stmt2& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncReaderInterface< ::transfer::Chunk>>(PrepareAsyncL_SRaw(context, request, cq));
     }
-    std::unique_ptr< ::grpc::ClientWriterInterface< ::transfer::Chunk>> L_T_L(::grpc::ClientContext* context, ::transfer::Reply* response) {
-      return std::unique_ptr< ::grpc::ClientWriterInterface< ::transfer::Chunk>>(L_T_LRaw(context, response));
+    // rpc L_T_L(stream Chunk) returns (Reply) {}
+    std::unique_ptr< ::grpc::ClientWriterInterface< ::transfer::TMPFile>> L_T_L(::grpc::ClientContext* context, ::transfer::Reply* response) {
+      return std::unique_ptr< ::grpc::ClientWriterInterface< ::transfer::TMPFile>>(L_T_LRaw(context, response));
     }
-    std::unique_ptr< ::grpc::ClientAsyncWriterInterface< ::transfer::Chunk>> AsyncL_T_L(::grpc::ClientContext* context, ::transfer::Reply* response, ::grpc::CompletionQueue* cq, void* tag) {
-      return std::unique_ptr< ::grpc::ClientAsyncWriterInterface< ::transfer::Chunk>>(AsyncL_T_LRaw(context, response, cq, tag));
+    std::unique_ptr< ::grpc::ClientAsyncWriterInterface< ::transfer::TMPFile>> AsyncL_T_L(::grpc::ClientContext* context, ::transfer::Reply* response, ::grpc::CompletionQueue* cq, void* tag) {
+      return std::unique_ptr< ::grpc::ClientAsyncWriterInterface< ::transfer::TMPFile>>(AsyncL_T_LRaw(context, response, cq, tag));
     }
-    std::unique_ptr< ::grpc::ClientAsyncWriterInterface< ::transfer::Chunk>> PrepareAsyncL_T_L(::grpc::ClientContext* context, ::transfer::Reply* response, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncWriterInterface< ::transfer::Chunk>>(PrepareAsyncL_T_LRaw(context, response, cq));
+    std::unique_ptr< ::grpc::ClientAsyncWriterInterface< ::transfer::TMPFile>> PrepareAsyncL_T_L(::grpc::ClientContext* context, ::transfer::Reply* response, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncWriterInterface< ::transfer::TMPFile>>(PrepareAsyncL_T_LRaw(context, response, cq));
     }
     class experimental_async_interface {
      public:
@@ -88,10 +89,11 @@ class Transfer final {
       #else
       virtual void L_S(::grpc::ClientContext* context, ::transfer::Stmt2* request, ::grpc::experimental::ClientReadReactor< ::transfer::Chunk>* reactor) = 0;
       #endif
+      // rpc L_T_L(stream Chunk) returns (Reply) {}
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      virtual void L_T_L(::grpc::ClientContext* context, ::transfer::Reply* response, ::grpc::ClientWriteReactor< ::transfer::Chunk>* reactor) = 0;
+      virtual void L_T_L(::grpc::ClientContext* context, ::transfer::Reply* response, ::grpc::ClientWriteReactor< ::transfer::TMPFile>* reactor) = 0;
       #else
-      virtual void L_T_L(::grpc::ClientContext* context, ::transfer::Reply* response, ::grpc::experimental::ClientWriteReactor< ::transfer::Chunk>* reactor) = 0;
+      virtual void L_T_L(::grpc::ClientContext* context, ::transfer::Reply* response, ::grpc::experimental::ClientWriteReactor< ::transfer::TMPFile>* reactor) = 0;
       #endif
     };
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -109,9 +111,9 @@ class Transfer final {
     virtual ::grpc::ClientReaderInterface< ::transfer::Chunk>* L_SRaw(::grpc::ClientContext* context, const ::transfer::Stmt2& request) = 0;
     virtual ::grpc::ClientAsyncReaderInterface< ::transfer::Chunk>* AsyncL_SRaw(::grpc::ClientContext* context, const ::transfer::Stmt2& request, ::grpc::CompletionQueue* cq, void* tag) = 0;
     virtual ::grpc::ClientAsyncReaderInterface< ::transfer::Chunk>* PrepareAsyncL_SRaw(::grpc::ClientContext* context, const ::transfer::Stmt2& request, ::grpc::CompletionQueue* cq) = 0;
-    virtual ::grpc::ClientWriterInterface< ::transfer::Chunk>* L_T_LRaw(::grpc::ClientContext* context, ::transfer::Reply* response) = 0;
-    virtual ::grpc::ClientAsyncWriterInterface< ::transfer::Chunk>* AsyncL_T_LRaw(::grpc::ClientContext* context, ::transfer::Reply* response, ::grpc::CompletionQueue* cq, void* tag) = 0;
-    virtual ::grpc::ClientAsyncWriterInterface< ::transfer::Chunk>* PrepareAsyncL_T_LRaw(::grpc::ClientContext* context, ::transfer::Reply* response, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientWriterInterface< ::transfer::TMPFile>* L_T_LRaw(::grpc::ClientContext* context, ::transfer::Reply* response) = 0;
+    virtual ::grpc::ClientAsyncWriterInterface< ::transfer::TMPFile>* AsyncL_T_LRaw(::grpc::ClientContext* context, ::transfer::Reply* response, ::grpc::CompletionQueue* cq, void* tag) = 0;
+    virtual ::grpc::ClientAsyncWriterInterface< ::transfer::TMPFile>* PrepareAsyncL_T_LRaw(::grpc::ClientContext* context, ::transfer::Reply* response, ::grpc::CompletionQueue* cq) = 0;
   };
   class Stub final : public StubInterface {
    public:
@@ -139,14 +141,14 @@ class Transfer final {
     std::unique_ptr< ::grpc::ClientAsyncReader< ::transfer::Chunk>> PrepareAsyncL_S(::grpc::ClientContext* context, const ::transfer::Stmt2& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncReader< ::transfer::Chunk>>(PrepareAsyncL_SRaw(context, request, cq));
     }
-    std::unique_ptr< ::grpc::ClientWriter< ::transfer::Chunk>> L_T_L(::grpc::ClientContext* context, ::transfer::Reply* response) {
-      return std::unique_ptr< ::grpc::ClientWriter< ::transfer::Chunk>>(L_T_LRaw(context, response));
+    std::unique_ptr< ::grpc::ClientWriter< ::transfer::TMPFile>> L_T_L(::grpc::ClientContext* context, ::transfer::Reply* response) {
+      return std::unique_ptr< ::grpc::ClientWriter< ::transfer::TMPFile>>(L_T_LRaw(context, response));
     }
-    std::unique_ptr< ::grpc::ClientAsyncWriter< ::transfer::Chunk>> AsyncL_T_L(::grpc::ClientContext* context, ::transfer::Reply* response, ::grpc::CompletionQueue* cq, void* tag) {
-      return std::unique_ptr< ::grpc::ClientAsyncWriter< ::transfer::Chunk>>(AsyncL_T_LRaw(context, response, cq, tag));
+    std::unique_ptr< ::grpc::ClientAsyncWriter< ::transfer::TMPFile>> AsyncL_T_L(::grpc::ClientContext* context, ::transfer::Reply* response, ::grpc::CompletionQueue* cq, void* tag) {
+      return std::unique_ptr< ::grpc::ClientAsyncWriter< ::transfer::TMPFile>>(AsyncL_T_LRaw(context, response, cq, tag));
     }
-    std::unique_ptr< ::grpc::ClientAsyncWriter< ::transfer::Chunk>> PrepareAsyncL_T_L(::grpc::ClientContext* context, ::transfer::Reply* response, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncWriter< ::transfer::Chunk>>(PrepareAsyncL_T_LRaw(context, response, cq));
+    std::unique_ptr< ::grpc::ClientAsyncWriter< ::transfer::TMPFile>> PrepareAsyncL_T_L(::grpc::ClientContext* context, ::transfer::Reply* response, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncWriter< ::transfer::TMPFile>>(PrepareAsyncL_T_LRaw(context, response, cq));
     }
     class experimental_async final :
       public StubInterface::experimental_async_interface {
@@ -169,9 +171,9 @@ class Transfer final {
       void L_S(::grpc::ClientContext* context, ::transfer::Stmt2* request, ::grpc::experimental::ClientReadReactor< ::transfer::Chunk>* reactor) override;
       #endif
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      void L_T_L(::grpc::ClientContext* context, ::transfer::Reply* response, ::grpc::ClientWriteReactor< ::transfer::Chunk>* reactor) override;
+      void L_T_L(::grpc::ClientContext* context, ::transfer::Reply* response, ::grpc::ClientWriteReactor< ::transfer::TMPFile>* reactor) override;
       #else
-      void L_T_L(::grpc::ClientContext* context, ::transfer::Reply* response, ::grpc::experimental::ClientWriteReactor< ::transfer::Chunk>* reactor) override;
+      void L_T_L(::grpc::ClientContext* context, ::transfer::Reply* response, ::grpc::experimental::ClientWriteReactor< ::transfer::TMPFile>* reactor) override;
       #endif
      private:
       friend class Stub;
@@ -191,9 +193,9 @@ class Transfer final {
     ::grpc::ClientReader< ::transfer::Chunk>* L_SRaw(::grpc::ClientContext* context, const ::transfer::Stmt2& request) override;
     ::grpc::ClientAsyncReader< ::transfer::Chunk>* AsyncL_SRaw(::grpc::ClientContext* context, const ::transfer::Stmt2& request, ::grpc::CompletionQueue* cq, void* tag) override;
     ::grpc::ClientAsyncReader< ::transfer::Chunk>* PrepareAsyncL_SRaw(::grpc::ClientContext* context, const ::transfer::Stmt2& request, ::grpc::CompletionQueue* cq) override;
-    ::grpc::ClientWriter< ::transfer::Chunk>* L_T_LRaw(::grpc::ClientContext* context, ::transfer::Reply* response) override;
-    ::grpc::ClientAsyncWriter< ::transfer::Chunk>* AsyncL_T_LRaw(::grpc::ClientContext* context, ::transfer::Reply* response, ::grpc::CompletionQueue* cq, void* tag) override;
-    ::grpc::ClientAsyncWriter< ::transfer::Chunk>* PrepareAsyncL_T_LRaw(::grpc::ClientContext* context, ::transfer::Reply* response, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientWriter< ::transfer::TMPFile>* L_T_LRaw(::grpc::ClientContext* context, ::transfer::Reply* response) override;
+    ::grpc::ClientAsyncWriter< ::transfer::TMPFile>* AsyncL_T_LRaw(::grpc::ClientContext* context, ::transfer::Reply* response, ::grpc::CompletionQueue* cq, void* tag) override;
+    ::grpc::ClientAsyncWriter< ::transfer::TMPFile>* PrepareAsyncL_T_LRaw(::grpc::ClientContext* context, ::transfer::Reply* response, ::grpc::CompletionQueue* cq) override;
     const ::grpc::internal::RpcMethod rpcmethod_L_I_D_;
     const ::grpc::internal::RpcMethod rpcmethod_L_L_;
     const ::grpc::internal::RpcMethod rpcmethod_L_S_;
@@ -208,7 +210,8 @@ class Transfer final {
     virtual ::grpc::Status L_I_D(::grpc::ServerContext* context, const ::transfer::Stmt1* request, ::transfer::Reply* response);
     virtual ::grpc::Status L_L(::grpc::ServerContext* context, const ::transfer::Stmt2* request, ::transfer::Reply* response);
     virtual ::grpc::Status L_S(::grpc::ServerContext* context, const ::transfer::Stmt2* request, ::grpc::ServerWriter< ::transfer::Chunk>* writer);
-    virtual ::grpc::Status L_T_L(::grpc::ServerContext* context, ::grpc::ServerReader< ::transfer::Chunk>* reader, ::transfer::Reply* response);
+    // rpc L_T_L(stream Chunk) returns (Reply) {}
+    virtual ::grpc::Status L_T_L(::grpc::ServerContext* context, ::grpc::ServerReader< ::transfer::TMPFile>* reader, ::transfer::Reply* response);
   };
   template <class BaseClass>
   class WithAsyncMethod_L_I_D : public BaseClass {
@@ -282,11 +285,11 @@ class Transfer final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status L_T_L(::grpc::ServerContext* /*context*/, ::grpc::ServerReader< ::transfer::Chunk>* /*reader*/, ::transfer::Reply* /*response*/) override {
+    ::grpc::Status L_T_L(::grpc::ServerContext* /*context*/, ::grpc::ServerReader< ::transfer::TMPFile>* /*reader*/, ::transfer::Reply* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    void RequestL_T_L(::grpc::ServerContext* context, ::grpc::ServerAsyncReader< ::transfer::Reply, ::transfer::Chunk>* reader, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+    void RequestL_T_L(::grpc::ServerContext* context, ::grpc::ServerAsyncReader< ::transfer::Reply, ::transfer::TMPFile>* reader, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
       ::grpc::Service::RequestAsyncClientStreaming(3, context, reader, new_call_cq, notification_cq, tag);
     }
   };
@@ -435,7 +438,7 @@ class Transfer final {
       ::grpc::Service::experimental().
     #endif
         MarkMethodCallback(3,
-          new ::grpc::internal::CallbackClientStreamingHandler< ::transfer::Chunk, ::transfer::Reply>(
+          new ::grpc::internal::CallbackClientStreamingHandler< ::transfer::TMPFile, ::transfer::Reply>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
                    ::grpc::CallbackServerContext*
@@ -448,15 +451,15 @@ class Transfer final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status L_T_L(::grpc::ServerContext* /*context*/, ::grpc::ServerReader< ::transfer::Chunk>* /*reader*/, ::transfer::Reply* /*response*/) override {
+    ::grpc::Status L_T_L(::grpc::ServerContext* /*context*/, ::grpc::ServerReader< ::transfer::TMPFile>* /*reader*/, ::transfer::Reply* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-    virtual ::grpc::ServerReadReactor< ::transfer::Chunk>* L_T_L(
+    virtual ::grpc::ServerReadReactor< ::transfer::TMPFile>* L_T_L(
       ::grpc::CallbackServerContext* /*context*/, ::transfer::Reply* /*response*/)
     #else
-    virtual ::grpc::experimental::ServerReadReactor< ::transfer::Chunk>* L_T_L(
+    virtual ::grpc::experimental::ServerReadReactor< ::transfer::TMPFile>* L_T_L(
       ::grpc::experimental::CallbackServerContext* /*context*/, ::transfer::Reply* /*response*/)
     #endif
       { return nullptr; }
@@ -529,7 +532,7 @@ class Transfer final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status L_T_L(::grpc::ServerContext* /*context*/, ::grpc::ServerReader< ::transfer::Chunk>* /*reader*/, ::transfer::Reply* /*response*/) override {
+    ::grpc::Status L_T_L(::grpc::ServerContext* /*context*/, ::grpc::ServerReader< ::transfer::TMPFile>* /*reader*/, ::transfer::Reply* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
@@ -606,7 +609,7 @@ class Transfer final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status L_T_L(::grpc::ServerContext* /*context*/, ::grpc::ServerReader< ::transfer::Chunk>* /*reader*/, ::transfer::Reply* /*response*/) override {
+    ::grpc::Status L_T_L(::grpc::ServerContext* /*context*/, ::grpc::ServerReader< ::transfer::TMPFile>* /*reader*/, ::transfer::Reply* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
@@ -753,7 +756,7 @@ class Transfer final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status L_T_L(::grpc::ServerContext* /*context*/, ::grpc::ServerReader< ::transfer::Chunk>* /*reader*/, ::transfer::Reply* /*response*/) override {
+    ::grpc::Status L_T_L(::grpc::ServerContext* /*context*/, ::grpc::ServerReader< ::transfer::TMPFile>* /*reader*/, ::transfer::Reply* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }

@@ -36,26 +36,26 @@
 //  或者"FAIL" */
 // string Data_Load_Execute(string create_sql, string load_sql, string main_name, vector<string> sitenames, vector<string> sqls, vector<string> table_names);
 
-int main(int argc,char *argv[])
-{
-    /* id int key, name char(100), nation char(3) */
-    string create_sql = "create table publisher(id int(6), name char(100), nation char(3))";
-    string load_sql = "load data local infile '/home/roy/ddbms/rawdata/publisher.tsv' into table publisher";
-    string main_name = "pulisher";
-    vector<string> sitenames;
-    string site = "s2";
-    sitenames.push_back(site);
-    vector<string> sqls;
-    string sql = "select * from publisher where id < 104000 and nation='PRC'";
-    sqls.push_back(sql);
-    vector<string> table_names;
-    string table_name = "publisher_1";
-    table_names.push_back(table_name);
+// int main(int argc,char *argv[])
+// {
+//     /* id int key, name char(100), nation char(3) */
+//     string create_sql = "create table publisher(id int(6), name char(100), nation char(3))";
+//     string load_sql = "load data local infile '/home/roy/ddbms/rawdata/publisher.tsv' into table publisher";
+//     string main_name = "pulisher";
+//     vector<string> sitenames;
+//     string site = "s2";
+//     sitenames.push_back(site);
+//     vector<string> sqls;
+//     string sql = "select * from publisher where id < 104000 and nation='PRC'";
+//     sqls.push_back(sql);
+//     vector<string> table_names;
+//     string table_name = "publisher_1";
+//     table_names.push_back(table_name);
 
-    string load_output = Data_Load_Execute(create_sql, load_sql, main_name, sitenames, sqls, table_names);
-    printf("%s", load_output.data());
-    return 0;
-}
+//     string load_output = Data_Load_Execute(create_sql, load_sql, main_name, sitenames, sqls, table_names);
+//     printf("%s", load_output.data());
+//     return 0;
+// }
 
 string Data_Load_Execute(string create_sql, string load_sql, string main_name, vector<string> sitenames, vector<string> sqls, vector<string> table_names){
     /* 将数据存入本地数据库 */

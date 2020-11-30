@@ -6,7 +6,8 @@
 #include "../../transfer/transfer/transfer.h"
 
 /* 在每个site实例上部署的时候这个值不同 */
-#define LOCALSITE "s1"
+#define LOCALSITE "s3"
+#define LOCALSITE2 "s4"
 
 
 // 现在定义一下时间和数据传输量记录的结构

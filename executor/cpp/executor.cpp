@@ -85,6 +85,9 @@ string Data_Load_Execute(string create_sql, string load_sql, string main_name, v
                 // printf("localsite.");
                 frag_res = Local_Tmp_Load(local_name, site);
             }
+            else if(site == LOCALSITE2){
+                frag_res = Local_Tmp_Load(local_name, site);
+            }
             else{
                 // printf("not localsite.");
                 frag_res = RPC_Local_Tmp_Load(local_name, site);

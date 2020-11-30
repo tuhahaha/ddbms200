@@ -120,6 +120,7 @@ string TransferClient::local_T_L(string tmp_data, int site){
 
 // RPC_  是executor调用的接口定义
 string RPC_local_Insert_Delete(string sql, string site){
+    site = site[1];
     char *p = (char*)site.c_str();
     int st = atoi(p);
     TransferClient t1(grpc::CreateChannel(site_info[st-1].IP+":"+site_info[st-1].RPC_PORT, grpc::InsecureChannelCredentials()));
@@ -127,6 +128,7 @@ string RPC_local_Insert_Delete(string sql, string site){
     return res;
 }
 string RPC_local_Load(string sql_create, string sql_load, string site){
+    site = site[1];
     char *p = (char*)site.c_str();
     int st = atoi(p);
     TransferClient t1(grpc::CreateChannel(site_info[st-1].IP+":"+site_info[st-1].RPC_PORT, grpc::InsecureChannelCredentials()));
@@ -135,6 +137,7 @@ string RPC_local_Load(string sql_create, string sql_load, string site){
 
 }
 string RPC_Local_Select(string sql, string res_name, string site){
+    site = site[1];
     char *p = (char*)site.c_str();
     int st = atoi(p);
     TransferClient t1(grpc::CreateChannel(site_info[st-1].IP+":"+site_info[st-1].RPC_PORT, grpc::InsecureChannelCredentials()));
@@ -142,6 +145,7 @@ string RPC_Local_Select(string sql, string res_name, string site){
     return res_name;
 }
 string RPC_Local_Tmp_Load(string tmp_data, string site){
+    site = site[1];
     char *p = (char*)site.c_str();
     int st = atoi(p);
     TransferClient t1(grpc::CreateChannel(site_info[st-1].IP+":"+site_info[st-1].RPC_PORT, grpc::InsecureChannelCredentials()));
@@ -149,10 +153,10 @@ string RPC_Local_Tmp_Load(string tmp_data, string site){
     return res;
 }
 
-int main(){
-    // string res = RPC_local_Insert_Delete("insert into book values(200001,'Book #200001','H. Johnston',100366,7231)","3");
-    // string res = RPC_Local_Select("","test","3");
-    string res = RPC_Local_Tmp_Load("test","3");
-    cout << res << endl;
-    return 0;
-}
+// int main(){
+//     string res = RPC_local_Insert_Delete("insert into book values(200002,'Book #200001','H. Johnston',100366,7231)","s3");
+//     // string res = RPC_Local_Select("","test","3");
+//     // string res = RPC_Local_Tmp_Load("test","3");
+//     cout << res << endl;
+//     return 0;
+// }

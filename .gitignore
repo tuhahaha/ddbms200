@@ -1,5 +1,6 @@
 *.o
 *.grpc.pb.*
+*.exe
 metadata/m
 metadata/t
 parser/Parse_INIT.cpp

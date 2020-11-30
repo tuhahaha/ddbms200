@@ -1,27 +1,27 @@
 #include "./mysql_connector.h"
 
-int main(int argc,char *argv[])
-{
-    // string res_str_out;
-    // res_str_out = local_Insert_Delete("delete from test where name='user'");
-    // insert into test values('user','123456')
-    // res_str_out = local_Insert_Delete("insert into test values('user','123456')");
-    // res_str_out = local_Load("create table book(id int(6), title char(100), authors char(200), publisher_id int(6), copies int(5), key(id) )", "load data local infile '/home/roy/ddbms/rawdata/book.tsv' into table book");
-    // const char* p = res_str_out.data();
-    // printf("%s\n", p);
-    /* 从s3读出数据并在s4存成临时表 */
-    string res_data_out = Local_Select("select * from book where id<=200005", "tmp_book_1", "s3");
-    const char* p = res_data_out.data();
-    printf("tmp table name:%s\n", p);
-    // string res_tmp_out = Local_Tmp_Load(res_data_out, "s4");
-    // p = res_tmp_out.data();
-    // printf("tmp table stored on s4: %s\n", p);
-    // /* 把临时表查出来并且打印 */
-    // res_data_out = Local_Select("select * from tmp_book_1", "tmp_book_2", "s4");
-    // my_mysql_res_print(res_data_out);
+// int main(int argc,char *argv[])
+// {
+//     // string res_str_out;
+//     // res_str_out = local_Insert_Delete("delete from test where name='user'");
+//     // insert into test values('user','123456')
+//     // res_str_out = local_Insert_Delete("insert into test values('user','123456')");
+//     // res_str_out = local_Load("create table book(id int(6), title char(100), authors char(200), publisher_id int(6), copies int(5), key(id) )", "load data local infile '/home/roy/ddbms/rawdata/book.tsv' into table book");
+//     // const char* p = res_str_out.data();
+//     // printf("%s\n", p);
+//     /* 从s3读出数据并在s4存成临时表 */
+//     string res_data_out = Local_Select("select * from book where id<=200005", "tmp_book_1", "s3");
+//     const char* p = res_data_out.data();
+//     printf("tmp table name:%s\n", p);
+//     // string res_tmp_out = Local_Tmp_Load(res_data_out, "s4");
+//     // p = res_tmp_out.data();
+//     // printf("tmp table stored on s4: %s\n", p);
+//     // /* 把临时表查出来并且打印 */
+//     // res_data_out = Local_Select("select * from tmp_book_1", "tmp_book_2", "s4");
+//     // my_mysql_res_print(res_data_out);
 
-    return 0;
-}
+//     return 0;
+// }
 
 string local_Insert_Delete(string sql, string site) // 即只返回成功与否的所有sql语句都可以用这个，测试完毕
 {

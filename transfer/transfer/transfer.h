@@ -45,7 +45,7 @@ typedef struct webInfo{
     string IP;
     string RPC_PORT;
     string ETCD_PORT;
-    string MYSQL_PORT;
+    string MySQL_PRT;
 }WEB;
 
 extern WEB site_info[4];

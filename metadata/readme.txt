@@ -1,3 +1,6 @@
+// 生成可执行文件m
+g++ metadata.cc -lcurl -ljson -o m
+
 //函数调用说明
 
 //可能会经常用到：直接存取GDD，Fragment对象

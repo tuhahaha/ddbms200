@@ -60,7 +60,7 @@ int main() {
     Traverse(sqls);
     vector<string> table_names = GetTableNames(sql_statements);
     Traverse(table_names);
-    string result = Data_Load_Execute(create_sql,load_sql,main_name,sitenames,sqls,table_names);
+    string result = Data_Load_Execute(create_sql_yq,load_sql_yq,main_name,sitenames,sqls,table_names);
     cout << result << endl;
 
     // string select_sql;

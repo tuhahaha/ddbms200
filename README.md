@@ -28,3 +28,15 @@ The parser mainly contains 6 functions
 - LoadObject Parse_LOAD(string sql_statement);
 
 ### executor
+
+
+
+<!-- 运行 -->
+<!-- transfer/transfer/下运行： -->
+make
+g++ -c client.cc
+
+<!-- parser/build下运行： -->
+cmake ..
+make -j
+./main

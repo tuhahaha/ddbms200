@@ -1,15 +1,10 @@
 #include "transfer.h"
 
 
-// HOST_1=10.46.182.82
-// HOST_2=10.46.235.16
-// HOST_3=10.46.219.70
-// HOST_4=10.46.219.70
-
-WEB site_info[4] = {{"10.46.182.82","50051","2379","3306"},
-                    {"10.46.235.16","50051","2379","3306"},
+WEB site_info[4] = {{"10.46.122.10","50051","2379","3306"},
                     {"10.46.219.70","50051","2379","3306"},
-                    {"10.46.219.70","50052","22379","33306"}
+                    {"10.47.201.61","50051","2379","3306"},
+                    {"10.47.201.61","50052","22379","33306"}
                 };
 
 string TransferClient::local_I_D(string sql, int site){
@@ -44,7 +39,8 @@ string TransferClient::local_L(string sql1,string sql2, int site){
       return re.done();
     } else {
       cout << status.error_code() << ": " << status.error_message() << endl;
-      return re.done();
+      string res = re.done();
+      return res;
     }
 }
 string TransferClient::local_S(string sql,string file_name, int site){
@@ -114,7 +110,8 @@ string TransferClient::local_T_L(string tmp_data, int site){
     }
     gettimeofday(&end, NULL);
     cout <<  (end.tv_sec-start.tv_sec)+ (double)(end.tv_usec-start.tv_usec)/1000000 << endl;
-    return re.done();
+    string res = re.done();
+    return res;
 }
 
 
@@ -154,7 +151,7 @@ string RPC_Local_Tmp_Load(string tmp_data, string site){
 }
 
 // int main(){
-//     string res = RPC_local_Insert_Delete("insert into book values(200002,'Book #200001','H. Johnston',100366,7231)","s3");
+//     string res = RPC_local_Insert_Delete("create table test2(id int(6))","s2");
 //     // string res = RPC_Local_Select("","test","3");
 //     // string res = RPC_Local_Tmp_Load("test","3");
 //     cout << res << endl;

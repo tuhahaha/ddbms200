@@ -38,14 +38,13 @@ public:
     string local_S(string sql, string file_name, int site);
     string local_T_L(string tmp_data, int site);
 private:
-    std::unique_ptr<Transfer::Stub> stub_;
+    unique_ptr<Transfer::Stub> stub_;
 };
 
 typedef struct webInfo{
     string IP;
     string RPC_PORT;
     string ETCD_PORT;
-    string MySQL_PRT;
 }WEB;
 
 extern WEB site_info[4];

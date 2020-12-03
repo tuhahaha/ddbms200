@@ -8,5 +8,5 @@ add_library(Mysql_connector mysql_connector.cpp)
 
 
 add_library(Executor executor.cpp)
-target_link_libraries(Executor client.o transfer.pb.o transfer.grpc.pb.o Mysql_connector)
+target_link_libraries(Executor Client Mysql_connector)
 

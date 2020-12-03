@@ -1,10 +1,9 @@
 #include "transfer.h"
 
-
-WEB site_info[4] = {{"10.46.122.10","50051","2379","3306"},
-                    {"10.46.219.70","50051","2379","3306"},
-                    {"10.47.201.61","50051","2379","3306"},
-                    {"10.47.201.61","50052","22379","33306"}
+WEB site_info[4] = {{"10.46.122.10","50051","2379"},
+                    {"10.46.219.70","50051","2379"},
+                    {"10.47.201.61","50051","2379"},
+                    {"10.47.201.61","50052","22379"}
                 };
 
 string TransferClient::local_I_D(string sql, int site){
@@ -39,8 +38,7 @@ string TransferClient::local_L(string sql1,string sql2, int site){
       return re.done();
     } else {
       cout << status.error_code() << ": " << status.error_message() << endl;
-      string res = re.done();
-      return res;
+      return re.done();;
     }
 }
 string TransferClient::local_S(string sql,string file_name, int site){
@@ -71,6 +69,7 @@ string TransferClient::local_S(string sql,string file_name, int site){
     if (status.ok()) {
       return file_name;
     } else {
+      cout << site << ":  " << site << " has something wrong! Please check it!" << endl;
       cout << status.error_code() << ": " << status.error_message() << endl;
       return "";
     }
@@ -97,7 +96,7 @@ string TransferClient::local_T_L(string tmp_data, int site){
     gettimeofday(&start, NULL);
 
     infile.open(filename, ifstream::in | ifstream::binary);
-    std::unique_ptr<ClientWriter<TMPFile>> writer(stub_->L_T_L(&context, &re));
+    unique_ptr<ClientWriter<TMPFile>> writer(stub_->L_T_L(&context, &re));
     while (!infile.eof()) {
       infile.read(data, CHUNK_SIZE);
       chunk.set_buffer(data, infile.gcount());
@@ -108,10 +107,19 @@ string TransferClient::local_T_L(string tmp_data, int site){
       }
       len += infile.gcount();
     }
+    writer->WritesDone();
+    Status status = writer->Finish();
     gettimeofday(&end, NULL);
     cout <<  (end.tv_sec-start.tv_sec)+ (double)(end.tv_usec-start.tv_usec)/1000000 << endl;
-    string res = re.done();
-    return res;
+    // string res = re.done();
+    // return res;
+    if (status.ok()) {
+      return "OK";
+    } else {
+      cout << "site:  " << site << "   has something wrong! Please check it!" << endl;
+      cout << status.error_code() << ": " << status.error_message() << endl;
+      return "";
+    }
 }
 
 
@@ -151,9 +159,9 @@ string RPC_Local_Tmp_Load(string tmp_data, string site){
 }
 
 // int main(){
-//     string res = RPC_local_Insert_Delete("create table test2(id int(6))","s2");
+//     // string res = RPC_local_Insert_Delete("create table test2(id int(6))","s2");
 //     // string res = RPC_Local_Select("","test","3");
-//     // string res = RPC_Local_Tmp_Load("test","3");
-//     cout << res << endl;
+//     string res = RPC_Local_Tmp_Load("test","s2");
+//     cout << "res is : " << res << endl;
 //     return 0;
 // }

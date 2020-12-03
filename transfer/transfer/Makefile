@@ -29,7 +29,7 @@ server: transfer.pb.o transfer.grpc.pb.o server.o ../../executor/cpp/mysql_conne
 	$(CXX) $^ $(LDFLAGS) -o $@
 
 # client: transfer.pb.o transfer.grpc.pb.o client.o ../../executor/cpp/mysql_connector.o
-	# $(CXX) $^ $(LDFLAGS) -o $@
+# 	$(CXX) $^ $(LDFLAGS) -o $@
 
 %.grpc.pb.cc: %.proto
 	$(PROTOC) -I $(PROTOS_PATH) --grpc_out=. --plugin=protoc-gen-grpc=$(GRPC_CPP_PLUGIN_PATH) $<

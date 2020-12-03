@@ -61,8 +61,12 @@ int main(int argc,char *argv[])
     sitenames.push_back(site);
     site = "s4";
     sitenames.push_back(site);
+    site = "s2";
+    sitenames.push_back(site);
     vector<string> sqls;
     string sql = "select * from publisher where id < 104000 and nation='PRC'";
+    sqls.push_back(sql);
+    sql = "select * from publisher where id > 104000 and nation='PRC'";
     sqls.push_back(sql);
     sql = "select * from publisher where id > 104000 and nation='PRC'";
     sqls.push_back(sql);
@@ -70,6 +74,8 @@ int main(int argc,char *argv[])
     string table_name = "publisher_3";
     table_names.push_back(table_name);
     table_name = "publisher_4";
+    table_names.push_back(table_name);
+    table_name = "publisher_2";
     table_names.push_back(table_name);
 
     string load_output = Data_Load_Execute(create_sql, load_sql, main_name, sitenames, sqls, table_names);

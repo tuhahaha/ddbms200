@@ -417,13 +417,10 @@ int my_mysql_res_get_rows(string my_res_name){
                 /*取得結果的行列数*/
                 column = mysql_num_fields(res_ptr);
                 row = mysql_num_rows(res_ptr);
-                /* 关闭连接 */
-                mysql_close(&conn);
-                mysql_free_result(res_ptr);
-                return row;
             }
             else
             {
+                row = 0;
                 printf("Empty!");
             }
             /* 构建语句删除原来的表 */
@@ -444,6 +441,7 @@ int my_mysql_res_get_rows(string my_res_name){
             /* 关闭连接 */
             mysql_close(&conn);
             mysql_free_result(res_ptr);
+            return row;
         }
     }
     else{

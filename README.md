@@ -28,3 +28,15 @@ The parser mainly contains 6 functions
 - LoadObject Parse_LOAD(string sql_statement);
 
 ### executor
+
+
+
+# 从parse入口编译运行整个项目
+## transfer/transfer/下运行（先利用现成的makefile生成grpc需要的链接库）：
+- make
+- ./server 50051
+
+## parser/build下运行（利用CMakeLists将所有可执行文件链接起来）：
+- cmake ..
+- make -j
+- ./main

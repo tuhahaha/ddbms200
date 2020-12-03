@@ -41,6 +41,7 @@ Status TransferImpl::L_I_D(ServerContext* context, const Stmt1* stmt,Reply* re){
     string sql = stmt->sql();
     int site = stmt->site();
     string res = local_Insert_Delete(sql, "s"+to_string(site)); // 此处调用函数
+    // string res = "OK";
     re->set_done(res);
     return Status::OK;
 }
@@ -109,17 +110,19 @@ Status TransferImpl::L_T_L(ServerContext* context, ServerReader<TMPFile>* reader
     // }
     long pos = outfile.tellp();
     cout << "length: " << pos << endl;
-    re->set_done("OK");
     outfile.close();
 
     // 文件传过去以后，调用本地函数
-    Local_Tmp_Load(fn,"s"+to_string(site));
-
-    return Status::OK;
+    // string res = "OK";
+    string res = Local_Tmp_Load(fn,"s"+to_string(site));
+    re->set_done(res);
+    if(res == "OK"){
+        return Status::OK;
+    }
 }
 
-void RunServer() {
-  string server_address("0.0.0.0:50051");
+void RunServer(string host) {
+  string server_address("0.0.0.0:"+host);
   TransferImpl service;
   ServerBuilder builder;
   builder.AddListeningPort(server_address, grpc::InsecureServerCredentials());
@@ -128,7 +131,8 @@ void RunServer() {
   cout << "Server listening on " << server_address << endl;
   server->Wait();
 }
-int main(){
-    RunServer();
+int main(int argc, char** argv){
+    string host = argv[1];
+    RunServer(host);
     return 0;
 }

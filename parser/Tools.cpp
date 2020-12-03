@@ -2,7 +2,8 @@
 #include <stdio.h>
 #include <vector>
 #include <string>
-// #include "../metadata/metadata.h"
+#include "../metadata/metadata.h"
+#include "Tools.h"
 using namespace std;
 
 string GetBetween(string sql_statement, string start, string end) {
@@ -183,9 +184,9 @@ string Link(vector<string> input, string devide) {
 //     return original;
 // }
 
-int main() {
-    string a = "The day is a beautiful day!";
-    // cout << GetBetween(a,"The", " is");
-    cout << GetAfter(a,"The");
-    return 0;
-}
+// int main() {
+//     string a = "The day is a beautiful day!";
+//     // cout << GetBetween(a,"The", " is");
+//     cout << GetAfter(a,"The");
+//     return 0;
+// }

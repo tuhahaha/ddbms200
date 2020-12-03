@@ -1,0 +1,1 @@
+/usr/bin/c++     CMakeFiles/main.dir/Parse_LOAD.cpp.o CMakeFiles/main.dir/Tools.cpp.o  -o main   -L/mnt/d/ddbms200/parser/../../metadata  -L/mnt/d/ddbms200/parser/../../executor/cpp  -Wl,-rpath,/mnt/d/ddbms200/parser/../../metadata:/mnt/d/ddbms200/parser/../../executor/cpp -lExecutor -lMetadata 

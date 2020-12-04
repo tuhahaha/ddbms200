@@ -1,0 +1,2 @@
+/usr/bin/ar qc libMysql_connector.a  CMakeFiles/Mysql_connector.dir/mysql_connector.cpp.o
+/usr/bin/ranlib libMysql_connector.a

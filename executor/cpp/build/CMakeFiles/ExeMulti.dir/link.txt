@@ -1,0 +1,2 @@
+/usr/bin/ar qc libExeMulti.a  CMakeFiles/ExeMulti.dir/executor_multi.cpp.o
+/usr/bin/ranlib libExeMulti.a

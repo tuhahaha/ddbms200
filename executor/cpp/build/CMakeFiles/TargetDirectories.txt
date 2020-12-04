@@ -1,0 +1,5 @@
+/mnt/d/ddbms200/executor/cpp/build/CMakeFiles/rebuild_cache.dir
+/mnt/d/ddbms200/executor/cpp/build/CMakeFiles/ExeMulti.dir
+/mnt/d/ddbms200/executor/cpp/build/CMakeFiles/edit_cache.dir
+/mnt/d/ddbms200/executor/cpp/build/CMakeFiles/Executor.dir
+/mnt/d/ddbms200/executor/cpp/build/CMakeFiles/Mysql_connector.dir

@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <vector>
 #include <string>
-// #include "../metadata/metadata.h"
+#include "../metadata/metadata.h"
 using namespace std;
 
 
@@ -25,6 +25,8 @@ vector<string> GetAllColumnList(string sql_statement);
 vector<string> GetAllData(string sql_statement);
 int GetTCLoc(string table, string column);
 string GetPureColumnFromColumn(string column);
+string Link(vector<string> input, string devide);
+
 // Need metadata 
 // int GetIdFromTC(string table, string column);
 // int GetSiteFromTC(string table, string column);

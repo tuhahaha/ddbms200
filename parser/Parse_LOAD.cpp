@@ -4,6 +4,7 @@
 #include <string>
 #include "Tools.h"
 #include "../executor/cpp/executor.h"
+#include "Parse_LOAD.h"
 using namespace std;
 
 // load sql contains 3 sub sentence parser parse the sql seperately
@@ -11,27 +12,6 @@ using namespace std;
 // sentence 2: LOCAL LOAD ALLDATA
 // sentence 3: LOCAL LOAD LOCALDATA
 // the sql is parsed differently according to the fragmenttype
-
-// local create
-int GetSite(string sql_statement);
-string GetLocalCreate(string sql_statement);
-
-string GetSitename(string sql_statement);
-// local load ALLDATA
-string GetPathFromLocalLoad(string sql_statement);
-string GetTableFromLocalLoad(string sql_statement);
-string GetFragType(string sql_statement);
-
-string GetLoadSql(string sql_statement);
-// local select and load
-string GetSelectSqlFromLoadLocalData(string sql_statement);
-string GetToTable(string sql_statement);
-
-vector<string> GetSiteNames(vector<string> sql_statements);
-vector<string> GetSqls(vector<string> sql_statements);
-vector<string> GetTableNames(vector<string> sql_statements);
-
-string Link(vector<string> input, string devide);
 
 int main() {
     // H
@@ -60,7 +40,7 @@ int main() {
     Traverse(sqls);
     vector<string> table_names = GetTableNames(sql_statements);
     Traverse(table_names);
-    string result = Data_Load_Execute(create_sql_yq,load_sql_yq,main_name,sitenames,sqls,table_names);
+    string result = Data_Load_Execute(create_sql,load_sql,main_name,sitenames,sqls,table_names);
     cout << result << endl;
 
     // string select_sql;
@@ -158,13 +138,7 @@ string GetToTable(string sql_statement) {
     string to_table = GetBetween(sql_statement, "TO", "ON");
     return to_table;
 }
-string Link(vector<string> input, string devide) {
-    string output = input[0];
-    for (int i = 1; i < input.size(); i++) {
-        output += devide + input[i];
-    }
-    return output;
-}
+
 
 vector<string> GetSiteNames(vector<string> sql_statements) {
     vector<string> site_names;

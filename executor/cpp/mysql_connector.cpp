@@ -195,6 +195,7 @@ string Local_Select(string sql, string res_name, string site)
         if (res) 
         {   /*现在就代表执行失败了*/
             printf("Error： mysql_query !\n");
+            return "FAIL";
         }
         else 
         { 
@@ -236,6 +237,9 @@ string Local_Select(string sql, string res_name, string site)
             mysql_close(&my_connection);
             return res_name;
         }             
+    }
+    else{
+        return "FAIL";
     }  
 }
 

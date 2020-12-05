@@ -106,7 +106,7 @@ string local_Insert_Delete(string sql, string site);
    local_Load("create table book(id int(6), title char(100), authors char(200), publisher_id int(6), copies int(5), key(id) )", "load data local infile '/home/roy/ddbms/rawdata/book.tsv' into table book"); */
 string local_Load(string sql_create, string sql_load, string site);
 
-/* 本地执行查询函数，输入SQL语句，和指定返回结果集名称（唯一），和站点名称（s1, s2, s3, s4）,返回执行结果表名(全局唯一), 或者"Empty!"(暂时没有了) */
+/* 本地执行查询函数，输入SQL语句，和指定返回结果集名称（唯一），和站点名称（s1, s2, s3, s4）,返回执行结果表名(全局唯一), 或者"FAIL"(暂时没有了) */
 string Local_Select(string sql, string res_name, string site);
 
 /* 本地执行表存储函数，输入待存的数据表名，和站点名称（s1, s2, s3, s4）,返回执行结果(OK or FAIL) */
@@ -120,5 +120,5 @@ id      title   authors publisher_id    copies
 200002  Book #200002    L. Houghton     101543  694 */
 void my_mysql_res_print(string my_res);
 
-/* 获得SQL文件里数据的行数 */
+/* 获得SQL文件里数据的行数，要在load之前（之后再也不需要数据库里有这个数据）  */
 int my_mysql_res_get_rows(string my_res);

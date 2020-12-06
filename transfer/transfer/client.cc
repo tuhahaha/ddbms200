@@ -121,7 +121,51 @@ string TransferClient::local_T_L(string tmp_data, int site){
       return "";
     }
 }
+exec_tree TransferClient::Data_S_E(TREE tree, int site){
+  MTree mtree;
+  mtree.set_treeid(tree.tree_id);
+  mtree.set_root(tree.root);
+  for(int i=0;i<tree.Nodes.size();i++){
+    MNode* mnode;
+    mnode = mtree.add_nodes();
+    NODE tmp = tree.Nodes[i];
+    mnode->set_id(tmp.id);
+    for(int j=0;j<tmp.child.size();j++){
+      mnode->add_child(tmp.child[j]);
+    }
+    mnode->set_parent(tmp.parent);
+    mnode->set_sqlstmt(tmp.sql_statement);
+    mnode->set_site(tmp.site);
+  }
+  ETree etree;
 
+  ClientContext context;
+  Status status = stub_->D_S_E(&context, mtree, &etree);
+  if (status.ok()) {
+    // 将etree转为exec_tree返回
+    exec_tree res;
+    res.tree_id = etree.treeid();
+    res.root = etree.root();
+    for(int i=0;i<etree.nodes_size();i++){
+      ENode eno = etree.nodes(i);
+      exec_node exeno;
+      exeno.node_id = eno.nodeid();
+      exeno.time_spend = eno.timespend();
+      exeno.volume = eno.volume();
+      exeno.res = eno.res();
+      for(int j=0;j<eno.child_size();j++){
+        exeno.child.push_back(eno.child(j));
+      }
+      // exeno.child = eno.child();
+      exeno.parent = eno.parent();
+      exeno.site = eno.site();
+      res.nodes.push_back(exeno);
+    }
+    return res;
+  } else {
+    cout << status.error_code() << ": " << status.error_message() << endl;
+  } 
+}
 
 // RPC_  是executor调用的接口定义
 string RPC_local_Insert_Delete(string sql, string site){
@@ -157,11 +201,18 @@ string RPC_Local_Tmp_Load(string tmp_data, string site){
     string res = t1.local_T_L(tmp_data,st);
     return res;
 }
-
+exec_tree RPC_Data_Select_Execute(TREE tree, string site){
+    site = site[1];
+    char *p = (char*)site.c_str();
+    int st = atoi(p);
+    TransferClient t1(grpc::CreateChannel(site_info[st-1].IP+":"+site_info[st-1].RPC_PORT, grpc::InsecureChannelCredentials()));
+    return t1.Data_S_E(tree,st);
+}
 // int main(){
 //     // string res = RPC_local_Insert_Delete("create table test2(id int(6))","s2");
 //     // string res = RPC_Local_Select("","test","3");
 //     string res = RPC_Local_Tmp_Load("test","s2");
+
 //     cout << "res is : " << res << endl;
 //     return 0;
 // }

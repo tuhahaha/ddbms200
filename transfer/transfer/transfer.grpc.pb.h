@@ -69,6 +69,13 @@ class Transfer final {
     std::unique_ptr< ::grpc::ClientAsyncWriterInterface< ::transfer::TMPFile>> PrepareAsyncL_T_L(::grpc::ClientContext* context, ::transfer::Reply* response, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncWriterInterface< ::transfer::TMPFile>>(PrepareAsyncL_T_LRaw(context, response, cq));
     }
+    virtual ::grpc::Status D_S_E(::grpc::ClientContext* context, const ::transfer::MTree& request, ::transfer::ETree* response) = 0;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::transfer::ETree>> AsyncD_S_E(::grpc::ClientContext* context, const ::transfer::MTree& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::transfer::ETree>>(AsyncD_S_ERaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::transfer::ETree>> PrepareAsyncD_S_E(::grpc::ClientContext* context, const ::transfer::MTree& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::transfer::ETree>>(PrepareAsyncD_S_ERaw(context, request, cq));
+    }
     class experimental_async_interface {
      public:
       virtual ~experimental_async_interface() {}
@@ -95,6 +102,12 @@ class Transfer final {
       #else
       virtual void L_T_L(::grpc::ClientContext* context, ::transfer::Reply* response, ::grpc::experimental::ClientWriteReactor< ::transfer::TMPFile>* reactor) = 0;
       #endif
+      virtual void D_S_E(::grpc::ClientContext* context, const ::transfer::MTree* request, ::transfer::ETree* response, std::function<void(::grpc::Status)>) = 0;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      virtual void D_S_E(::grpc::ClientContext* context, const ::transfer::MTree* request, ::transfer::ETree* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void D_S_E(::grpc::ClientContext* context, const ::transfer::MTree* request, ::transfer::ETree* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
     };
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
     typedef class experimental_async_interface async_interface;
@@ -114,6 +127,8 @@ class Transfer final {
     virtual ::grpc::ClientWriterInterface< ::transfer::TMPFile>* L_T_LRaw(::grpc::ClientContext* context, ::transfer::Reply* response) = 0;
     virtual ::grpc::ClientAsyncWriterInterface< ::transfer::TMPFile>* AsyncL_T_LRaw(::grpc::ClientContext* context, ::transfer::Reply* response, ::grpc::CompletionQueue* cq, void* tag) = 0;
     virtual ::grpc::ClientAsyncWriterInterface< ::transfer::TMPFile>* PrepareAsyncL_T_LRaw(::grpc::ClientContext* context, ::transfer::Reply* response, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::transfer::ETree>* AsyncD_S_ERaw(::grpc::ClientContext* context, const ::transfer::MTree& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::transfer::ETree>* PrepareAsyncD_S_ERaw(::grpc::ClientContext* context, const ::transfer::MTree& request, ::grpc::CompletionQueue* cq) = 0;
   };
   class Stub final : public StubInterface {
    public:
@@ -150,6 +165,13 @@ class Transfer final {
     std::unique_ptr< ::grpc::ClientAsyncWriter< ::transfer::TMPFile>> PrepareAsyncL_T_L(::grpc::ClientContext* context, ::transfer::Reply* response, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncWriter< ::transfer::TMPFile>>(PrepareAsyncL_T_LRaw(context, response, cq));
     }
+    ::grpc::Status D_S_E(::grpc::ClientContext* context, const ::transfer::MTree& request, ::transfer::ETree* response) override;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::transfer::ETree>> AsyncD_S_E(::grpc::ClientContext* context, const ::transfer::MTree& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::transfer::ETree>>(AsyncD_S_ERaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::transfer::ETree>> PrepareAsyncD_S_E(::grpc::ClientContext* context, const ::transfer::MTree& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::transfer::ETree>>(PrepareAsyncD_S_ERaw(context, request, cq));
+    }
     class experimental_async final :
       public StubInterface::experimental_async_interface {
      public:
@@ -175,6 +197,12 @@ class Transfer final {
       #else
       void L_T_L(::grpc::ClientContext* context, ::transfer::Reply* response, ::grpc::experimental::ClientWriteReactor< ::transfer::TMPFile>* reactor) override;
       #endif
+      void D_S_E(::grpc::ClientContext* context, const ::transfer::MTree* request, ::transfer::ETree* response, std::function<void(::grpc::Status)>) override;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      void D_S_E(::grpc::ClientContext* context, const ::transfer::MTree* request, ::transfer::ETree* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void D_S_E(::grpc::ClientContext* context, const ::transfer::MTree* request, ::transfer::ETree* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
      private:
       friend class Stub;
       explicit experimental_async(Stub* stub): stub_(stub) { }
@@ -196,10 +224,13 @@ class Transfer final {
     ::grpc::ClientWriter< ::transfer::TMPFile>* L_T_LRaw(::grpc::ClientContext* context, ::transfer::Reply* response) override;
     ::grpc::ClientAsyncWriter< ::transfer::TMPFile>* AsyncL_T_LRaw(::grpc::ClientContext* context, ::transfer::Reply* response, ::grpc::CompletionQueue* cq, void* tag) override;
     ::grpc::ClientAsyncWriter< ::transfer::TMPFile>* PrepareAsyncL_T_LRaw(::grpc::ClientContext* context, ::transfer::Reply* response, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::transfer::ETree>* AsyncD_S_ERaw(::grpc::ClientContext* context, const ::transfer::MTree& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::transfer::ETree>* PrepareAsyncD_S_ERaw(::grpc::ClientContext* context, const ::transfer::MTree& request, ::grpc::CompletionQueue* cq) override;
     const ::grpc::internal::RpcMethod rpcmethod_L_I_D_;
     const ::grpc::internal::RpcMethod rpcmethod_L_L_;
     const ::grpc::internal::RpcMethod rpcmethod_L_S_;
     const ::grpc::internal::RpcMethod rpcmethod_L_T_L_;
+    const ::grpc::internal::RpcMethod rpcmethod_D_S_E_;
   };
   static std::unique_ptr<Stub> NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options = ::grpc::StubOptions());
 
@@ -212,6 +243,7 @@ class Transfer final {
     virtual ::grpc::Status L_S(::grpc::ServerContext* context, const ::transfer::Stmt2* request, ::grpc::ServerWriter< ::transfer::Chunk>* writer);
     // rpc L_T_L(stream Chunk) returns (Reply) {}
     virtual ::grpc::Status L_T_L(::grpc::ServerContext* context, ::grpc::ServerReader< ::transfer::TMPFile>* reader, ::transfer::Reply* response);
+    virtual ::grpc::Status D_S_E(::grpc::ServerContext* context, const ::transfer::MTree* request, ::transfer::ETree* response);
   };
   template <class BaseClass>
   class WithAsyncMethod_L_I_D : public BaseClass {
@@ -293,7 +325,27 @@ class Transfer final {
       ::grpc::Service::RequestAsyncClientStreaming(3, context, reader, new_call_cq, notification_cq, tag);
     }
   };
-  typedef WithAsyncMethod_L_I_D<WithAsyncMethod_L_L<WithAsyncMethod_L_S<WithAsyncMethod_L_T_L<Service > > > > AsyncService;
+  template <class BaseClass>
+  class WithAsyncMethod_D_S_E : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithAsyncMethod_D_S_E() {
+      ::grpc::Service::MarkMethodAsync(4);
+    }
+    ~WithAsyncMethod_D_S_E() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status D_S_E(::grpc::ServerContext* /*context*/, const ::transfer::MTree* /*request*/, ::transfer::ETree* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestD_S_E(::grpc::ServerContext* context, ::transfer::MTree* request, ::grpc::ServerAsyncResponseWriter< ::transfer::ETree>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(4, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  typedef WithAsyncMethod_L_I_D<WithAsyncMethod_L_L<WithAsyncMethod_L_S<WithAsyncMethod_L_T_L<WithAsyncMethod_D_S_E<Service > > > > > AsyncService;
   template <class BaseClass>
   class ExperimentalWithCallbackMethod_L_I_D : public BaseClass {
    private:
@@ -464,11 +516,58 @@ class Transfer final {
     #endif
       { return nullptr; }
   };
+  template <class BaseClass>
+  class ExperimentalWithCallbackMethod_D_S_E : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    ExperimentalWithCallbackMethod_D_S_E() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodCallback(4,
+          new ::grpc::internal::CallbackUnaryHandler< ::transfer::MTree, ::transfer::ETree>(
+            [this](
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::transfer::MTree* request, ::transfer::ETree* response) { return this->D_S_E(context, request, response); }));}
+    void SetMessageAllocatorFor_D_S_E(
+        ::grpc::experimental::MessageAllocator< ::transfer::MTree, ::transfer::ETree>* allocator) {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(4);
+    #else
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(4);
+    #endif
+      static_cast<::grpc::internal::CallbackUnaryHandler< ::transfer::MTree, ::transfer::ETree>*>(handler)
+              ->SetMessageAllocator(allocator);
+    }
+    ~ExperimentalWithCallbackMethod_D_S_E() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status D_S_E(::grpc::ServerContext* /*context*/, const ::transfer::MTree* /*request*/, ::transfer::ETree* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+    virtual ::grpc::ServerUnaryReactor* D_S_E(
+      ::grpc::CallbackServerContext* /*context*/, const ::transfer::MTree* /*request*/, ::transfer::ETree* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* D_S_E(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::transfer::MTree* /*request*/, ::transfer::ETree* /*response*/)
+    #endif
+      { return nullptr; }
+  };
   #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-  typedef ExperimentalWithCallbackMethod_L_I_D<ExperimentalWithCallbackMethod_L_L<ExperimentalWithCallbackMethod_L_S<ExperimentalWithCallbackMethod_L_T_L<Service > > > > CallbackService;
+  typedef ExperimentalWithCallbackMethod_L_I_D<ExperimentalWithCallbackMethod_L_L<ExperimentalWithCallbackMethod_L_S<ExperimentalWithCallbackMethod_L_T_L<ExperimentalWithCallbackMethod_D_S_E<Service > > > > > CallbackService;
   #endif
 
-  typedef ExperimentalWithCallbackMethod_L_I_D<ExperimentalWithCallbackMethod_L_L<ExperimentalWithCallbackMethod_L_S<ExperimentalWithCallbackMethod_L_T_L<Service > > > > ExperimentalCallbackService;
+  typedef ExperimentalWithCallbackMethod_L_I_D<ExperimentalWithCallbackMethod_L_L<ExperimentalWithCallbackMethod_L_S<ExperimentalWithCallbackMethod_L_T_L<ExperimentalWithCallbackMethod_D_S_E<Service > > > > > ExperimentalCallbackService;
   template <class BaseClass>
   class WithGenericMethod_L_I_D : public BaseClass {
    private:
@@ -533,6 +632,23 @@ class Transfer final {
     }
     // disable synchronous version of this method
     ::grpc::Status L_T_L(::grpc::ServerContext* /*context*/, ::grpc::ServerReader< ::transfer::TMPFile>* /*reader*/, ::transfer::Reply* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+  };
+  template <class BaseClass>
+  class WithGenericMethod_D_S_E : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithGenericMethod_D_S_E() {
+      ::grpc::Service::MarkMethodGeneric(4);
+    }
+    ~WithGenericMethod_D_S_E() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status D_S_E(::grpc::ServerContext* /*context*/, const ::transfer::MTree* /*request*/, ::transfer::ETree* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
@@ -615,6 +731,26 @@ class Transfer final {
     }
     void RequestL_T_L(::grpc::ServerContext* context, ::grpc::ServerAsyncReader< ::grpc::ByteBuffer, ::grpc::ByteBuffer>* reader, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
       ::grpc::Service::RequestAsyncClientStreaming(3, context, reader, new_call_cq, notification_cq, tag);
+    }
+  };
+  template <class BaseClass>
+  class WithRawMethod_D_S_E : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithRawMethod_D_S_E() {
+      ::grpc::Service::MarkMethodRaw(4);
+    }
+    ~WithRawMethod_D_S_E() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status D_S_E(::grpc::ServerContext* /*context*/, const ::transfer::MTree* /*request*/, ::transfer::ETree* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestD_S_E(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(4, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -770,6 +906,44 @@ class Transfer final {
       { return nullptr; }
   };
   template <class BaseClass>
+  class ExperimentalWithRawCallbackMethod_D_S_E : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    ExperimentalWithRawCallbackMethod_D_S_E() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodRawCallback(4,
+          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+            [this](
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->D_S_E(context, request, response); }));
+    }
+    ~ExperimentalWithRawCallbackMethod_D_S_E() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status D_S_E(::grpc::ServerContext* /*context*/, const ::transfer::MTree* /*request*/, ::transfer::ETree* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+    virtual ::grpc::ServerUnaryReactor* D_S_E(
+      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* D_S_E(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #endif
+      { return nullptr; }
+  };
+  template <class BaseClass>
   class WithStreamedUnaryMethod_L_I_D : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
@@ -823,7 +997,34 @@ class Transfer final {
     // replace default version of method with streamed unary
     virtual ::grpc::Status StreamedL_L(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::transfer::Stmt2,::transfer::Reply>* server_unary_streamer) = 0;
   };
-  typedef WithStreamedUnaryMethod_L_I_D<WithStreamedUnaryMethod_L_L<Service > > StreamedUnaryService;
+  template <class BaseClass>
+  class WithStreamedUnaryMethod_D_S_E : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithStreamedUnaryMethod_D_S_E() {
+      ::grpc::Service::MarkMethodStreamed(4,
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::transfer::MTree, ::transfer::ETree>(
+            [this](::grpc::ServerContext* context,
+                   ::grpc::ServerUnaryStreamer<
+                     ::transfer::MTree, ::transfer::ETree>* streamer) {
+                       return this->StreamedD_S_E(context,
+                         streamer);
+                  }));
+    }
+    ~WithStreamedUnaryMethod_D_S_E() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable regular version of this method
+    ::grpc::Status D_S_E(::grpc::ServerContext* /*context*/, const ::transfer::MTree* /*request*/, ::transfer::ETree* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    // replace default version of method with streamed unary
+    virtual ::grpc::Status StreamedD_S_E(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::transfer::MTree,::transfer::ETree>* server_unary_streamer) = 0;
+  };
+  typedef WithStreamedUnaryMethod_L_I_D<WithStreamedUnaryMethod_L_L<WithStreamedUnaryMethod_D_S_E<Service > > > StreamedUnaryService;
   template <class BaseClass>
   class WithSplitStreamingMethod_L_S : public BaseClass {
    private:
@@ -852,7 +1053,7 @@ class Transfer final {
     virtual ::grpc::Status StreamedL_S(::grpc::ServerContext* context, ::grpc::ServerSplitStreamer< ::transfer::Stmt2,::transfer::Chunk>* server_split_streamer) = 0;
   };
   typedef WithSplitStreamingMethod_L_S<Service > SplitStreamedService;
-  typedef WithStreamedUnaryMethod_L_I_D<WithStreamedUnaryMethod_L_L<WithSplitStreamingMethod_L_S<Service > > > StreamedService;
+  typedef WithStreamedUnaryMethod_L_I_D<WithStreamedUnaryMethod_L_L<WithSplitStreamingMethod_L_S<WithStreamedUnaryMethod_D_S_E<Service > > > > StreamedService;
 };
 
 }  // namespace transfer

@@ -12,6 +12,7 @@
 #include <grpc++/security/server_credentials.h>
 #include "transfer.grpc.pb.h"
 #include "../../executor/cpp/mysql_connector.h"
+#include "../../executor/cpp/executor_multi.h"
 using grpc::Server;
 using grpc::ServerBuilder;
 using grpc::ServerContext;
@@ -23,6 +24,10 @@ using transfer::Stmt2;
 using transfer::Chunk;
 using transfer::TMPFile;
 using transfer::Reply;
+using transfer::MTree;
+using transfer::ETree;
+using transfer::MNode;
+using transfer::ENode;
 using transfer::Transfer;
 
 using namespace std;
@@ -34,6 +39,7 @@ public:
     Status L_L(ServerContext* context, const Stmt2* stmt,Reply* re);
     Status L_S(ServerContext* context, const Stmt2* stmt,ServerWriter<Chunk>* writer);
     Status L_T_L(ServerContext* context, ServerReader<TMPFile>* reader, Reply* re);
+    Status D_S_E(ServerContext* context, const MTree* mtree,ETree* etree);
     
 };
 
@@ -120,6 +126,46 @@ Status TransferImpl::L_T_L(ServerContext* context, ServerReader<TMPFile>* reader
         return Status::OK;
     }
 }
+
+Status TransferImpl::D_S_E(ServerContext* context, const MTree* mtree,ETree* etree){
+    TREE tr;
+    tr.tree_id = mtree->treeid();
+    tr.root = mtree->root();
+    for(int i=0;i<mtree->nodes_size();i++){
+        MNode mnd = mtree->nodes(i);
+        NODE nd;
+        nd.id = mnd.id();
+        for(int j=0;j<mnd.child_size();j++){
+            nd.child.push_back(mnd.child(j));
+        }
+        nd.parent = mnd.parent();
+        nd.sql_statement = mnd.sqlstmt();
+        nd.site = mnd.site();
+        tr.Nodes.push_back(nd);
+    }
+    exec_tree exetr;
+    // exetr = Data_Select_Execute(tr);
+    // 将exetr包装成message etree传回去
+    etree->set_treeid(exetr.tree_id);
+    etree->set_root(exetr.root);
+    for(int i=0;i<exetr.nodes.size();i++){
+        exec_node exeno=exetr.nodes[i];
+        ENode* eno;
+        eno = etree->add_nodes();
+        eno->set_nodeid(exeno.node_id);
+        eno->set_timespend(exeno.time_spend);
+        eno->set_volume(exeno.volume);
+        eno->set_res(exeno.res);
+        for(int j=0;j<exeno.child.size();j++){
+            eno->add_child(exeno.child[j]);
+        }
+        // eno->set_child(exeno.child);
+        eno->set_parent(exeno.parent);
+        eno->set_site(exeno.site);
+    }
+    return Status::OK;
+}
+
 
 void RunServer(string host) {
   string server_address("0.0.0.0:"+host);

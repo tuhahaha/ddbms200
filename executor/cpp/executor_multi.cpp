@@ -2,6 +2,10 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<sys/stat.h>
+//是否用得上存疑
+#include <set>
+#include <iterator>
+#include <algorithm>
 // #include <thread>
 // #include <future>
 // #include <utility>
@@ -52,6 +56,10 @@ NODE get_node(TREE tree, int node_id);
 /* 输入一个树结构和节点id，返回以对应节点为根节点的子树 */
 TREE get_sub_tree(TREE tree, int node_id);
 
+/* for循环内原先的内容被封装为另外一个函数，
+输入sitenames, sqls, table_names, 输出String - "xx rows imported on site x.\n" 或者 "FAIL on site x.\n" */
+// void Data_Select_Thread(TREE tree, int child_id, exec_tree res_tree, std::promise<string> &resultObj)
+
 /* 本函数用于递归执行整个select流程，输入一棵查询计划树，返回对应的执行结果树 
 至于查询到的数据结果，从tree与node的id便可以推测得到结果表的名字，
 mysql_connector.h里面也提供了根据结果表名字打印结果的函数void my_mysql_res_print(string my_res); */
@@ -90,8 +98,40 @@ int main(int argc,char *argv[])
     // printf("%s", load_output.data());
 
     /* 以下是测试SELECT所用代码 */
-    /* 此处应有tree定义 */
+    /* 此处应有tree定义 */   
+    // NODE tmp_input_node = new NODE();  
+    NODE tmp_input_node1;
+    vector<NODE> input_nodes;
     TREE Tree;
+    Tree.root = 1;
+    Tree.tree_id = 0;
+    tmp_input_node1.id = 1;
+    tmp_input_node1.site = 3;
+    tmp_input_node1.sql_statement = "select tree_0_node_2.id from tree_0_node_2,tree_0_node_3 where tree_0_node_2.publisher_id = tree_0_node_3.id and tree_0_node_2.id < 200011";
+    // tmp_input_node1.sql_statement = "select * from tree_0_node_2 where id < 100005";
+    tmp_input_node1.child.push_back(2);
+    tmp_input_node1.child.push_back(3);
+    input_nodes.push_back(tmp_input_node1);
+
+    NODE tmp_input_node2;
+    tmp_input_node2.id = 2;
+    tmp_input_node2.site = 3;
+    tmp_input_node2.sql_statement = "select * from book";
+    tmp_input_node2.parent = 1;
+    tmp_input_node2.child.clear();
+    input_nodes.push_back(tmp_input_node2);
+
+    NODE tmp_input_node3;
+    tmp_input_node3.id = 3;
+    tmp_input_node3.site = 4;
+    tmp_input_node3.sql_statement = "select * from publisher_4";
+    tmp_input_node3.parent = 1;   
+    tmp_input_node3.child.clear();
+    input_nodes.push_back(tmp_input_node3);
+
+    Tree.Nodes = input_nodes;
+    // delete tmp_input_node;
+
     exec_tree res_tree = Data_Select_Execute(Tree);
     printf("tree id: %d\n", res_tree.tree_id);
     printf("tree root id: %d\n", res_tree.root);
@@ -99,7 +139,7 @@ int main(int argc,char *argv[])
         exec_node tmp_node = res_tree.Nodes[i];
         printf("node id: %d; \tdata volume: %ld; \t time used: %f.\n", tmp_node.node_id, tmp_node.volume, tmp_node.time_spend);
     }
-    string res_name = "tree_" + to_string(res_tree.tree_id) + "node_" + to_string(res_tree.root);
+    string res_name = "tree_" + to_string(res_tree.tree_id) + "_node_" + to_string(res_tree.root);
     my_mysql_res_print(res_name); 
     return 0;
 }
@@ -392,57 +432,62 @@ exec_tree Data_Select_Execute(TREE tree){
     exec_root_node.site = root_node.site;
     exec_root_node.child = root_node.child;
     exec_root_node.parent = root_node.parent;
-    /* 遍历根节点的子节点，获得以该子节点为根节点的子树，这里的遍历先写成循环，通顺以后再改成多线程  */
-    for(int child_id: childs_id){
-        sub_tree = get_sub_tree(tree, child_id);
-        child_node = get_node(tree, child_id);
-        string site = site_to_string(child_node.site);
-        string res_name = "tree_" + to_string(tree.tree_id) + "node_" + to_string(child_node.id);
-        /* 如果已经是叶子节点，就要从MySQL里面具体拿数据 */
-        if(sub_tree.Nodes.size()==1){
-            // string Local_Select(string sql, string res_name, string site);
-            string sql_statement = sub_tree.Nodes[0].sql_statement;
-            // string res_name = "tree_" + to_string(tree.tree_id) + "node_" + to_string(sub_tree.Nodes[0].id);
-            // string site = site_to_string(sub_tree.Nodes[0].site);
-            string select_res;
-            if(site == LOCALSITE || site == LOCALSITE2){
-                select_res = Local_Select(sql_statement, res_name, site);
-            }
-            else{
-                // select_res = RPC_Local_Select(sql_statement, res_name, site);
-                select_res = Local_Select(sql_statement, res_name, site); // 本地调试用，我觉得这个分支可能永远也进入不了吧
-            }
-            /* 获取结果文件大小 */
-            if(select_res == "FAIL"){
-                /* 如果查询失败了 */
-                /* 计算所花时间 */
-                time_t end_time = time(NULL);
-                double time_spend = difftime(end_time, start_time);
-                /* 构造本节点的执行记录，合并进执行树 */
-                exec_root_node.time_spend = time_spend;
-                exec_root_node.volume = 0;
-                exec_root_node.res = "FAIL";
-                res_tree.Nodes.push_back(exec_root_node);
-                return res_tree;
-            }
-            else{
-                /* 现在表示查询成功了 */
-                string filepath = TMPPATH + res_name + ".sql";
-                const char* p = filepath.data();
-                size_t res_volume = get_filebytes(p);
-                /* 计算所花时间 */
-                time_t end_time = time(NULL);
-                double time_spend = difftime(end_time, start_time);
-                /* 构造本节点的执行记录，合并进执行树 */
-                exec_root_node.time_spend = time_spend;
-                exec_root_node.volume = res_volume;
-                exec_root_node.res = "OK";
-                res_tree.Nodes.push_back(exec_root_node);
-                return res_tree;
-            }
+    /* 判断是否叶子节点 */
+    if(tree.Nodes.size()==1){
+        /* 是叶子节点，从MySQL里面具体拿数据 */
+        string site = site_to_string(root_node.site);
+        string res_name = "tree_" + to_string(tree.tree_id) + "_node_" + to_string(root_node.id);
+        string sql_statement = root_node.sql_statement;
+        string select_res;
+        if(site == LOCALSITE || site == LOCALSITE2){
+            select_res = Local_Select(sql_statement, res_name, site);
         }
         else{
-            /* 不是叶子节点，继续执行本函数，得到返回的执行树 */
+            // select_res = RPC_Local_Select(sql_statement, res_name, site);
+            select_res = Local_Select(sql_statement, res_name, site); // 本地调试用，我觉得这个分支可能永远也进入不了吧
+        }
+        printf("select_res: %s\n", select_res.data());
+        /* 获取结果文件大小 */
+        if(select_res == "FAIL"){
+            /* 如果查询失败了 */
+            /* 计算所花时间 */
+            time_t end_time = time(NULL);
+            double time_spend = difftime(end_time, start_time);
+            /* 构造本节点的执行记录，合并进执行树 */
+            exec_root_node.time_spend = time_spend;
+            exec_root_node.volume = 0;
+            exec_root_node.res = "FAIL";
+            res_tree.Nodes.push_back(exec_root_node);
+            return res_tree;
+        }
+        else{
+            /* 现在表示查询成功了 */
+            string filepath = TMPPATH + res_name + ".sql";
+            const char* p = filepath.data();
+            size_t res_volume = get_filebytes(p);
+            /* 计算所花时间 */
+            time_t end_time = time(NULL);
+            double time_spend = difftime(end_time, start_time);
+            /* 构造本节点的执行记录，合并进执行树 */
+            exec_root_node.time_spend = time_spend;
+            exec_root_node.volume = res_volume;
+            exec_root_node.res = "OK";
+            res_tree.Nodes.push_back(exec_root_node);
+            return res_tree;
+        }
+    }
+    else{
+        /* 不是叶子节点 */
+        /* 遍历根节点的子节点，获得以该子节点为根节点的子树，这里的遍历先写成循环，通顺以后再改成多线程  */
+        for(int child_id: childs_id){
+            printf("child %d on processing ...\n", child_id);
+            sub_tree = get_sub_tree(tree, child_id);
+            printf("sub tree nodes %ld\n", sub_tree.Nodes.size());
+            child_node = get_node(tree, child_id);
+            string site = site_to_string(child_node.site);
+            string res_name = "tree_" + to_string(tree.tree_id) + "_node_" + to_string(child_node.id);
+
+            /* 继续执行本函数，得到返回的执行树 */
             exec_tree res_sub_tree;
             if(site == LOCALSITE || site == LOCALSITE2){
                 res_sub_tree = Data_Select_Execute(sub_tree);
@@ -460,7 +505,7 @@ exec_tree Data_Select_Execute(TREE tree){
                 /*把结果存进本地MySQL，通用s1 */               
                 string tmp_load_res = Local_Tmp_Load(res_name, "s1");
                 if(tmp_load_res == "OK"){
-                    printf("tmp table loading of %s succeed!", res_name.data());
+                    printf("tmp table loading of %s succeed!\n", res_name.data());
                 }
                 else{
                     /* 计算所花时间 */
@@ -491,13 +536,14 @@ exec_tree Data_Select_Execute(TREE tree){
     }
     /* 根据根节点的sql_statement执行结果整合 */
     string root_sql = root_node.sql_statement;
-    string root_res_name = "tree_" + to_string(tree.tree_id) + "node_" + to_string(root_node.id);
+    string root_res_name = "tree_" + to_string(tree.tree_id) + "_node_" + to_string(root_node.id);
+    printf("root res name: %s\n", root_res_name.data());
     string root_site = site_to_string(root_node.site);
     string root_select_res = Local_Select(root_sql, root_res_name, root_site);
 
     /* 删除MySQL内部临时表，通用s1，中间失败的话不影响结果，只是长此以往会造成数据库负担，所以没有因此而返回FAIL */
     for(int child_id: childs_id){
-        string drop_sql = "drop table tree_" + to_string(tree.tree_id) + "node_" + to_string(child_id);
+        string drop_sql = "drop table tree_" + to_string(tree.tree_id) + "_node_" + to_string(child_id);
         string drop_res = local_Insert_Delete(drop_sql, "s1");
         if(drop_res != "OK"){
             printf("release failed! %s", drop_sql.data());

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <stdio.h>
 #include <string>
 #include <vector>
 #include <ctime>
@@ -7,6 +8,8 @@
 #include <thread>
 #include <future>
 #include <utility>
+
+using namespace std;
 
 /* 这是为了记录每次最多并行多少线程，受到机器最大并行数量的限制，
 所以实质上应当取max(机器允许的最大并行数量，数据库站点数量)，

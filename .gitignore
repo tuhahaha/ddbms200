@@ -15,3 +15,9 @@ executor/cpp/test
 executor/cpp/test.cpp
 executor/cpp/test_tree
 executor/cpp/test_tree.cpp
+executor/cpp/a.out
+executor/cpp/em
+executor/cpp/mm
+executor/cpp/test_tree
+executor/cpp/test_tree.cpp
+executor/cpp/CMakeLists.txt

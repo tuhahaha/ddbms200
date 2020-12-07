@@ -1,5 +1,4 @@
 #include "Parse_LOAD.h"
-#include "Tools.h"
 using namespace std;
 
 // load sql contains 3 sub sentence parser parse the sql seperately

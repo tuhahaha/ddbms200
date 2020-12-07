@@ -8,53 +8,66 @@ using namespace std;
 // sentence 3: LOCAL LOAD LOCALDATA
 // the sql is parsed differently according to the fragmenttype
 
-int main() {
-    // H
-    string sql_statement;
-    sql_statement = "LOCAL CREATE TABLE Publisher (id int(6) key, name char(100), nation char(3)) ON SITE 1;";
-    string create_sql_yq;
-    create_sql_yq = GetLocalCreate(sql_statement);
-    cout << create_sql_yq << endl;
-    sql_statement = "LOCAL LOAD ALLDATA TO TABLE Publisher FROM LOCAL FILE the path;";
-    string load_sql_yq = GetLoadSql(sql_statement);
-    cout << load_sql_yq << endl;
-    string main_name = GetTableFromLocalLoad(sql_statement);
-    cout << main_name << endl;
-    vector<string> sql_statements;
-    sql_statement = "LOCAL LOAD LOCALDATA TABLE Publisher BY H WITH ( id<104000 nation='PRC') TO Publisher_1 ON SITE 1;";
-    sql_statements.push_back(sql_statement);
-    sql_statement = "LOCAL LOAD LOCALDATA TABLE Publisher BY H WITH ( id<104000 nation='USA') TO Publisher_2 ON SITE 2;";
-    sql_statements.push_back(sql_statement);
-    sql_statement = "LOCAL LOAD LOCALDATA TABLE Publisher BY H WITH ( id>=104000 nation='PRC') TO Publisher_3 ON SITE 3;";
-    sql_statements.push_back(sql_statement);
-    sql_statement = "LOCAL LOAD LOCALDATA TABLE Publisher BY H WITH ( id>=104000 nation='USA') TO Publisher_4 ON SITE 4;";
-    sql_statements.push_back(sql_statement);
-    // vector<string> sitenames = GetSiteNames(sql_statements);
-    // Traverse(sitenames);
-    // vector<string> sqls = GetSqls(sql_statements);
-    // Traverse(sqls);
-    // vector<string> table_names = GetTableNames(sql_statements);
-    // Traverse(table_names);
-    // V
-    // string sql_statement;
-    // sql_statement = "LOCAL CREATE TABLE Customer (id int(6) key, name char(100), rank int(6)) ON SITE 1;";
-    // int site = GetSite(sql_statement);
-    // string sql_localcreate = GetLocalCreate(sql_statement);
-    // cout << site << endl;
-    // cout << sql_localcreate << endl;
-    // sql_statement = "LOCAL LOAD ALLDATA TO TABLE Customer FROM LOCAL FILE the path;";
-    // string table_name = GetTableFromLocalLoad(sql_statement);
-    // string path = GetPathFromLocalLoad(sql_statement);
-    // cout << table_name << endl;
-    // cout << path << endl;
-    // sql_statement = "LOCAL LOAD LOCALDATA TABLE Customer BY V WITH ( id name) TO Customer_1 ON SITE 1;";
-    // string select_sql;
-    // select_sql = GetSelectSqlFromLoadLocalData(sql_statement);
-    // string to_table; 
-    // to_table = GetToTable(sql_statement);
-    // cout << to_table << endl;
-    return 0;
-}
+// int main() {
+//     // H
+//     string sql_statement;
+//     string create_sql_yq;
+//     string load_sql_yq;
+//     string main_name;
+//     vector<string> sql_statements;
+//     vector<string> sitenames ;
+//     vector<string> sqls ;
+//     vector<string> table_names ;
+
+//     sql_statement = "LOCAL CREATE TABLE Publisher (id int(6) key, name char(100), nation char(3)) ON SITE 1;";
+//     create_sql_yq = GetLocalCreate(sql_statement);
+//     cout << create_sql_yq << endl;
+//     sql_statement = "LOCAL LOAD ALLDATA TO TABLE Publisher FROM LOCAL FILE the path;";
+//     load_sql_yq = GetLoadSql(sql_statement);
+//     cout << load_sql_yq << endl;
+//     main_name = GetTableFromLocalLoad(sql_statement);
+//     cout << main_name << endl;
+//     sql_statements.clear();
+//     sql_statement = "LOCAL LOAD LOCALDATA TABLE Publisher BY H WITH ( id<104000 nation='PRC') TO Publisher_1 ON SITE 1;";
+//     sql_statements.push_back(sql_statement);
+//     sql_statement = "LOCAL LOAD LOCALDATA TABLE Publisher BY H WITH ( id<104000 nation='USA') TO Publisher_2 ON SITE 2;";
+//     sql_statements.push_back(sql_statement);
+//     sql_statement = "LOCAL LOAD LOCALDATA TABLE Publisher BY H WITH ( id>=104000 nation='PRC') TO Publisher_3 ON SITE 3;";
+//     sql_statements.push_back(sql_statement);
+//     sql_statement = "LOCAL LOAD LOCALDATA TABLE Publisher BY H WITH ( id>=104000 nation='USA') TO Publisher_4 ON SITE 4;";
+//     sql_statements.push_back(sql_statement);
+//     sitenames = GetSiteNames(sql_statements);
+//     sqls = GetSqls(sql_statements);
+//     table_names = GetTableNames(sql_statements);
+//     Traverse(sitenames);
+//     Traverse(sqls);
+//     Traverse(table_names);
+//     // string result = Data_Load_Execute(create_sql_yq,load_sql_yq,main_name,sitenames,sqls,table_names); // call yq's function
+    
+//     // V
+//     sql_statement = "LOCAL CREATE TABLE Customer (id int(6) key, name char(100), rank int(6)) ON SITE 1;";
+//     create_sql_yq = GetLocalCreate(sql_statement);
+//     cout << create_sql_yq << endl;
+//     sql_statement = "LOCAL LOAD ALLDATA TO TABLE Customer FROM LOCAL FILE the path;";
+//     load_sql_yq = GetLoadSql(sql_statement);
+//     main_name = GetTableFromLocalLoad(sql_statement);
+//     cout << load_sql_yq << endl;
+//     cout << main_name << endl;
+//     sql_statements.clear();
+//     sql_statement = "LOCAL LOAD LOCALDATA TABLE Customer BY V WITH ( id name) TO Customer_1 ON SITE 1;";
+//     sql_statements.push_back(sql_statement);
+//     sql_statement = "LOCAL LOAD LOCALDATA TABLE Customer BY V WITH ( id rank) TO Customer_2 ON SITE 2;";
+//     sql_statements.push_back(sql_statement);
+//     sitenames = GetSiteNames(sql_statements);
+//     sqls = GetSqls(sql_statements);
+//     table_names = GetTableNames(sql_statements);
+//     Traverse(sitenames);
+//     Traverse(sqls);
+//     Traverse(table_names);
+//     // string result = Data_Load_Execute(create_sql_yq,load_sql_yq,main_name,sitenames,sqls,table_names); // call yq's function
+
+//     return 0;
+// }
 // local create 
 int GetSite(string sql_statement) {
     int site = stoi(GetBetween(sql_statement, "SITE", ";"));

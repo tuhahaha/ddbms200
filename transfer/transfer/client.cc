@@ -159,7 +159,7 @@ exec_tree TransferClient::Data_S_E(TREE tree, int site){
       // exeno.child = eno.child();
       exeno.parent = eno.parent();
       exeno.site = eno.site();
-      res.nodes.push_back(exeno);
+      res.Nodes.push_back(exeno);
     }
     return res;
   } else {

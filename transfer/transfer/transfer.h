@@ -61,7 +61,7 @@ struct exec_node{
 struct exec_tree{
     int tree_id; // 应当与它执行的树的ID一致
     int root; // 为了与原来的树保持一致
-    vector<exec_node> nodes; // 应当与它计划树的node数量一致
+    vector<exec_node> Nodes; // 应当与它计划树的node数量一致
 };
 
 // bool Transfer(int site,string data);

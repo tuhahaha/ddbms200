@@ -1,6 +1,11 @@
 #include "Tools.h"
 using namespace std;
 
+
+int main() {
+    cout << "Hello World " << endl;
+    return 0;
+}
 string GetBetween(string sql_statement, string start, string end) {
     int start_loc = sql_statement.find(start) + start.size() + 1;
     int end_loc = sql_statement.find(end);
@@ -8,6 +13,11 @@ string GetBetween(string sql_statement, string start, string end) {
 }
 string GetAfter(string sql_statement, string start) {
     int start_loc = sql_statement.find(start) + start.size() + 1;
+    int end_loc = sql_statement.size();
+    return sql_statement.substr(start_loc, end_loc-start_loc);
+}
+string GetExactAfter(string sql_statement, string start) {
+    int start_loc = sql_statement.find(start) + start.size();
     int end_loc = sql_statement.size();
     return sql_statement.substr(start_loc, end_loc-start_loc);
 }

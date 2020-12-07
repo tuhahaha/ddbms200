@@ -122,3 +122,6 @@ void my_mysql_res_print(string my_res);
 
 /* 获得SQL文件里数据的行数，要在load之前（之后再也不需要数据库里有这个数据）  */
 int my_mysql_res_get_rows(string my_res);
+
+/* 获得SQL文件里第一列数据(此处其实特意为id而设)，要在load之前（之后再也不需要数据库里有这个数据）  */
+vector<int> my_mysql_res_get_column1(string my_res);

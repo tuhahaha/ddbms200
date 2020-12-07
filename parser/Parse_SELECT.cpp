@@ -2,12 +2,11 @@
 using namespace std;
 
 
-int main() {
-    string sql_statement = "SELECT Customer.name,Book.title,Publisher.name,Orders.quantity FROM Customer,Book,Publisher,Orders WHERE Customer.id=Orders.customer_id and Book.id=Orders.book_id and Book.publisher_id=Publisher.id and Customer.id>308000 and Book.copies>100 and Orders.quantity>1 and Publisher.nation='PRC'";
-    TREE Tree = SELECT(sql_statement,0);
-    // TraverseTree(tree);
-    return 0;
-}
+// int main() {
+//     string sql_statement = "SELECT Customer.name,Book.title,Publisher.name,Orders.quantity FROM Customer,Book,Publisher,Orders WHERE Customer.id=Orders.customer_id and Book.id=Orders.book_id and Book.publisher_id=Publisher.id and Customer.id>308000 and Book.copies>100 and Orders.quantity>1 and Publisher.nation='PRC'";
+//     TREE Tree = SELECT(sql_statement,0);
+//     return 0;
+// }
 TCC GetTCC(string table_name, vector<string> column_list, vector<string> select_list) {
     // Get TCC for a table
    TCC tcc;

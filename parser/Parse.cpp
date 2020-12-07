@@ -16,20 +16,7 @@ int main() {
     vector<string> sqls;
     vector<string> table_names;
     // in load function end
-
-    // sql_statement = "CREATE TABLE Pulisher[ id int(24) key,name char(100),nation char(100)];"; 
-    // sql_statement = "LOCAL CREATE TABLE Publisher (id int(6) key, name char(100), nation char(3)) ON SITE 1;";
-    // sql_statement = "LOCAL LOAD ALLDATA TO TABLE Publisher FROM LOCAL FILE the path;";
-    // sql_statements.clear();
-    // sql_statement = "LOCAL LOAD LOCALDATA TABLE Publisher BY H WITH ( id<104000 nation='PRC') TO Publisher_1 ON SITE 1;";
-    // sql_statements.push_back(sql_statement);
-    // sql_statement = "LOCAL LOAD LOCALDATA TABLE Publisher BY H WITH ( id<104000 nation='USA') TO Publisher_2 ON SITE 2;";
-    // sql_statements.push_back(sql_statement);
-    // sql_statement = "LOCAL LOAD LOCALDATA TABLE Publisher BY H WITH ( id>=104000 nation='PRC') TO Publisher_3 ON SITE 3;";
-    // sql_statements.push_back(sql_statement);
-    // sql_statement = "LOCAL LOAD LOCALDATA TABLE Publisher BY H WITH ( id>=104000 nation='USA') TO Publisher_4 ON SITE 4;";
-    // sql_statements.push_back(sql_statement);
-    // cout << sql_statement.find("LOCAL") << endl;    
+    
     while (true) {
         getline(cin,sql_statement);
         if (sql_statement.find("LOCAL") != -1) {

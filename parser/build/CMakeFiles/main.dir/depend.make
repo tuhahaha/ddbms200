@@ -3,7 +3,9 @@
 
 CMakeFiles/main.dir/Parse_LOAD.cpp.o: /mnt/d/ddbms200/executor/cpp/executor.h
 CMakeFiles/main.dir/Parse_LOAD.cpp.o: /mnt/d/ddbms200/executor/cpp/mysql_connector.h
+CMakeFiles/main.dir/Parse_LOAD.cpp.o: /mnt/d/ddbms200/metadata/metadata.h
 CMakeFiles/main.dir/Parse_LOAD.cpp.o: ../Parse_LOAD.cpp
+CMakeFiles/main.dir/Parse_LOAD.cpp.o: ../Parse_LOAD.h
 CMakeFiles/main.dir/Parse_LOAD.cpp.o: ../Tools.h
 CMakeFiles/main.dir/Parse_LOAD.cpp.o: /mnt/d/ddbms200/transfer/transfer/transfer.grpc.pb.h
 CMakeFiles/main.dir/Parse_LOAD.cpp.o: /mnt/d/ddbms200/transfer/transfer/transfer.h

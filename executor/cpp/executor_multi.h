@@ -25,35 +25,36 @@ using namespace std;
 #define LOCALSITE2 "s4"
 
 /* 晓桐定义的树结构 */
-struct NODE {
-	int id;
-	vector<int> child;
-	int parent;
-	string sql_statement;
-	int site;
-};
-struct TREE {
-    int tree_id;
-    int root;
-    vector<NODE> Nodes;
-};
+// 定义在transfer.h中
+// struct NODE {
+// 	int id;
+// 	vector<int> child;
+// 	int parent;
+// 	string sql_statement;
+// 	int site;
+// };
+// struct TREE {
+//     int tree_id;
+//     int root;
+//     vector<NODE> Nodes;
+// };
 
-// 现在定义一下时间和数据传输量记录的结构
-// 也用树结构记录每个节点花费的时间和数据传输量
-struct exec_node{
-    int node_id; // 计划树中该节点对应的ID
-    double time_spend; // 执行对应节点所花的时间，单位为秒
-    size_t volume; // 该节点上结果的数据量，单位为比特
-    string res; //该节点上结果的执行情况，OK或者FAIL
-    vector<int> child; //该节点的孩子，与计划树一致
-	int parent; //该节点的父亲，与计划树一致
-    int site; //该节点的site，与计划树一致
-};
-struct exec_tree{
-    int tree_id; // 应当与它执行的树的ID一致
-    int root; // 为了与原来的树保持一致
-    vector<exec_node> Nodes; // 应当与它计划树的node数量一致
-};
+// // 现在定义一下时间和数据传输量记录的结构
+// // 也用树结构记录每个节点花费的时间和数据传输量
+// struct exec_node{
+//     int node_id; // 计划树中该节点对应的ID
+//     double time_spend; // 执行对应节点所花的时间，单位为秒
+//     size_t volume; // 该节点上结果的数据量，单位为比特
+//     string res; //该节点上结果的执行情况，OK或者FAIL
+//     vector<int> child; //该节点的孩子，与计划树一致
+// 	int parent; //该节点的父亲，与计划树一致
+//     int site; //该节点的site，与计划树一致
+// };
+// struct exec_tree{
+//     int tree_id; // 应当与它执行的树的ID一致
+//     int root; // 为了与原来的树保持一致
+//     vector<exec_node> Nodes; // 应当与它计划树的node数量一致
+// };
 
 /* for循环内原先的内容被封装为另外一个函数，
 输入sitenames, sqls, table_names, 输出String - "xx rows imported on site x.\n" 或者 "FAIL on site x.\n" 

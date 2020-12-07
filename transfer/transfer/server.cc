@@ -148,8 +148,8 @@ Status TransferImpl::D_S_E(ServerContext* context, const MTree* mtree,ETree* etr
     // 将exetr包装成message etree传回去
     etree->set_treeid(exetr.tree_id);
     etree->set_root(exetr.root);
-    for(int i=0;i<exetr.nodes.size();i++){
-        exec_node exeno=exetr.nodes[i];
+    for(int i=0;i<exetr.Nodes.size();i++){
+        exec_node exeno=exetr.Nodes[i];
         ENode* eno;
         eno = etree->add_nodes();
         eno->set_nodeid(exeno.node_id);

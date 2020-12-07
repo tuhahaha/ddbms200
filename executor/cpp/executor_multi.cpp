@@ -54,88 +54,101 @@
 // 注意此版本非并行化版本，仅供RPC_Data_Select_Execute或者parser调用（递归的开始），内部调用的均为可并行化版本 */
 // exec_tree Data_Select_Execute(TREE tree);
 
-int main(int argc,char *argv[])
-{
-    /* 以下是测试LOAD所用代码 */
-    // /* id int key, name char(100), nation char(3) */
-    // string create_sql = "create table publisher(id int(6), name char(100), nation char(3))";
-    // string load_sql = "load data local infile '/home/roy/ddbms/rawdata/publisher.tsv' into table publisher";
-    // string main_name = "publisher";
-    // vector<string> sitenames;
-    // string site = "s3";
-    // sitenames.push_back(site);
-    // site = "s4";
-    // sitenames.push_back(site);
-    // site = "s2";
-    // sitenames.push_back(site);
-    // vector<string> sqls;
-    // string sql = "select * from publisher where id < 104000 and nation='PRC'";
-    // sqls.push_back(sql);
-    // sql = "select * from publisher where id > 104000 and nation='PRC'";
-    // sqls.push_back(sql);
-    // sql = "select * from publisher where id > 104000 and nation='PRC'";
-    // sqls.push_back(sql);
-    // vector<string> table_names;
-    // string table_name = "publisher_3";
-    // table_names.push_back(table_name);
-    // table_name = "publisher_4";
-    // table_names.push_back(table_name);
-    // table_name = "publisher_2";
-    // table_names.push_back(table_name);
+// int main(int argc,char *argv[])
+// {
+//     /* 以下是测试LOAD所用代码 */
+//     // /* id int key, name char(100), nation char(3) */
+//     // string create_sql = "create table publisher(id int(6), name char(100), nation char(3))";
+//     // string load_sql = "load data local infile '/home/roy/ddbms/rawdata/publisher.tsv' into table publisher";
+//     // string main_name = "publisher";
+//     // vector<string> sitenames;
+//     // string site = "s3";
+//     // sitenames.push_back(site);
+//     // site = "s4";
+//     // sitenames.push_back(site);
+//     // site = "s2";
+//     // sitenames.push_back(site);
+//     // vector<string> sqls;
+//     // string sql = "select * from publisher where id < 104000 and nation='PRC'";
+//     // sqls.push_back(sql);
+//     // sql = "select * from publisher where id > 104000 and nation='PRC'";
+//     // sqls.push_back(sql);
+//     // sql = "select * from publisher where id > 104000 and nation='PRC'";
+//     // sqls.push_back(sql);
+//     // vector<string> table_names;
+//     // string table_name = "publisher_3";
+//     // table_names.push_back(table_name);
+//     // table_name = "publisher_4";
+//     // table_names.push_back(table_name);
+//     // table_name = "publisher_2";
+//     // table_names.push_back(table_name);
 
-    // string load_output = Data_Load_Execute(create_sql, load_sql, main_name, sitenames, sqls, table_names);
-    // printf("%s", load_output.data());
+//     // string load_output = Data_Load_Execute(create_sql, load_sql, main_name, sitenames, sqls, table_names);
+//     // printf("%s", load_output.data());
 
-    /* 以下是测试SELECT所用代码 */
-    /* 此处应有tree定义 */   
-    // NODE tmp_input_node = new NODE();  
-    NODE tmp_input_node1;
-    vector<NODE> input_nodes;
-    TREE Tree;
-    Tree.root = 1;
-    Tree.tree_id = 0;
-    tmp_input_node1.id = 1;
-    tmp_input_node1.site = 3;
-    tmp_input_node1.sql_statement = "select tree_0_node_2.id from tree_0_node_2,tree_0_node_3 where tree_0_node_2.publisher_id = tree_0_node_3.id and tree_0_node_2.id > 249946";
-    // tmp_input_node1.sql_statement = "select * from tree_0_node_2 where id < 100005";
-    tmp_input_node1.child.push_back(2);
-    tmp_input_node1.child.push_back(3);
-    input_nodes.push_back(tmp_input_node1);
+//     /* 以下是测试SELECT所用代码 */
+//     /* 此处应有tree定义 */   
+//     // NODE tmp_input_node = new NODE();  
+//     // NODE tmp_input_node1;
+//     // vector<NODE> input_nodes;
+//     // TREE Tree;
+//     // Tree.root = 1;
+//     // Tree.tree_id = 0;
+//     // tmp_input_node1.id = 1;
+//     // tmp_input_node1.site = 3;
+//     // tmp_input_node1.sql_statement = "select tree_0_node_2.id from tree_0_node_2,tree_0_node_3 where tree_0_node_2.publisher_id = tree_0_node_3.id and tree_0_node_2.id > 249946";
+//     // // tmp_input_node1.sql_statement = "select * from tree_0_node_2 where id < 100005";
+//     // tmp_input_node1.child.push_back(2);
+//     // tmp_input_node1.child.push_back(3);
+//     // input_nodes.push_back(tmp_input_node1);
 
-    NODE tmp_input_node2;
-    tmp_input_node2.id = 2;
-    tmp_input_node2.site = 3;
-    tmp_input_node2.sql_statement = "select * from book";
-    tmp_input_node2.parent = 1;
-    tmp_input_node2.child.clear();
-    input_nodes.push_back(tmp_input_node2);
+//     // NODE tmp_input_node2;
+//     // tmp_input_node2.id = 2;
+//     // tmp_input_node2.site = 3;
+//     // tmp_input_node2.sql_statement = "select * from book";
+//     // tmp_input_node2.parent = 1;
+//     // tmp_input_node2.child.clear();
+//     // input_nodes.push_back(tmp_input_node2);
 
-    NODE tmp_input_node3;
-    tmp_input_node3.id = 3;
-    /* 如果本地调试用这两行 */
-    // tmp_input_node3.site = 4;
-    // tmp_input_node3.sql_statement = "select * from publisher_4";
-    tmp_input_node3.site = 2;
-    tmp_input_node3.sql_statement = "select * from publisher_2";
+//     // NODE tmp_input_node3;
+//     // tmp_input_node3.id = 3;
+//     // /* 如果本地调试用这两行 */
+//     // // tmp_input_node3.site = 4;
+//     // // tmp_input_node3.sql_statement = "select * from publisher_4";
+//     // tmp_input_node3.site = 2;
+//     // tmp_input_node3.sql_statement = "select * from publisher_2";
 
-    tmp_input_node3.parent = 1;   
-    tmp_input_node3.child.clear();
-    input_nodes.push_back(tmp_input_node3);
+//     // tmp_input_node3.parent = 1;   
+//     // tmp_input_node3.child.clear();
+//     // input_nodes.push_back(tmp_input_node3);
 
-    Tree.Nodes = input_nodes;
-    // delete tmp_input_node;
+//     // Tree.Nodes = input_nodes;
+//     // // delete tmp_input_node;
 
-    exec_tree res_tree = Data_Select_Execute(Tree);
-    printf("tree id: %d\n", res_tree.tree_id);
-    printf("tree root id: %d\n", res_tree.root);
-    for(int i=0; i<res_tree.Nodes.size(); i++){
-        exec_node tmp_node = res_tree.Nodes[i];
-        printf("node id: %d; \tdata volume: %ld; \t time used: %f.\n", tmp_node.node_id, tmp_node.volume, tmp_node.time_spend);
-    }
-    string res_name = "tree_" + to_string(res_tree.tree_id) + "_node_" + to_string(res_tree.root);
-    my_mysql_res_print(res_name); 
-    return 0;
-}
+//     // exec_tree res_tree = Data_Select_Execute(Tree);
+//     // printf("tree id: %d\n", res_tree.tree_id);
+//     // printf("tree root id: %d\n", res_tree.root);
+//     // for(int i=0; i<res_tree.Nodes.size(); i++){
+//     //     exec_node tmp_node = res_tree.Nodes[i];
+//     //     printf("node id: %d; \tdata volume: %ld; \t time used: %f.\n", tmp_node.node_id, tmp_node.volume, tmp_node.time_spend);
+//     // }
+//     // string res_name = "tree_" + to_string(res_tree.tree_id) + "_node_" + to_string(res_tree.root);
+//     // my_mysql_res_print(res_name); 
+
+//     /* 以下是测试insert——delete所用代码 */
+//     // vector<string> sitenames;
+//     // sitenames.push_back("s3");
+//     // sitenames.push_back("s4");
+
+//     // vector<string> sqls;
+//     // sqls.push_back("insert into publisher_3 values(666666,'myname','PRC')");
+//     // sqls.push_back("insert into publisher_4 values(666666,'myname','PRC')");
+
+//     // string res = Data_Insert_Delete_Execute(sitenames, sqls);
+//     // printf("%s\n", res.data());
+
+//     // return 0;
+// }
 
 /* for循环内原先的内容被封装为另外一个函数，
 输入sitenames, sqls, table_names, 输出String - "xx rows imported on site x.\n" 或者 "FAIL on site x.\n" */
@@ -176,7 +189,6 @@ void Data_Load_Thread(string site, string frag_sql, string frag_name, std::promi
         res_output.append(".\n");
         
         // printf("%s\n", res_output.data());
-        resultObj.set_value(res_output);
         // return res_output;
     }
     else{
@@ -185,9 +197,9 @@ void Data_Load_Thread(string site, string frag_sql, string frag_name, std::promi
         res_output.append(site);
         res_output.append("\n");
         // printf("%s\n", res_output.data());
-        resultObj.set_value(res_output);
         // return res_output_2;
     }
+    resultObj.set_value(res_output);
 }
 
 string Data_Load_Execute(string create_sql, string load_sql, string main_name, vector<string> sitenames, vector<string> sqls, vector<string> table_names){
@@ -796,4 +808,89 @@ exec_tree Data_Select_Execute(TREE tree){
         res_tree.Nodes.push_back(exec_root_node);
         return res_tree;
     }
+}
+
+/* for循环内原先的内容被封装为另外一个函数，
+输入sitenames, sqls, 输出String - "OK on site x.\n" 或者 "FAIL on site x.\n" 
+最后三个参数是为了传递主函数给每个线程的对应变量预留的空间，而不是传递值 */
+void Data_Insert_Delete_Thread(string site, string frag_sql, std::promise<string> &resultObj){
+    /* 判断一下是否为本地，并执行对应sql语句 */
+    string frag_res;
+    string res_output;
+    if(site == LOCALSITE || site == LOCALSITE2){
+        frag_res = local_Insert_Delete(frag_sql, site);
+        // printf("localsite.\n%s\n", frag_res.data());
+    }
+    else{
+        // printf("not localsite.");
+        frag_res = RPC_local_Insert_Delete(frag_sql, site);
+        // frag_res = Local_Tmp_Load(frag_name, site); // 先这么写着，防止transfer那边的问题
+        // printf("success .");
+        // printf("%s", frag_res.data());
+        // cout << frag_res;
+    }
+    // frag_res = "OK";
+    if(frag_res == "OK"){ /* 目标site上存储成功 */
+        /* 构造输出语句 */
+        res_output = "OK on site ";
+        res_output.append(site);
+        res_output.append(".\n");
+        
+        // printf("%s\n", res_output.data());
+        // return res_output;
+    }
+    else{
+        // printf("FAIL TO LOAD %s", frag_name);
+        res_output = "FAIL on site ";
+        res_output.append(site);
+        res_output.append(".\n");
+        // printf("%s\n", res_output.data());
+        // return res_output_2;
+    }
+    resultObj.set_value(res_output);
+}
+
+/* 本函数供parser调用
+本函数用于执行整个Insert或Delete流程，输入站点列表，分片sql语句列表，返回
+"OK/FAIL on site 1.
+ OK/FAIL on site 2.
+ y seconds used." */
+string Data_Insert_Delete_Execute(vector<string> sitenames, vector<string> sqls){
+    /* 记录开始时间 */
+    time_t start_time = time(NULL);
+    int i;
+    /* 先把空间给申请好 */
+    std::promise<string> resultObjs[MAXTHREAD]; 
+    std::thread load_threads[MAXTHREAD];
+    std::future<string> load_sentences[MAXTHREAD];
+
+    for(i = 0; i < sitenames.size(); i++){           
+        /* 开启一个分片并在对应site存储的线程，通过传promise类给线程，让线程把结果给future类，实现结果返回 */
+        load_sentences[i] = resultObjs[i].get_future();
+        load_threads[i] = std::thread(Data_Insert_Delete_Thread, sitenames[i], sqls[i], std::ref(resultObjs[i]));
+    }
+
+    /* 从每个进程中获得返回结果并汇总 */
+    vector<string> load_results;
+    for(i = 0; i < sitenames.size(); i++){
+        string load_sentence = load_sentences[i].get();
+        load_results.push_back(load_sentence);
+    }
+
+    /* 本意是说所有线程完成了主函数才继续 */
+    for(i = 0; i < sitenames.size(); i++){
+        load_threads[i].join();
+    }
+    /* 计算所花时间 */
+    time_t end_time = time(NULL);
+    double time_spend = difftime(end_time, start_time);
+    /* 构造输出语句 */
+    string time_output = to_string(time_spend);
+    time_output.append(" seconds used.\n");
+    string output_sentence = "";
+    for(i = 0; i < load_results.size(); i++){
+        output_sentence.append(load_results[i]);
+    }
+    output_sentence.append(time_output);
+    return output_sentence;
 }

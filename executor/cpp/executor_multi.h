@@ -25,7 +25,6 @@ using namespace std;
 #define LOCALSITE2 "s4"
 
 /* 晓桐定义的树结构 */
-// 定义在transfer.h中
 // struct NODE {
 // 	int id;
 // 	vector<int> child;
@@ -39,8 +38,8 @@ using namespace std;
 //     vector<NODE> Nodes;
 // };
 
-// // 现在定义一下时间和数据传输量记录的结构
-// // 也用树结构记录每个节点花费的时间和数据传输量
+// 现在定义一下时间和数据传输量记录的结构
+// 也用树结构记录每个节点花费的时间和数据传输量
 // struct exec_node{
 //     int node_id; // 计划树中该节点对应的ID
 //     double time_spend; // 执行对应节点所花的时间，单位为秒
@@ -100,3 +99,15 @@ void Data_Select_Execute_Thread(TREE tree, std::promise<exec_tree> &resultObj);
 mysql_connector.h里面也提供了根据结果表名字打印结果的函数void my_mysql_res_print(string my_res);
 注意此版本非并行化版本，仅供RPC_Data_Select_Execute或者parser调用（递归的开始），内部调用的均为可并行化版本 */
 exec_tree Data_Select_Execute(TREE tree);
+
+/* for循环内原先的内容被封装为另外一个函数，
+输入sitenames, sqls, 输出String - "OK on site x.\n" 或者 "FAIL on site x.\n" 
+最后三个参数是为了传递主函数给每个线程的对应变量预留的空间，而不是传递值 */
+void Data_Insert_Delete_Thread(string site, string frag_sql, std::promise<string> &resultObj);
+
+/* 本函数供parser调用
+本函数用于执行整个Insert或Delete流程，输入站点列表，分片sql语句列表，返回
+"OK/FAIL on site s1.
+ OK/FAIL on site s2.
+ y seconds used." */
+string Data_Insert_Delete_Execute(vector<string> sitenames, vector<string> sqls);

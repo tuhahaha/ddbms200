@@ -1,9 +1,3 @@
-#include "iostream"
-#include <stdio.h>
-#include <vector>
-#include <string>
-#include "Tools.h"
-#include "../executor/cpp/executor.h"
 #include "Parse_LOAD.h"
 using namespace std;
 
@@ -34,29 +28,12 @@ int main() {
     sql_statements.push_back(sql_statement);
     sql_statement = "LOCAL LOAD LOCALDATA TABLE Publisher BY H WITH ( id>=104000 nation='USA') TO Publisher_4 ON SITE 4;";
     sql_statements.push_back(sql_statement);
-    vector<string> sitenames = GetSiteNames(sql_statements);
-    Traverse(sitenames);
-    vector<string> sqls = GetSqls(sql_statements);
-    Traverse(sqls);
-    vector<string> table_names = GetTableNames(sql_statements);
-    Traverse(table_names);
-    string result = Data_Load_Execute(create_sql,load_sql,main_name,sitenames,sqls,table_names);
-    cout << result << endl;
-
-    // string select_sql;
-    // select_sql = GetSelectSqlFromLoadLocalData(sql_statement);
-    // string to_table; 
-    // to_table = GetToTable(sql_statement);
-    // cout << to_table << endl;
-
-    // string load_sql = "load data local infile '" + path + "' into table " + table_name ;
-    // cout << load_sql << endl;
-    
-    
-    
-    
-
-    
+    // vector<string> sitenames = GetSiteNames(sql_statements);
+    // Traverse(sitenames);
+    // vector<string> sqls = GetSqls(sql_statements);
+    // Traverse(sqls);
+    // vector<string> table_names = GetTableNames(sql_statements);
+    // Traverse(table_names);
     // V
     // string sql_statement;
     // sql_statement = "LOCAL CREATE TABLE Customer (id int(6) key, name char(100), rank int(6)) ON SITE 1;";

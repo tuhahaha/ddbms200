@@ -1,9 +1,4 @@
-#include "iostream"
-#include <stdio.h>
-#include <vector>
-#include <string>
 #include "Tools.h"
-#include "../metadata/metadata.h"
 
 using namespace std;
 // Create table
@@ -17,5 +12,5 @@ string InitGetFragmentTypeCreateFragmentation(string sql_statement);
 vector<FragDef> InitGetFragDefCreateFragmentation(string sql_statement);
 int InitGetFragNumCreateFragmentation(string sql_statement);
 void Traversefrags(vector<FragDef> frags);
-void TraverseFragment(Fragment);
+void TraverseFragment(Fragment frags);
 Fragment InitGetFragmentCreateFragment(string sql_statement);

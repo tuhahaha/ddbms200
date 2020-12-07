@@ -1,8 +1,3 @@
-#include "iostream"
-#include <stdio.h>
-#include <vector>
-#include <string>
-#include "../metadata/metadata.h"
 #include "Tools.h"
 using namespace std;
 
@@ -150,43 +145,3 @@ string Link(vector<string> input, string devide) {
     }
     return output;
 }
-// int GetIdFromTC(string table, string column) {
-//     Fragment FragmentOfTable;
-//     FragmentOfTable = getFragFromEtcd(table);
-//     vector<FragDef> frags = FragmentOfTable.frags;
-//     for (int i = 0; i < frags.size(); i++ ){
-//         if (frags[i].column == GetPureColumnFromColumn(column)) {
-//             return frags[i].id;
-//         }
-//     }
-//     cout << "ERROR IN GetIdFromTC " << endl;
-//     return -1;
-// }
-// int GetSiteFromTC(string table, string column) {
-//     Fragment FragmentOfTable;
-//     FragmentOfTable = getFragFromEtcd(table);
-//     vector<FragDef> frags = FragmentOfTable.frags;
-//     for (int i = 0; i < frags.size(); i++ ){
-//         if (frags[i].column == GetPureColumnFromColumn(column)) {
-//             return frags[i].id;
-//         }
-//     }
-//     cout << "ERROR IN GetSiteFromTC " << endl;
-//     return -1;
-// }
-// vector<int> PushBackUnique(vector<int> original, int input) {
-//     for(int i = 0; i < original.size(); i++) {
-//         if (input == original[i]) {
-//             return original;
-//         }
-//     }
-//     original.push_back(input);
-//     return original;
-// }
-
-// int main() {
-//     string a = "The day is a beautiful day!";
-//     // cout << GetBetween(a,"The", " is");
-//     cout << GetAfter(a,"The");
-//     return 0;
-// }

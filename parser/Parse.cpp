@@ -16,16 +16,16 @@ int main() {
     vector<string> table_names;
     // in load function end
 
-    sql_statement = "CREATE TABLE Pulisher[ id int(24) key,name char(100),nation char(100)];"; 
+    // sql_statement = "CREATE TABLE Pulisher[ id int(24) key,name char(100),nation char(100)];"; 
     while (true) {
         cin >> sql_statement;
         if (sql_statement.find("CREATE TABLE") != -1) {
             GDD gdd = InitGetGDDCreateTable(sql_statement);
-            saveTableToEtcd(gdd);
+            // saveTableToEtcd(gdd);
         }
         else if (sql_statement.find("CREATE FRAGMENTATION") != -1) {
             Fragment fragment = InitGetFragmentCreateFragment(sql_statement);
-            saveFragToEtcd(fragment);
+            // saveFragToEtcd(fragment);
         }
         else if (sql_statement.find("LOCAL") != -1) {           
             while (true){
@@ -43,8 +43,8 @@ int main() {
                     sitenames = GetSiteNames(sql_statements);
                     sqls = GetSqls(sql_statements);
                     table_names = GetTableNames(sql_statements);
-                    string result = Data_Load_Execute(create_sql_yq,load_sql_yq,main_name,sitenames,sqls,table_names); // call yq's function
-                    cout << result << endl;
+                    // string result = Data_Load_Execute(create_sql_yq,load_sql_yq,main_name,sitenames,sqls,table_names); // call yq's function
+                    // cout << result << endl;
                     sql_statements.clear();
                     sitenames.clear();
                     sqls.clear();
@@ -60,11 +60,11 @@ int main() {
 
         // }
         else if (sql_statement.find("DELETE") != -1) {
-            string sql_statement_2 = "SELECT * FROM " + GetAfter(sql_statement, "FROM");
+            // string/ sql_statement_2 = "SELECT * FROM " + GetAfter(sql_statement, "FROM");
             
         }
         else if (sql_statement.find("SELECT") != -1) {
-            Data_Select_Execute(SELECT(sql_statement, 0)); // call yq's function
+            // Data_Select_Execute(SELECT(sql_statement, 0)); // call yq's function
         }
         else if (sql_statement == "QUIT") {
             break;

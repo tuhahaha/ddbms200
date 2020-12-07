@@ -1,4 +1,5 @@
 #include "Parse_LOAD.h"
+#include "Tools.h"
 using namespace std;
 
 // load sql contains 3 sub sentence parser parse the sql seperately
@@ -115,7 +116,6 @@ string GetToTable(string sql_statement) {
     string to_table = GetBetween(sql_statement, "TO", "ON");
     return to_table;
 }
-
 
 vector<string> GetSiteNames(vector<string> sql_statements) {
     vector<string> site_names;

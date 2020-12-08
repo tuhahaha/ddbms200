@@ -11,12 +11,15 @@ set(CMAKE_CXX_COMPILER_ID "GNU")
 
 # The include file search paths:
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
-  "../../../executor/cpp"
-  "../../../metadata"
+  "../../executor/cpp"
+  "../../metadata"
+  "/mnt/d/ddbms200/executor/cpp/../../transfer/transfer"
   )
 
 # Targets to which this target links.
 set(CMAKE_TARGET_LINKED_INFO_FILES
+  "/mnt/d/ddbms200/parser/metadata/CMakeFiles/Executor.dir/DependInfo.cmake"
+  "/mnt/d/ddbms200/parser/metadata/CMakeFiles/Mysql_connector.dir/DependInfo.cmake"
   )
 
 # Fortran module output directory.

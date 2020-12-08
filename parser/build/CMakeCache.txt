@@ -215,12 +215,6 @@ DDBMS_BINARY_DIR:STATIC=/mnt/d/ddbms200/parser/build
 //Value Computed by CMake
 DDBMS_SOURCE_DIR:STATIC=/mnt/d/ddbms200/parser
 
-//Value Computed by CMake
-Project_BINARY_DIR:STATIC=/mnt/d/ddbms200/parser/build
-
-//Value Computed by CMake
-Project_SOURCE_DIR:STATIC=/mnt/d/ddbms200/parser
-
 
 ########################
 # INTERNAL cache entries

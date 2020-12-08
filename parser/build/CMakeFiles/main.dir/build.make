@@ -94,6 +94,8 @@ main_EXTERNAL_OBJECTS =
 main: CMakeFiles/main.dir/Parse_LOAD.cpp.o
 main: CMakeFiles/main.dir/Tools.cpp.o
 main: CMakeFiles/main.dir/build.make
+main: ../metadata/libExecutor.a
+main: ../metadata/libMysql_connector.a
 main: CMakeFiles/main.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/mnt/d/ddbms200/parser/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable main"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/main.dir/link.txt --verbose=$(VERBOSE)

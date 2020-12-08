@@ -6,5 +6,5 @@ CXX_FLAGS =
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/mnt/d/ddbms200/parser/../../executor/cpp -I/mnt/d/ddbms200/parser/../../metadata 
+CXX_INCLUDES = -I/mnt/d/ddbms200/parser/../executor/cpp -I/mnt/d/ddbms200/parser/../metadata -I/mnt/d/ddbms200/executor/cpp/../../transfer/transfer 
 

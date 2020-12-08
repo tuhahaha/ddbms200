@@ -123,6 +123,45 @@ main/fast:
 	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/build
 .PHONY : main/fast
 
+#=============================================================================
+# Target rules for targets named ExeMulti
+
+# Build rule for target.
+ExeMulti: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 ExeMulti
+.PHONY : ExeMulti
+
+# fast build rule for target.
+ExeMulti/fast:
+	$(MAKE) -f /mnt/d/ddbms200/parser/metadata/CMakeFiles/ExeMulti.dir/build.make /mnt/d/ddbms200/parser/metadata/CMakeFiles/ExeMulti.dir/build
+.PHONY : ExeMulti/fast
+
+#=============================================================================
+# Target rules for targets named Executor
+
+# Build rule for target.
+Executor: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 Executor
+.PHONY : Executor
+
+# fast build rule for target.
+Executor/fast:
+	$(MAKE) -f /mnt/d/ddbms200/parser/metadata/CMakeFiles/Executor.dir/build.make /mnt/d/ddbms200/parser/metadata/CMakeFiles/Executor.dir/build
+.PHONY : Executor/fast
+
+#=============================================================================
+# Target rules for targets named Mysql_connector
+
+# Build rule for target.
+Mysql_connector: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 Mysql_connector
+.PHONY : Mysql_connector
+
+# fast build rule for target.
+Mysql_connector/fast:
+	$(MAKE) -f /mnt/d/ddbms200/parser/metadata/CMakeFiles/Mysql_connector.dir/build.make /mnt/d/ddbms200/parser/metadata/CMakeFiles/Mysql_connector.dir/build
+.PHONY : Mysql_connector/fast
+
 Parse_LOAD.o: Parse_LOAD.cpp.o
 
 .PHONY : Parse_LOAD.o
@@ -186,6 +225,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... main"
+	@echo "... ExeMulti"
+	@echo "... Executor"
+	@echo "... Mysql_connector"
 	@echo "... Parse_LOAD.o"
 	@echo "... Parse_LOAD.i"
 	@echo "... Parse_LOAD.s"

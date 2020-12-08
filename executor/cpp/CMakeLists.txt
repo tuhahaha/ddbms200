@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5.1)
-project(main)
+#project(main)
 
 set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS}"-pthread -std=c++11")
 
@@ -13,7 +13,7 @@ target_link_libraries(Mysql_connector ${MYSQL_LIBS})
 
 add_library(Executor executor.cpp)
 target_link_libraries(Executor Client Mysql_connector)
-target_include_directories(Executor PUBLIC ../../transfer/transfer)
+target_include_directories(Executor PUBLIC "../../transfer/transfer")
 
 add_library(ExeMulti executor_multi.cpp executor.h)
 target_link_libraries(ExeMulti Executor)

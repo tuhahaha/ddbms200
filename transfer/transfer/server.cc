@@ -144,7 +144,7 @@ Status TransferImpl::D_S_E(ServerContext* context, const MTree* mtree,ETree* etr
         tr.Nodes.push_back(nd);
     }
     exec_tree exetr;
-    // exetr = Data_Select_Execute(tr);
+    exetr = Data_Select_Execute(tr);
     // 将exetr包装成message etree传回去
     etree->set_treeid(exetr.tree_id);
     etree->set_root(exetr.root);

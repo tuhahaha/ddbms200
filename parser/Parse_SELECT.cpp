@@ -2,11 +2,11 @@
 using namespace std;
 
 
-int main() {
-    string sql_statement = "SELECT Customer.name,Book.title,Publisher.name,Orders.quantity FROM Customer,Book,Publisher,Orders WHERE Customer.id=Orders.customer_id and Book.id=Orders.book_id and Book.publisher_id=Publisher.id and Customer.id>308000 and Book.copies>100 and Orders.quantity>1 and Publisher.nation='PRC'";
-    TREE Tree = SELECT(sql_statement,0);
-    return 0;
-}
+// int main() {
+//     string sql_statement = "SELECT Customer.name,Book.title,Publisher.name,Orders.quantity FROM Customer,Book,Publisher,Orders WHERE Customer.id=Orders.customer_id and Book.id=Orders.book_id and Book.publisher_id=Publisher.id and Customer.id>308000 and Book.copies>100 and Orders.quantity>1 and Publisher.nation='PRC'";
+//     TREE Tree = SELECT(sql_statement,0);
+//     return 0;
+// }
 TCC GetTCC(string table_name, vector<string> column_list, vector<string> select_list) {
     // Get TCC for a table
    TCC tcc;
@@ -302,6 +302,7 @@ TREE SELECT(string sql_statement, int treeid) {
     Tree.tree_id = treeid;
     int iid = 1;
     map<string,int> TableMap;
+    cout << "TCCLIST GET IN SELECT " << endl;
     // GetData
     for (int i = 0; i < TCCList.size(); i++) {
         string table_name = TCCList[i].table_name;
@@ -310,6 +311,7 @@ TREE SELECT(string sql_statement, int treeid) {
             string condition = Link(condition_list, " AND ");
             Fragment frag = getFragFromEtcd(table_name);
             vector<FragDef> frags = frag.frags;
+            cout << frags.size() << endl;
             for (int j = 0; j < frags.size(); j++) {
                 node.id = iid;
                 node.site = frags[j].site;
@@ -343,6 +345,7 @@ TREE SELECT(string sql_statement, int treeid) {
             vector<FragDef> frags = frag.frags;
             // string key = GetKeyofTable(table_name)[0];
             string key = getTableKey(table_name);
+            cout << frags.size() << endl;
             for (int j = 0; j < frags.size(); j++) {
                 node.id = iid;
                 node.site = j;

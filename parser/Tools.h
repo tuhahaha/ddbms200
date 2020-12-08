@@ -21,6 +21,7 @@ vector<string> GetTableList(string TableName);
 string GetSelectColumnName(string sql_statement);
 vector<string> GetSelectColumnList(string sql_statement);
 string GetCondition(string sql_statement);
+vector<string> GetConditionList(string sql_statement);
 string GetTableFromColumn(string column, vector<string> TableList);
 vector<string> GetColumnFromCondition(string condtion, vector<string> TableList);
 vector<string> GetColumnListFromConditionList(vector<string> ConditionList, vector<string> TableList);

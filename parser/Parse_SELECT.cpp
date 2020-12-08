@@ -2,11 +2,11 @@
 using namespace std;
 
 
-// int main() {
-//     string sql_statement = "SELECT Customer.name,Book.title,Publisher.name,Orders.quantity FROM Customer,Book,Publisher,Orders WHERE Customer.id=Orders.customer_id and Book.id=Orders.book_id and Book.publisher_id=Publisher.id and Customer.id>308000 and Book.copies>100 and Orders.quantity>1 and Publisher.nation='PRC'";
-//     TREE Tree = SELECT(sql_statement,0);
-//     return 0;
-// }
+int main() {
+    string sql_statement = "SELECT Customer.name,Book.title,Publisher.name,Orders.quantity FROM Customer,Book,Publisher,Orders WHERE Customer.id=Orders.customer_id and Book.id=Orders.book_id and Book.publisher_id=Publisher.id and Customer.id>308000 and Book.copies>100 and Orders.quantity>1 and Publisher.nation='PRC'";
+    TREE Tree = SELECT(sql_statement,0);
+    return 0;
+}
 TCC GetTCC(string table_name, vector<string> column_list, vector<string> select_list) {
     // Get TCC for a table
    TCC tcc;
@@ -308,14 +308,24 @@ TREE SELECT(string sql_statement, int treeid) {
         if (TCCList[i].fratype == "H") {
             vector<string> condition_list = TCCList[i].condition_list;
             string condition = Link(condition_list, " AND ");
-            for(int j = 1; j <= 4; j++) { 
+            Fragment frag = getFragFromEtcd(table_name);
+            vector<FragDef> frags = frag.frags;
+            for (int j = 0; j < frags.size(); j++) {
                 node.id = iid;
-                node.site = j;
+                node.site = frags[j].site;
                 node.child.clear();
                 node.sql_statement = "SELECT * FROM " + table_name + "_" + to_string(j) + " WHERE " +  condition;
                 iid += 1;
                 tree.push_back(node);
             }
+            // for(int j = 1; j <= 4; j++) { 
+            //     node.id = iid;
+            //     node.site = j;
+            //     node.child.clear();
+            //     node.sql_statement = "SELECT * FROM " + table_name + "_" + to_string(j) + " WHERE " +  condition;
+            //     iid += 1;
+            //     tree.push_back(node);
+            // }
             node.id = iid;
             node.site = 1;
             node.child.clear();
@@ -329,8 +339,11 @@ TREE SELECT(string sql_statement, int treeid) {
             tree.push_back(node);
         }
         else if (TCCList[i].fratype == "V") {
-            string key = GetKeyofTable(table_name)[0];
-            for (int j = 1; j <= 4; j++) { 
+            Fragment frag = getFragFromEtcd(table_name);
+            vector<FragDef> frags = frag.frags;
+            // string key = GetKeyofTable(table_name)[0];
+            string key = getTableKey(table_name);
+            for (int j = 0; j < frags.size(); j++) {
                 node.id = iid;
                 node.site = j;
                 node.child.clear();
@@ -338,6 +351,14 @@ TREE SELECT(string sql_statement, int treeid) {
                 iid += 1;
                 tree.push_back(node);
             }
+            // for (int j = 1; j <= 4; j++) { 
+            //     node.id = iid;
+            //     node.site = j;
+            //     node.child.clear();
+            //     node.sql_statement = "SELECT * FROM " + table_name + "_" + to_string(j);
+            //     iid += 1;
+            //     tree.push_back(node);
+            // }
             string join_condition = Get_join_condition(treeid, iid-4, iid-3, key);
             node.id = iid;
             node.site = 1;

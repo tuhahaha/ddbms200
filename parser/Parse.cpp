@@ -62,6 +62,8 @@ int main() {
         }
         else if (sql_statement.find("SELECT") != -1) {
             cout << "SELECT" << endl;
+            TREE Tree = SELECT(sql_statement,0);
+            TraverseTree(Tree.Nodes);
             continue;
         }
         else if (sql_statement == "QUIT") {

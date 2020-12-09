@@ -1,5 +1,7 @@
-TOKEN=token-02
 CLUSTER_STATE=new
+
+TOKEN=token-02
+CLUSTER_STATE=existing
 NAME_1=s1
 NAME_2=s2
 NAME_3=s3

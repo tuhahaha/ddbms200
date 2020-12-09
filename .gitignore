@@ -3,10 +3,10 @@
 *.exe
 metadata/m
 metadata/t
-parser/Parse_INIT.cpp
 parser/a.out
-metadata/metadata.h
-metadata/metadata.cc
+parser/main
+parser/
+transfer/transfer/server
 executor/cpp/em
 executor/cpp/mm
 executor/cpp/em

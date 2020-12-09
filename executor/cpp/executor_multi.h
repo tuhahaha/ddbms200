@@ -21,8 +21,8 @@ using namespace std;
 #define MAXTHREAD 4
 
 /* 在每个site实例上部署的时候这个值不同 */
-#define LOCALSITE "s3"
-#define LOCALSITE2 "s4"
+#define LOCALSITE "s2"
+#define LOCALSITE2 "sn"
 
 /* 晓桐定义的树结构 */
 // struct NODE {

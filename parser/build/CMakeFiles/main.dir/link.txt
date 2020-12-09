@@ -1,1 +1,0 @@
-/usr/bin/c++     CMakeFiles/main.dir/Parse_LOAD.cpp.o CMakeFiles/main.dir/Tools.cpp.o  -o main  ../metadata/libExecutor.a -lMetadata -lClient ../metadata/libMysql_connector.a -L/usr/lib/x86_64-linux-gnu -lmysqlclient -lpthread -lz -lm -lrt -lssl -lcrypto -ldl -lresolv 

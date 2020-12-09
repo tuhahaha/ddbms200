@@ -25,7 +25,7 @@ vpath %.proto $(PROTOS_PATH)
 
 # all: client server
 all: server
-server: transfer.pb.o transfer.grpc.pb.o server.o ../../executor/cpp/mysql_connector.o
+server: transfer.pb.o transfer.grpc.pb.o server.o ../../executor/cpp/mysql_connector.o ../../executor/cpp/executor_multi.o client.o
 	$(CXX) $^ $(LDFLAGS) -o $@
 
 # client: transfer.pb.o transfer.grpc.pb.o client.o ../../executor/cpp/mysql_connector.o

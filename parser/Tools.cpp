@@ -11,6 +11,15 @@ string GetAfter(string sql_statement, string start) {
     int end_loc = sql_statement.size();
     return sql_statement.substr(start_loc, end_loc-start_loc);
 }
+string GetExactAfter(string sql_statement, string start) {
+    int start_loc = sql_statement.find(start) + start.size();
+    int end_loc = sql_statement.size();
+    return sql_statement.substr(start_loc, end_loc-start_loc);
+}
+string GetBefore(string sql_statement, string end) {
+    int end_loc = sql_statement.find(end);
+    return sql_statement.substr(0,end_loc);
+}
 vector<string> GetList(string Line, string split, string stop) {
     vector <string> TableList;
     int loc_start = 0;

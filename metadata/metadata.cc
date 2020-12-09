@@ -227,6 +227,20 @@ string toJson(string k){
 }
 
 bool saveTableToEtcd(GDD table){
+    // add table
+    vector<string> exist_tables = getTables();
+    exist_tables.push_back(table.name);
+    string k0 = "/gdd_table";
+    string v0 = "";
+    // cout << typeid(table).name() << endl;
+    cout << exist_tables.size() << endl;
+    for (int i=0; i<exist_tables.size(); i++){
+        v0 += exist_tables[i];
+        v0 += ",";
+    }
+    v0.pop_back();
+    Insert_Attrvalue(k0,v0);
+
     // save table
     string k = "/gdd_table/"+table.name;
     string v = "";

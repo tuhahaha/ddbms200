@@ -1,8 +1,0 @@
-/mnt/d/ddbms200/parser/build/CMakeFiles/rebuild_cache.dir
-/mnt/d/ddbms200/parser/build/CMakeFiles/edit_cache.dir
-/mnt/d/ddbms200/parser/build/CMakeFiles/main.dir
-/mnt/d/ddbms200/parser/metadata/CMakeFiles/rebuild_cache.dir
-/mnt/d/ddbms200/parser/metadata/CMakeFiles/ExeMulti.dir
-/mnt/d/ddbms200/parser/metadata/CMakeFiles/edit_cache.dir
-/mnt/d/ddbms200/parser/metadata/CMakeFiles/Executor.dir
-/mnt/d/ddbms200/parser/metadata/CMakeFiles/Mysql_connector.dir

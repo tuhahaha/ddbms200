@@ -98,7 +98,7 @@ using namespace std;
 // - 现在改成sql文件形式传输了，要求是每个查询树的每个节点所代表的数据表名称（编号）唯一
 	
 
-/* 本地执行插入和删除函数，输入SQL语句和站点名称（s1, s2, s3, s4），返回执行结果(OK or FAIL) */
+/* 本地执行插入和删除函数，输入SQL语句和站点名称（s1, s2, s3, s4），返回执行结果(OK or FAILED) */
 string local_Insert_Delete(string sql, string site);
 
 /* 本地执行文件导入函数，输入创建表的SQL语句和导入文件的SQL语句，和站点名称（s1, s2, s3, s4）,返回执行结果(OK or FAIL)
@@ -122,3 +122,6 @@ void my_mysql_res_print(string my_res);
 
 /* 获得SQL文件里数据的行数，要在load之前（之后再也不需要数据库里有这个数据）  */
 int my_mysql_res_get_rows(string my_res);
+
+/* 获得SQL文件里第一列数据(此处其实特意为id而设)，要在load之前（之后再也不需要数据库里有这个数据）  */
+vector<int> my_mysql_res_get_column1(string my_res);

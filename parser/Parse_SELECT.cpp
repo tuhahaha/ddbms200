@@ -302,20 +302,32 @@ TREE SELECT(string sql_statement, int treeid) {
     Tree.tree_id = treeid;
     int iid = 1;
     map<string,int> TableMap;
+    cout << "TCCLIST GET IN SELECT " << endl;
     // GetData
     for (int i = 0; i < TCCList.size(); i++) {
         string table_name = TCCList[i].table_name;
         if (TCCList[i].fratype == "H") {
             vector<string> condition_list = TCCList[i].condition_list;
             string condition = Link(condition_list, " AND ");
-            for(int j = 1; j <= 4; j++) { 
+            Fragment frag = getFragFromEtcd(table_name);
+            vector<FragDef> frags = frag.frags;
+            cout << frags.size() << endl;
+            for (int j = 0; j < frags.size(); j++) {
                 node.id = iid;
-                node.site = j;
+                node.site = frags[j].site;
                 node.child.clear();
                 node.sql_statement = "SELECT * FROM " + table_name + "_" + to_string(j) + " WHERE " +  condition;
                 iid += 1;
                 tree.push_back(node);
             }
+            // for(int j = 1; j <= 4; j++) { 
+            //     node.id = iid;
+            //     node.site = j;
+            //     node.child.clear();
+            //     node.sql_statement = "SELECT * FROM " + table_name + "_" + to_string(j) + " WHERE " +  condition;
+            //     iid += 1;
+            //     tree.push_back(node);
+            // }
             node.id = iid;
             node.site = 1;
             node.child.clear();
@@ -329,8 +341,12 @@ TREE SELECT(string sql_statement, int treeid) {
             tree.push_back(node);
         }
         else if (TCCList[i].fratype == "V") {
-            string key = GetKeyofTable(table_name)[0];
-            for (int j = 1; j <= 4; j++) { 
+            Fragment frag = getFragFromEtcd(table_name);
+            vector<FragDef> frags = frag.frags;
+            // string key = GetKeyofTable(table_name)[0];
+            string key = getTableKey(table_name);
+            cout << frags.size() << endl;
+            for (int j = 0; j < frags.size(); j++) {
                 node.id = iid;
                 node.site = j;
                 node.child.clear();
@@ -338,6 +354,14 @@ TREE SELECT(string sql_statement, int treeid) {
                 iid += 1;
                 tree.push_back(node);
             }
+            // for (int j = 1; j <= 4; j++) { 
+            //     node.id = iid;
+            //     node.site = j;
+            //     node.child.clear();
+            //     node.sql_statement = "SELECT * FROM " + table_name + "_" + to_string(j);
+            //     iid += 1;
+            //     tree.push_back(node);
+            // }
             string join_condition = Get_join_condition(treeid, iid-4, iid-3, key);
             node.id = iid;
             node.site = 1;

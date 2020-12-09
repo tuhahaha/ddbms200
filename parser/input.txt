@@ -1,0 +1,21 @@
+# LOAD  >>>> don't copy this line >>> don't copy this line >>>
+# Note
+# You need to set the path like '/home/xiaotong/publisher.tsv' WITHOUT sigle quotation mark
+
+LOCAL CREATE TABLE publisher (id int(6) key, name char(100), nation char(3)) ON SITE 1;
+LOCAL LOAD ALLDATA TO TABLE publisher FROM LOCAL FILE the path;
+LOCAL LOAD LOCALDATA TABLE publisher BY H WITH ( id<104000 nation='PRC') TO publisher_1 ON SITE 1;
+LOCAL LOAD LOCALDATA TABLE publisher BY H WITH ( id<104000 nation='USA') TO publisher_2 ON SITE 2;
+LOCAL LOAD LOCALDATA TABLE publisher BY H WITH ( id>=104000 nation='PRC') TO publisher_3 ON SITE 3;
+LOCAL LOAD LOCALDATA TABLE publisher BY H WITH ( id>=104000 nation='USA') TO publisher_4 ON SITE 4;
+LOCAL FINISH;
+
+# LOAD  >>>> don't copy this line >>> don't copy this line >>> 
+# Note
+# You need to set the path like '/home/xiaotong/publisher.tsv' WITHOUT sigle quotation mark
+
+LOCAL CREATE TABLE Customer (id int(6) key, name char(100), rank int(6)) ON SITE 1;
+LOCAL LOAD ALLDATA TO TABLE Customer FROM LOCAL FILE the path;
+LOCAL LOAD LOCALDATA TABLE Customer BY V WITH ( id name) TO Customer_1 ON SITE 1;
+LOCAL LOAD LOCALDATA TABLE Customer BY V WITH ( id rank) TO Customer_2 ON SITE 2;
+LOCAL FINISH;

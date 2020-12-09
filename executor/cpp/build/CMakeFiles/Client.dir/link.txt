@@ -1,2 +1,0 @@
-/usr/bin/ar qc libClient.a  CMakeFiles/Client.dir/mnt/d/ddbms200/transfer/transfer/client.cc.o /mnt/d/ddbms200/transfer/transfer/transfer.pb.o /mnt/d/ddbms200/transfer/transfer/transfer.grpc.pb.o
-/usr/bin/ranlib libClient.a

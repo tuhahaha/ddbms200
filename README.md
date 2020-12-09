@@ -2,29 +2,29 @@
 - 1，启动etcd集群（可能需要修改ip   client.cc,set_etcd.sh）
 
 - 2，启动mysql
--- cd /home/mysql1
--- ./bin/mysqld --defaults-file=/etc/my1.cnf  --user=mysql --basedir=/home/mysql1 --datadir=/home/mysql1/data
--- mysql -u root -S /home/mysql1/mysql.sock -p
+-    cd /home/mysql1
+-    ./bin/mysqld --defaults-file=/etc/my1.cnf  --user=mysql --basedir=/home/mysql1 --datadir=/home/mysql1/data
+-    mysql -u root -S /home/mysql1/mysql.sock -p
 
 - 3，编译grpc server，在transfer/transfer 下
--- make
--- ./server
+-    make
+-    ./server
 
 - 4，编译main函数，在parser下
--- make
--- ./main 
+-    make
+-    ./main 
 
--- 或者用命令：
--- g++ Parse.o Parse_INIT.o Parse_LOAD.o Parse_SELECT.o Tools.o ../executor/cpp/executor_multi.o ../executor/cpp/mysql_connector.o ../transfer/transfer/transfer.pb.o ../transfer/transfer/transfer.grpc.pb.o ../transfer/transfer/client.o ../metadata/metadata.o -o main `pkg-config --cflags protobuf grpc` `pkg-config --libs protobuf grpc++` `mysql_config --cflags --libs` -ljson -lcurl
+-    或者用命令：
+-    g++ Parse.o Parse_INIT.o Parse_LOAD.o Parse_SELECT.o Tools.o ../executor/cpp/executor_multi.o ../executor/cpp/mysql_connector.o ../transfer/transfer/transfer.pb.o ../transfer/transfer/transfer.grpc.pb.o ../transfer/transfer/client.o ../metadata/metadata.o -o main `pkg-config --cflags protobuf grpc` `pkg-config --libs protobuf grpc++` `mysql_config --cflags --libs` -ljson -lcurl
 
--- 如果需要测试executor，在executor/cpp下
--- g++ -c executor_multi.cpp -pthread -std=c++11
--- g++ -c mysql_connector.cpp
--- g++ executor_multi.o mysql_connector.o ../../transfer/transfer/transfer.pb.o ../../transfer/transfer/transfer.grpc.pb.o ../../transfer/transfer/client.o -o mm `pkg-config --cflags protobuf grpc` `pkg-config --libs protobuf grpc++` `mysql_config --cflags --libs`
+-    如果需要测试executor，在executor/cpp下
+-    g++ -c executor_multi.cpp -pthread -std=c++11
+-    g++ -c mysql_connector.cpp
+-    g++ executor_multi.o mysql_connector.o ../../transfer/transfer/transfer.pb.o ../../transfer/transfer/transfer.grpc.pb.o ../../transfer/transfer/client.o -o mm `pkg-config --cflags protobuf grpc` `pkg-config --libs protobuf grpc++` `mysql_config --cflags --libs`
 
 
 - mysql导出数据权限问题
--- https://blog.csdn.net/weixin_44595372/article/details/88723191
+-    https://blog.csdn.net/weixin_44595372/article/details/88723191
 
 
 

@@ -1,22 +1,22 @@
 #include "Tools.h"
 // #include "../executor/cpp/executor_multi.h"
 
-struct NODE {
-    int id;
-    vector<int> child;
-    int parent;
-    string sql_statement;
-    int site;
-};
+// struct NODE {
+//     int id;
+//     vector<int> child;
+//     int parent;
+//     string sql_statement;
+//     int site;
+// };
 struct TABLE{
     string table_name;
     int node_id;
 };
-struct TREE {
-    int tree_id;
-    int root;
-    vector<NODE> Nodes;
-};
+// struct TREE {
+//     int tree_id;
+//     int root;
+//     vector<NODE> Nodes;
+// };
 struct JOIN {
     string join_condition;
     vector<string> table_list;

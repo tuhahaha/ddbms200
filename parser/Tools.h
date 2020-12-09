@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include "../metadata/metadata.h"
+#include "../executor/cpp/executor_multi.h"
 #include <map>
 #include <sys/time.h>
 

@@ -97,7 +97,7 @@ string GetFragType(string sql_statement){
 string GetLoadSql(string sql_statement){
     string table_name  = GetTableFromLocalLoad(sql_statement);
     string path = GetPathFromLocalLoad(sql_statement);
-    return "load data local infile '" + path + "' into table " + table_name;
+    return "load data infile '" + path + "' into table " + table_name;
 }
 // local load local data
 string GetSelectSqlFromLoadLocalData(string sql_statement) {

@@ -83,7 +83,7 @@ string GetSitename(string sql_statement) {
 }
 // local load all data
 string GetTableFromLocalLoad(string sql_statement) {
-    return GetBetween(sql_statement,"TABLE","FROM");
+    return GetBetween(sql_statement,"TABLE"," FROM");
 }
 string GetPathFromLocalLoad(string sql_statement) {
     return GetBetween(sql_statement, "FILE",";");
@@ -125,7 +125,7 @@ string GetSelectSqlFromLoadLocalData(string sql_statement) {
     return select_sql;
 }
 string GetToTable(string sql_statement) {
-    string to_table = GetBetween(sql_statement, "TO", "ON");
+    string to_table = GetBetween(sql_statement, "TO", " ON");
     return to_table;
 }
 

@@ -5,7 +5,6 @@ metadata/m
 metadata/t
 parser/a.out
 parser/main
-parser/
 transfer/transfer/server
 executor/cpp/em
 executor/cpp/mm

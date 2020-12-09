@@ -44,6 +44,9 @@ int main() {
                 Traverse(table_names);
                 string result = Data_Load_Execute(create_sql_yq,load_sql_yq,main_name,sitenames,sqls,table_names);
                 cout << result << endl;
+                sitenames.clear();
+                sqls.clear();
+                table_names.clear();
             }
             else {
                 cout << "INVALID LOAD COMMNET" << endl;

@@ -1,9 +1,21 @@
+# INIT >>>> don't copy this line >>> don't copy this line >>>
+
+CREATE TABLE pulisher[ id int(24) key,name char(100),nation char(100)];
+CREATE TABLE customer[ id int(24) key,name char(100),rank char(100)];
+CREATE TABLE book[ id int(24) key,title char(100),authors char(100),publisher_id int(24),copies int(24)];
+CREATE TABLE orders[ customer_id int(24) key,Book_id int(24) key,quantity int(24)];
+
+CREATE FRAGMENTATION publisher ( H,1 Publisher.id<104000ANDPublisher.nation='PRC' 1,2 Publisher.id<104000ANDPublisher.nation='PRC' 2,3 Publisher.id>=104000ANDPublisher.nation='USA' 3,4 Publisher.id>=104000ANDPublisher.nation='USA' 4 );
+CREATE FRAGMENTATION book ( H,1 Book.id<205000 1,2 Book.id>=205000ANDid<210000 2,3 Book.id>=210000 3);
+CREATE FRAGMENTATION customer ( V,1 Customer.idANDCustomer.name 1,2 Customer.idANDCusomer.rank 2);
+CREATE FRAGMENTATION orders ( H,1 Orders.customer_id<307000ANDOrders.customer_id<215000 1,2 Orders.customer_id<307000ANDOrders.book_id>=215000 2,3 Orders.customer_id>=307000ANDOrders.book_id<215000 3,4 Orders.cusomer_id>=307000ANDOrders.book_id>=215000 4);
+
 # LOAD  >>>> don't copy this line >>> don't copy this line >>>
 # Note
 # You need to set the path like '/home/xiaotong/publisher.tsv' WITHOUT sigle quotation mark
 
 LOCAL CREATE TABLE publisher (id int(6) key, name char(100), nation char(3)) ON SITE 1;
-LOCAL LOAD ALLDATA TO TABLE publisher FROM LOCAL FILE the path;
+LOCAL LOAD ALLDATA TO TABLE publisher FROM LOCAL FILE /home/xiaotong/publisher.tsv;
 LOCAL LOAD LOCALDATA TABLE publisher BY H WITH ( id<104000 nation='PRC') TO publisher_1 ON SITE 1;
 LOCAL LOAD LOCALDATA TABLE publisher BY H WITH ( id<104000 nation='USA') TO publisher_2 ON SITE 2;
 LOCAL LOAD LOCALDATA TABLE publisher BY H WITH ( id>=104000 nation='PRC') TO publisher_3 ON SITE 3;

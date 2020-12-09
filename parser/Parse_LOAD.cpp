@@ -109,7 +109,7 @@ string GetSelectSqlFromLoadLocalData(string sql_statement) {
         string condition = GetBetween(sql_statement, "(",")");
         vector<string> condition_list = GetList(condition," ",")");
         condition = Link(condition_list, " AND ");
-        select_sql = "SELECT * FROM " + from_table + " WHERE " + condition ;
+        select_sql = "select * FROM " + from_table + "WHERE " + condition ;
     }
     else if (frag_type == "V") {
         string condition = GetBetween(sql_statement, "(",")");

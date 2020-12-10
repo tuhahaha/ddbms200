@@ -158,7 +158,6 @@ vector<TCC> GetTCCListTest(string sql_statement) {
     vector<string> table_list = GetTableList(sql_statement);
     vector<string> column_list = GetAllColumnList(sql_statement);
     string condition = GetCondition(sql_statement);
-    cout << "condition IN GetTCCListTest >>> " << condition << "/" << endl;
     vector<string> condition_list = GetConditionList(sql_statement);
     vector<string> select_list = GetSelectConditionList(condition_list,table_list);
     vector<TCC> tccList = GetTCCList(table_list, column_list, select_list);
@@ -237,7 +236,7 @@ TREE SELECT(string sql_statement, int treeid) {
             cout << "INVALID FRAGTYPE :" << TCCList[i].fratype << endl; 
         }
     }
-
+    // cout << "GetData IN SELECT " << endl;
     // Join
     vector<string> condition_list = GetConditionList(sql_statement);
     vector<string> table_list = GetTableList(sql_statement);
@@ -266,6 +265,7 @@ TREE SELECT(string sql_statement, int treeid) {
         tree.push_back(node);
         iid += 1;
     }
+    // cout << "JOIN IN SELECT" << endl;
     // FinalPI
     node.id = iid;
     node.child.clear();

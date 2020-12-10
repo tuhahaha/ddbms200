@@ -103,6 +103,7 @@ int main() {
             TREE Tree = SELECT(sql_statement,0);
             cout << "TREE >>>" << endl;
             TraverseTree(Tree.Nodes);
+            Data_Select_Execute(Tree);
         }
         else if (sql_statement == "QUIT") {
             break;

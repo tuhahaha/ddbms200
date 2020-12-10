@@ -152,12 +152,12 @@ vector<string> GetAllColumnList(string sql_statement) {
     vector<string> select_column_list = GetSelectColumnList(sql_statement);
     vector<string> condition_list = GetConditionList(sql_statement);
     vector<string> column_list = GetColumnListFromConditionList(condition_list, GetTableList(sql_statement));
-    cout << "select_column_list IN GetAllColumnList >>> " << endl;
-    Traverse(select_column_list);
-    cout << "condition_list IN GetAllColumnList >>> " << endl;
-    Traverse(condition_list);
-    cout << "column_list IN GetAllColumnList >>> " << endl;
-    Traverse(column_list);
+    // cout << "select_column_list IN GetAllColumnList >>> " << endl;
+    // Traverse(select_column_list);
+    // cout << "condition_list IN GetAllColumnList >>> " << endl;
+    // Traverse(condition_list);
+    // cout << "column_list IN GetAllColumnList >>> " << endl;
+    // Traverse(column_list);
     column_list.insert(column_list.end(),select_column_list.begin(),select_column_list.end());
     return column_list;
 }

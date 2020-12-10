@@ -11,26 +11,6 @@ CREATE FRAGMENTATION customer( V,1 customer.idANDcustomer.name 1,2 customer.idAN
 CREATE FRAGMENTATION orders( H,1 orders.customer_id<307000ANDorders.customer_id<215000 1,2 orders.customer_id<307000ANDorders.book_id>=215000 2,3 orders.customer_id>=307000ANDorders.book_id<215000 3,4 orders.cusomer_id>=307000ANDorders.book_id>=215000 4);
 
 # LOAD  >>>> don't copy this line >>> don't copy this line >>>
-# Note
-# You need to set the path like '/home/xiaotong/publisher.tsv' WITHOUT sigle quotation mark
-
-LOCAL CREATE TABLE publisher (id int(6) key, name char(100), nation char(3)) ON SITE 1;
-LOCAL LOAD ALLDATA TO TABLE publisher FROM LOCAL FILE /home/xiaotong/publisher.tsv;
-LOCAL LOAD LOCALDATA TABLE publisher BY H WITH ( id<104000 nation='PRC') TO publisher_1 ON SITE 1;
-LOCAL LOAD LOCALDATA TABLE publisher BY H WITH ( id<104000 nation='USA') TO publisher_2 ON SITE 2;
-LOCAL LOAD LOCALDATA TABLE publisher BY H WITH ( id>=104000 nation='PRC') TO publisher_3 ON SITE 3;
-LOCAL LOAD LOCALDATA TABLE publisher BY H WITH ( id>=104000 nation='USA') TO publisher_4 ON SITE 4;
-LOCAL FINISH;
-
-# LOAD  >>>> don't copy this line >>> don't copy this line >>> 
-# Note
-# You need to set the path like '/home/xiaotong/publisher.tsv' WITHOUT sigle quotation mark
-
-LOCAL CREATE TABLE Customer (id int(6) key, name char(100), rank int(6)) ON SITE 1;
-LOCAL LOAD ALLDATA TO TABLE Customer FROM LOCAL FILE the path;
-LOCAL LOAD LOCALDATA TABLE Customer BY V WITH ( id name) TO Customer_1 ON SITE 1;
-LOCAL LOAD LOCALDATA TABLE Customer BY V WITH ( id rank) TO Customer_2 ON SITE 2;
-LOCAL FINISH;
 
 LOCAL CREATE TABLE publisher (id int(6) key, name char(100), nation char(3)) ON SITE 1;
 LOCAL LOAD ALLDATA TO TABLE publisher FROM LOCAL FILE /home/xiaotong/publisher.tsv;
@@ -41,20 +21,20 @@ LOCAL LOAD LOCALDATA TABLE publisher BY H WITH ( id>=104000 nation='USA') TO pub
 LOCAL FINISH;
 
 LOCAL CREATE TABLE book (id int(6) key, title char(100), authors char(100), publisher_id char(100), copies char(100)) ON SITE 1;
-LOCAL LOAD ALLDATA TO TABLE book FROM LOCAL FILE the path;
+LOCAL LOAD ALLDATA TO TABLE book FROM LOCAL FILE /home/xiaotong/book.tsv;
 LOCAL LOAD LOCALDATA TABLE book BY H WITH ( id<205000) TO book_1 ON SITE 1;
 LOCAL LOAD LOCALDATA TABLE book BY H WITH ( id>=205000 id<2150000) TO book_2 ON SITE 2;
 LOCAL LOAD LOCALDATA TABLE book BY H WITH ( id>=210000) TO book_3 ON SITE 3;
 LOCAL FINISH;
 
 LOCAL CREATE TABLE customer (id int(6) key, name char(100), rank char(100)) ON SITE 1;
-LOCAL LOAD ALLDATA TO TABLE customer FROM LOCAL FILE the path;
+LOCAL LOAD ALLDATA TO TABLE customer FROM LOCAL FILE /home/xiaotong/customer.tsv;
 LOCAL LOAD LOCALDATA TABLE customer BY V WITH ( id name) TO customer_1 ON SITE 1;
 LOCAL LOAD LOCALDATA TABLE customer BY V WITH ( id rank) TO customer_2 ON SITE 2;
 LOCAL FINISH;
 
 LOCAL CREATE TABLE orders (customer_id int(6) key, book_id int(6), quantity int(6)) ON SITE 1;
-LOCAL LOAD ALLDATA TO TABLE orders FROM LOCAL FILE the path;
+LOCAL LOAD ALLDATA TO TABLE orders FROM LOCAL FILE /home/xiaotong/orders.tsv;
 LOCAL LOAD LOCALDATA TABLE orders BY H WITH ( customer_id<307000 book_id<215000) TO orders_1 ON SITE 1;
 LOCAL LOAD LOCALDATA TABLE orders BY H WITH ( customer_id<307000 book_id>=215000) TO orders_2 ON SITE 2;
 LOCAL LOAD LOCALDATA TABLE publisher BY H WITH ( customer_id>=307000 book_id<215000) TO orders_3 ON SITE 3;
@@ -63,7 +43,7 @@ LOCAL FINISH;
 
 
 # SELECT 
-SELECT * FROM customer;
+SELECT * FROM customer; 
 SELECT publisher.name FROM publisher;
 SELECT book.title FROM book WHERE copies>5000;
 SELECT customer_id,quantity FROM orders WHERE quantity<8;

@@ -106,14 +106,14 @@ vector<FragDef> InitGetFragDefCreateFragmentation(string sql_statement) {
 Fragment InitGetFragmentCreateFragment(string sql_statement) {
     Fragment fragment;
     fragment.fragnum = InitGetFragNumCreateFragmentation(sql_statement);
-    cout << "fragnum :"<< fragment.fragnum << "end" << endl;
+    // cout << "fragnum :"<< fragment.fragnum << "end" << endl;
     fragment.fragtype = InitGetFragmentTypeCreateFragmentation(sql_statement);
-    cout << "fragtype :"<<fragment.fragtype << "end" <<endl;
+    // cout << "fragtype :"<<fragment.fragtype << "end" <<endl;
     fragment.name = InitGetTableCreateFragmentation(sql_statement);
-    cout << "name " << fragment.name <<"end"<< endl;
+    // cout << "name " << fragment.name <<"end"<< endl;
     fragment.frags = InitGetFragDefCreateFragmentation(sql_statement); // Segmentation fault (core dumped)
     // cout << fragment.frags << endl;
-    Traversefrags(fragment.frags);
+    // Traversefrags(fragment.frags);
     return fragment;
 }
 int InitGetFragNumCreateFragmentation(string sql_statement) {

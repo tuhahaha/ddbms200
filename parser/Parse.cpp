@@ -30,70 +30,88 @@ int main() {
     fragment = InitGetFragmentCreateFragment(sql_statement);
     saveFragToEtcd(fragment);
 
-    sql_statement = "SELECT customer.name,book.title,publisher.name,orders.quantity FROM customer,book,publisher,orders WHERE customer.id=orders.customer_id and book.id=orders.book_id and book.publisher_id=publisher.id and customer.id>308000 and book.copies>100 and orders.quantity>1 and publisher.nation='PRC'";
-    vector<TCC> TCCList = GetTCCListTest(sql_statement);
-    TREE Tree = SELECT(sql_statement,0);
-    TraverseTree(Tree.Nodes);
-    Data_Select_Execute(Tree);
-    // while (true) {
-    //     getline(cin,sql_statement);
-    //     if (sql_statement.find("LOCAL") != -1) {
-    //         cout << "LOCAL" << endl;
-    //         if (sql_statement.find("CREATE TABLE") != -1) {
-    //             create_sql_yq = GetLocalCreate(sql_statement);
-    //         }
-    //         else if (sql_statement.find("LOAD ALLDATA") != -1) {
-    //             load_sql_yq = GetLoadSql(sql_statement);
-    //             main_name = GetTableFromLocalLoad(sql_statement);
-    //         }
-    //         else if (sql_statement.find("LOAD LOCALDATA") != -1) {
-    //             sql_statements.push_back(sql_statement);
-    //         }
-    //         else if (sql_statement.find("LOCAL FINISH") != -1) {
-    //             sitenames = GetSiteNames(sql_statements);
-    //             sqls = GetSqls(sql_statements);
-    //             table_names = GetTableNames(sql_statements);
+    // sql_statement = "SELECT customer.name,book.title,publisher.name,orders.quantity FROM customer,book,publisher,orders WHERE customer.id=orders.customer_id and book.id=orders.book_id and book.publisher_id=publisher.id and customer.id>308000 and book.copies>100 and orders.quantity>1 and publisher.nation='PRC'";
+    // vector<TCC> TCCList = GetTCCListTest(sql_statement);
+    // TREE Tree = SELECT(sql_statement,0);
+    // TraverseTree(Tree.Nodes);
+    // Data_Select_Execute(Tree);
+    while (true) {
+        getline(cin,sql_statement);
+        if (sql_statement.find("LOCAL") != -1) {
+            // cout << "LOCAL" << endl;
+            if (sql_statement.find("CREATE TABLE") != -1) {
+                create_sql_yq = GetLocalCreate(sql_statement);
+            }
+            else if (sql_statement.find("LOAD ALLDATA") != -1) {
+                load_sql_yq = GetLoadSql(sql_statement);
+                main_name = GetTableFromLocalLoad(sql_statement);
+            }
+            else if (sql_statement.find("LOAD LOCALDATA") != -1) {
+                sql_statements.push_back(sql_statement);
+            }
+            else if (sql_statement.find("LOCAL FINISH") != -1) {
+                sitenames = GetSiteNames(sql_statements);
+                sqls = GetSqls(sql_statements);
+                table_names = GetTableNames(sql_statements);
 
-    //             cout << "create_sql_yq " << create_sql_yq << endl;
-    //             cout << "load_sql_yq " << load_sql_yq << endl;
-    //             cout << "main_name " << main_name << endl;
-    //             Traverse(sitenames);
-    //             Traverse(sqls);
-    //             Traverse(table_names);
-    //             string result = Data_Load_Execute(create_sql_yq,load_sql_yq,main_name,sitenames,sqls,table_names);
-    //             cout << result << endl;
-    //             sitenames.clear();
-    //             sqls.clear();
-    //             table_names.clear();
-    //         }
-    //         else {
-    //             cout << "INVALID LOAD COMMNET" << endl;
-    //         }
-    //         continue;
-    //     }
-    //     else if (sql_statement.find("CREATE TABLE") != -1) {
-    //         cout << "CREATE TABLE" << endl;
-    //         GDD gdd = InitGetGDDCreateTable(sql_statement);
-    //         saveTableToEtcd(gdd);
-    //     }
-    //     else if (sql_statement.find("CREATE FRAGMENTATION") != -1) {
-    //         cout << "CREATE FRAGMENTATION" << endl;
-    //         Fragment fragment = InitGetFragmentCreateFragment(sql_statement);
-    //         saveFragToEtcd(fragment);
-    //     }
-    //     else if (sql_statement.find("SELECT") != -1) {
-    //         cout << "SELECT" << endl;
-    //         TREE Tree = SELECT(sql_statement,0);
-    //         // TraverseTree(Tree.Nodes);
-    //     }
-    //     else if (sql_statement == "QUIT") {
-    //         break;
-    //     }
-    //     else {
-    //         cout << "INVALID SQL STATEMENT " << endl;
-    //         continue;
-    //     }
-    // }
+                // TEST //
+                // cout << "create_sql_yq " << create_sql_yq << endl;
+                // cout << "load_sql_yq " << load_sql_yq << endl;
+                // cout << "main_name " << main_name << endl;
+                // Traverse(sitenames);
+                // Traverse(sqls);
+                // Traverse(table_names);
+                // TEST END //
+
+                string result = Data_Load_Execute(create_sql_yq,load_sql_yq,main_name,sitenames,sqls,table_names);
+                cout << result << endl;
+                sitenames.clear();
+                sqls.clear();
+                table_names.clear();
+            }
+            else {
+                cout << "INVALID LOAD COMMENT" << endl;
+            }
+            continue;
+        }
+        else if (sql_statement.find("CREATE TABLE") != -1) {
+            // cout << "CREATE TABLE" << endl;
+            GDD gdd = InitGetGDDCreateTable(sql_statement);
+            saveTableToEtcd(gdd);
+        }
+        else if (sql_statement.find("CREATE FRAGMENTATION") != -1) {
+            // cout << "CREATE FRAGMENTATION" << endl;
+            Fragment fragment = InitGetFragmentCreateFragment(sql_statement);
+            saveFragToEtcd(fragment);
+        }
+        else if (sql_statement.find("SELECT") != -1) {
+            // cout << "SELECT" << endl;
+            // TEST //
+            // string table = GetTableName(sql_statement);
+            // vector<string> table_list = GetTableList(sql_statement);
+            // vector<string> column_list = GetAllColumnList(sql_statement);
+            // string condition = GetCondition(sql_statement);
+            // cout << "table :" << table <<"/" << endl;
+            // cout << "table_list in main " << endl;
+            // Traverse(table_list);
+            // cout << "column_list in main " << endl;
+            // Traverse(column_list);
+            // cout << "condition :" << condition << "/" << endl;
+            // vector<TCC> TCCList = GetTCCListTest(sql_statement);
+            // TraverseTCCList(TCCList);
+            // // TEST END //
+            TREE Tree = SELECT(sql_statement,0);
+            cout << "TREE >>>" << endl;
+            TraverseTree(Tree.Nodes);
+        }
+        else if (sql_statement == "QUIT") {
+            break;
+        }
+        else {
+            cout << "INVALID SQL STATEMENT " << endl;
+            continue;
+        }
+    }
 
     return 0;
 }

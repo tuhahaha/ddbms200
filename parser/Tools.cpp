@@ -2,23 +2,43 @@
 using namespace std;
 
 string GetBetween(string sql_statement, string start, string end) {
-    int start_loc = sql_statement.find(start) + start.size() + 1;
-    int end_loc = sql_statement.find(end);
-    return sql_statement.substr(start_loc, end_loc-start_loc);
+    if (sql_statement.find(start) == -1 || sql_statement.find(end) == -1) {
+        return "";
+    }
+    else {
+        int start_loc = sql_statement.find(start) + start.size() + 1;
+        int end_loc = sql_statement.find(end);
+        return sql_statement.substr(start_loc, end_loc-start_loc);
+    }
 }
 string GetAfter(string sql_statement, string start) {
-    int start_loc = sql_statement.find(start) + start.size() + 1;
-    int end_loc = sql_statement.size();
-    return sql_statement.substr(start_loc, end_loc-start_loc);
+    if (sql_statement.find(start) == -1) {
+        return "";
+    }
+    else {
+        int start_loc = sql_statement.find(start) + start.size() + 1;
+        int end_loc = sql_statement.size();
+        return sql_statement.substr(start_loc, end_loc-start_loc);
+    }
 }
 string GetExactAfter(string sql_statement, string start) {
-    int start_loc = sql_statement.find(start) + start.size();
-    int end_loc = sql_statement.size();
-    return sql_statement.substr(start_loc, end_loc-start_loc);
+    if (sql_statement.find(start) == -1) {
+        return "";
+    }
+    else {
+        int start_loc = sql_statement.find(start) + start.size();
+        int end_loc = sql_statement.size();
+        return sql_statement.substr(start_loc, end_loc-start_loc);
+    }
 }
 string GetBefore(string sql_statement, string end) {
-    int end_loc = sql_statement.find(end);
-    return sql_statement.substr(0,end_loc);
+    if (sql_statement.find(end) == -1) {
+        return "";
+    }
+    else {
+        int end_loc = sql_statement.find(end);
+        return sql_statement.substr(0,end_loc);
+    }    
 }
 vector<string> GetList(string Line, string split, string stop) {
     vector <string> TableList;
@@ -51,7 +71,12 @@ void Traverse(vector<string> input) {
     }
 }
 string GetTableName(string sql_statement) {
-    return GetBetween(sql_statement, "FROM", " WHERE");
+    if (sql_statement.find("WHERE") == -1) {
+        return GetBetween(sql_statement, "FROM", ";");
+    }
+    else {
+        return GetBetween(sql_statement, "FROM", " WHERE");
+    }
 }
 vector<string> GetTableList(string sql_statement) {
     return GetList(GetTableName(sql_statement),","," ");
@@ -63,10 +88,19 @@ vector<string> GetSelectColumnList(string sql_statement) {
     return GetList(GetSelectColumnName(sql_statement),","," ");
 }
 string GetCondition(string sql_statement) {
-    return GetAfter(sql_statement,"WHERE");
+    // return GetAfter(sql_statement,"WHERE");
+    return GetBetween(sql_statement,"WHERE",";");
 }
 vector<string> GetConditionList(string sql_statement) {
-    return GetList(GetCondition(sql_statement),"and ",";");
+    string condition = GetCondition(sql_statement);
+    if (condition != " " && condition != "") {
+        return GetList(condition,"and ",";");
+    }
+    else {
+        vector<string> condition_list;
+        condition_list.clear();
+        return condition_list;
+    }
 }
 string GetTableFromColumn(string column, vector<string> TableList) {
     int size = TableList.size();
@@ -96,8 +130,8 @@ vector<string> GetColumnFromCondition(string condition, vector<string> TableList
         items = GetList(condition, "<=", " ");
     }
     else {
-        cout << "GetColumnFromCondition ERROR" << endl;
-        return items;
+        column_list.clear();
+        return column_list;
     }
     for (int i = 0; i < items.size(); i++) {
         if(GetTableFromColumn(items[i], TableList) != "GetTableFromColumn ERROR!") {
@@ -118,6 +152,12 @@ vector<string> GetAllColumnList(string sql_statement) {
     vector<string> select_column_list = GetSelectColumnList(sql_statement);
     vector<string> condition_list = GetConditionList(sql_statement);
     vector<string> column_list = GetColumnListFromConditionList(condition_list, GetTableList(sql_statement));
+    cout << "select_column_list IN GetAllColumnList >>> " << endl;
+    Traverse(select_column_list);
+    cout << "condition_list IN GetAllColumnList >>> " << endl;
+    Traverse(condition_list);
+    cout << "column_list IN GetAllColumnList >>> " << endl;
+    Traverse(column_list);
     column_list.insert(column_list.end(),select_column_list.begin(),select_column_list.end());
     return column_list;
 }

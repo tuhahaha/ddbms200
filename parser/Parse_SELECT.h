@@ -41,7 +41,7 @@ string GetTableFromSelectCondition(string select_condition);
 vector<string> GetTableFromJoinCondition(string join_condition);
 vector<int> GetNodeListFromTableList(vector<string> table_in_join_condition, vector<TABLE> TableList);
 vector<TCC> GetTCCListTest(string sql_statement);
-vector<NODE> GetData(string sql_statement, int treeid);
+// vector<NODE> GetData(string sql_statement, int treeid);
 TREE SELECT(string sql_statement, int treeid);
 void TraverseTree(vector<NODE> tree);
 void TraverseInt(vector<int> intlist);

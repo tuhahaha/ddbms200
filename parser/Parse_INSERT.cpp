@@ -1,15 +1,9 @@
-#include "iostream"
-#include <stdio.h>
-#include <vector>
-#include <string>
-#include"Tools.h"
-#include"../metadata/metadata.h"
+#include "Parse_INSERT.h"
 
 using namespace std;
-bool JudgeFragement(vector<string> condition_list, vector<string> field_list, vector<string> value_list);
 
 int main() {
-    string sql_statement = "INSERT INTO TABLE Publisher( field1,field2) VALUES (value1, value2);";
+    string sql_statement = "INSERT INTO TABLE publisher( field1,field2) VALUES (value1, value2);";
     string table_name = GetBetween(sql_statement, "TABLE","(");
     cout << table_name << endl;
     string column_name = GetBetween(sql_statement, "(", ")");

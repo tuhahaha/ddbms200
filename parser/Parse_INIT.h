@@ -11,6 +11,4 @@ string InitGetTableCreateFragmentation(string sql_statement);
 string InitGetFragmentTypeCreateFragmentation(string sql_statement);
 vector<FragDef> InitGetFragDefCreateFragmentation(string sql_statement);
 int InitGetFragNumCreateFragmentation(string sql_statement);
-void Traversefrags(vector<FragDef> frags);
-void TraverseFragment(Fragment frags);
 Fragment InitGetFragmentCreateFragment(string sql_statement);

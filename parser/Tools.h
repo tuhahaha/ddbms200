@@ -31,4 +31,5 @@ vector<string> GetAllData(string sql_statement);
 int GetTCLoc(string table, string column);
 string GetPureColumnFromColumn(string column);
 string Link(vector<string> input, string devide);
-
+void Traversefrags(vector<FragDef> frags);
+void TraverseFragment(Fragment frags);

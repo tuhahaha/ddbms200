@@ -51,7 +51,7 @@ void Traverse(vector<string> input) {
     }
 }
 string GetTableName(string sql_statement) {
-    return GetBetween(sql_statement, "FROM", "WHERE");
+    return GetBetween(sql_statement, "FROM", " WHERE");
 }
 vector<string> GetTableList(string sql_statement) {
     return GetList(GetTableName(sql_statement),","," ");
@@ -153,4 +153,19 @@ string Link(vector<string> input, string devide) {
         output += devide + input[i];
     }
     return output;
+}
+void Traversefrags(vector<FragDef> frags) {
+    for (int i = 0; i < frags.size(); i++) {
+        cout << frags[i].column << endl;
+        cout << frags[i].condition << endl;
+        cout << frags[i].id << endl;
+        cout << frags[i].site << endl;
+        cout << frags[i].size << endl;
+    }
+}
+void TraverseFragment(Fragment fragment) {
+    cout << fragment.name << endl;
+    cout << fragment.fragtype << endl;
+    cout << fragment.fragnum << endl;
+    Traversefrags(fragment.frags);
 }

@@ -106,32 +106,18 @@ vector<FragDef> InitGetFragDefCreateFragmentation(string sql_statement) {
 Fragment InitGetFragmentCreateFragment(string sql_statement) {
     Fragment fragment;
     fragment.fragnum = InitGetFragNumCreateFragmentation(sql_statement);
-    cout << "fragnum :"<< fragment.fragnum << endl;
+    cout << "fragnum :"<< fragment.fragnum << "end" << endl;
     fragment.fragtype = InitGetFragmentTypeCreateFragmentation(sql_statement);
-    cout << "fragtype :"<<fragment.fragtype << endl;
+    cout << "fragtype :"<<fragment.fragtype << "end" <<endl;
     fragment.name = InitGetTableCreateFragmentation(sql_statement);
-    cout << "name " << fragment.name << endl;
+    cout << "name " << fragment.name <<"end"<< endl;
     fragment.frags = InitGetFragDefCreateFragmentation(sql_statement); // Segmentation fault (core dumped)
     // cout << fragment.frags << endl;
+    Traversefrags(fragment.frags);
     return fragment;
 }
 int InitGetFragNumCreateFragmentation(string sql_statement) {
     string fragment_line = GetBetween(sql_statement, "(", ")");
     vector<string> fragment_list = GetList(fragment_line,",",")");
     return fragment_list.size()-1;
-}
-void Traversefrags(vector<FragDef> frags) {
-    for (int i = 0; i < frags.size(); i++) {
-        cout << frags[i].column << endl;
-        cout << frags[i].condition << endl;
-        cout << frags[i].id << endl;
-        cout << frags[i].site << endl;
-        cout << frags[i].size << endl;
-    }
-}
-void TraverseFragment(Fragment fragment) {
-    cout << fragment.name << endl;
-    cout << fragment.fragtype << endl;
-    cout << fragment.fragnum << endl;
-    Traversefrags(fragment.frags);
 }

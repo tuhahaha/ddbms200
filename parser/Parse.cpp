@@ -32,8 +32,10 @@ int main() {
 
     sql_statement = "SELECT customer.name,book.title,publisher.name,orders.quantity FROM customer,book,publisher,orders WHERE customer.id=orders.customer_id and book.id=Orders.book_id and book.publisher_id=publisher.id and customer.id>308000 and book.copies>100 and orders.quantity>1 and publisher.nation='PRC'";
     vector<TCC> TCCList = GetTCCListTest(sql_statement);
-    cout << TCCList.size() << endl;
-    TraverseTCCList(TCCList);
+    // cout << TCCList.size() << endl;
+    // TraverseTCCList(TCCList);
+    TREE Tree = SELECT(sql_statement,0);
+    TraverseTree(Tree.Nodes);
     // while (true) {
     //     getline(cin,sql_statement);
     //     if (sql_statement.find("LOCAL") != -1) {

@@ -3,7 +3,7 @@ using namespace std;
 
 
 // int main() {
-//     string sql_statement = "SELECT customer.name,book.title,publisher.name,orders.quantity FROM customer,book,publisher,orders WHERE customer.id=orders.customer_id and book.id=Orders.book_id and book.publisher_id=publisher.id and customer.id>308000 and book.copies>100 and orders.quantity>1 and publisher.nation='PRC'";
+//     string sql_statement = "SELECT customer.name,book.title,publisher.name,orders.quantity FROM customer,book,publisher,orders WHERE customer.id=orders.customer_id and book.id=orders.book_id and book.publisher_id=publisher.id and customer.id>308000 and book.copies>100 and orders.quantity>1 and publisher.nation='PRC'";
 //     TREE Tree = SELECT(sql_statement,0);
 //     return 0;
 // }
@@ -298,8 +298,6 @@ TREE SELECT(string sql_statement, int treeid) {
     Tree.tree_id = treeid;
     int iid = 1;
     map<string,int> TableMap;
-    cout << "TCCLIST GET IN SELECT " << endl;
-    TraverseTCCList(TCCList);
     // GetData
     for (int i = 0; i < TCCList.size(); i++) {
         string table_name = TCCList[i].table_name;
@@ -308,8 +306,6 @@ TREE SELECT(string sql_statement, int treeid) {
             string condition = Link(condition_list, " AND ");
             Fragment frag = getFragFromEtcd(table_name);
             vector<FragDef> frags = frag.frags;
-            Traversefrags(frags);
-            cout << frags.size() << endl;
             for (int j = 0; j < frags.size(); j++) {
                 node.id = iid;
                 node.site = frags[j].site;
@@ -318,21 +314,12 @@ TREE SELECT(string sql_statement, int treeid) {
                 iid += 1;
                 tree.push_back(node);
             }
-            // for(int j = 1; j <= 4; j++) { 
-            //     node.id = iid;
-            //     node.site = j;
-            //     node.child.clear();
-            //     node.sql_statement = "SELECT * FROM " + table_name + "_" + to_string(j) + " WHERE " +  condition;
-            //     iid += 1;
-            //     tree.push_back(node);
-            // }
             node.id = iid;
             node.site = 1;
             node.child.clear();
-            node.child.push_back(iid-4);
-            node.child.push_back(iid-3);
-            node.child.push_back(iid-2);
-            node.child.push_back(iid-1);
+            for (int k = 0; k < frags[k].size(); k++) {
+                node.child.push_back(iid-k);
+            }
             node.sql_statement = "SELECT * FROM tree_" + to_string(treeid) + "_node_" + to_string(iid-4) + " UNION ALL " + "SELECT * FROM tree_" + to_string(treeid) + "_node_" + to_string(iid-3) + " UNION ALL " + "SELECT * FROM tree_" + to_string(treeid) + "_node_" + to_string(iid-2) + " UNION ALL " + "SELECT * FROM tree_" + to_string(treeid) + "_node_" + to_string(iid-1);
             TableMap[table_name] = iid;          
             iid += 1;

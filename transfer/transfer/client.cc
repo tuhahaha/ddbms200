@@ -208,6 +208,11 @@ exec_tree RPC_Data_Select_Execute(TREE tree, string site){
     TransferClient t1(grpc::CreateChannel(site_info[st-1].IP+":"+site_info[st-1].RPC_PORT, grpc::InsecureChannelCredentials()));
     return t1.Data_S_E(tree,st);
 }
+string RPC_GET_FILE(string filename, string site){
+  string sql = "";
+  string res = RPC_Local_Select(sql, filename, site);
+  return "OK";
+}
 // int main(){
 //     // string res = RPC_local_Insert_Delete("create table test2(id int(6))","s2");
 //     // string res = RPC_Local_Select("","test","3");

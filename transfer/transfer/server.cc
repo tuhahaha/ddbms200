@@ -64,7 +64,9 @@ Status TransferImpl::L_S(ServerContext* context, const Stmt2* stmt,ServerWriter<
     string sql = stmt->sql1();
     string file_name = stmt->sql2();
     int site = stmt->site();
-    string res = Local_Select(sql,file_name, "s"+to_string(site)); // 此处生成文件TMPPATH+file_name+".sql"
+    if(sql != ""){
+        string res = Local_Select(sql,file_name, "s"+to_string(site)); // 此处生成文件TMPPATH+file_name+".sql"
+    }
     
     // 将新生成的文件传回client端
     Chunk chunk;
@@ -143,8 +145,14 @@ Status TransferImpl::D_S_E(ServerContext* context, const MTree* mtree,ETree* etr
         nd.site = mnd.site();
         tr.Nodes.push_back(nd);
     }
+    
+
     exec_tree exetr;
     exetr = Data_Select_Execute(tr);
+
+    // 传文件 文件名：tree_
+    // string filename = TMPPATH + "tree_" + to_string(tr.tree_id) + "_node_"+to_string(tr.root) +".sql";
+
     // 将exetr包装成message etree传回去
     etree->set_treeid(exetr.tree_id);
     etree->set_root(exetr.root);

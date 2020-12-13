@@ -93,4 +93,6 @@ string RPC_Local_Select(string sql, string res_name, string site);
 string RPC_Local_Tmp_Load(string tmp_data, string site);
 
 exec_tree RPC_Data_Select_Execute(TREE tree, string site);
+string RPC_GET_FILE(string filename, string site);
+
 #endif /*_TRANSFER_H_*/

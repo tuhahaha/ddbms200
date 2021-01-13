@@ -74,7 +74,7 @@ int GetSite(string sql_statement) {
 }
 string GetLocalCreate(string sql_statement) {
     string localcreate;
-    localcreate = GetBetween(sql_statement,"LOCAL","ON") ;
+    localcreate = GetBetween(sql_statement,"LOCAL"," ON") ;
     return localcreate;
 }
 string GetSitename(string sql_statement) {
@@ -131,6 +131,7 @@ string GetToTable(string sql_statement) {
 
 vector<string> GetSiteNames(vector<string> sql_statements) {
     vector<string> site_names;
+    site_names.clear();
     for (int i = 0; i < sql_statements.size(); i++) {
         site_names.push_back(GetSitename(sql_statements[i]));
     }
@@ -138,6 +139,7 @@ vector<string> GetSiteNames(vector<string> sql_statements) {
 }
 vector<string> GetSqls(vector<string> sql_statements) {
     vector<string> sqls;
+    sqls.clear();
     for (int i = 0; i < sql_statements.size(); i++) {
         sqls.push_back(GetSelectSqlFromLoadLocalData(sql_statements[i]));
     }
@@ -145,6 +147,7 @@ vector<string> GetSqls(vector<string> sql_statements) {
 }
 vector<string> GetTableNames(vector<string> sql_statements) {
     vector<string> table_names;
+    table_names.clear();
     for (int i = 0; i < sql_statements.size(); i++) {
         table_names.push_back(GetToTable(sql_statements[i]));
     }

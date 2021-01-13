@@ -1,3 +1,6 @@
 #include "Tools.h"
 
-bool JudgeFragement(vector<string> condition_list, vector<string> field_list, vector<string> value_list);
+
+vector<string> GetsqlInsert(string sql_statement);
+vector<string> GetsitenameInsert(string sql_statement);
+vector<string> GetPure(vector<string> column_list_get);

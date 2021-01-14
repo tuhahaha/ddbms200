@@ -9,12 +9,8 @@
 #include <regex>
 #include <vector>
 #include <sstream>
-// #include <cstdlib>
-// #include <cstdio>
 #include <typeinfo>
-// #define MAX_FRAG_COUNT1 100
-// #define MAX_FRAG_V 10
-// #define MAX_FRAG_H 10
+
 
 
 using namespace std;
@@ -84,20 +80,4 @@ bool Insert_Attrvalue(string &key,string &value);
 string etcd_op(string &dt,string &op);
 size_t write_data(void *buffer, size_t size, size_t nmemb, void *stream);
 
-
-// int etcd_set(char *key, char *value, char *token);
-// int etcd_set2(char *key, char *value, char *token);
-// string  Create_Dir(string &etcd_url,string &etcd_dir);  
-
-// bool Save_Table(Table TableInfo);
-// bool Save_Fragment(Fragment table);
-// Fragment To_json(string &info,string &tablename);
-// Fragment Get_Fragment(string &tablename);
-// Table To_Table(string &info,string &tablename);
-// Table Get_Table(string &tablename);
-// Fragment1 Change_Frag(Fragment f1);
-// Fragment1 Get_Fragment1(string &tablename);
-// void Get_TableAttrs(string &tablename,string str[]);
-// SiteInfos Get_SiteInfo();
-// bool Save_SiteInfo(SiteInfo site);
 #endif /*_DDB_METADATA_H_*/

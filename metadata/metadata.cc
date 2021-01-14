@@ -309,7 +309,8 @@ string get_value_from_json(string &res){
     FastWriter writer; 
     string json = res;
      if(!reader.parse(json, root)){  
-        cout << "parse json error" << endl;   
+        cout << "parse json error" << endl;
+        return "";   
     }
     // cout << cout << typeid(root).name() << "       " << root["kvs"][0]["value"] << endl;
 
@@ -318,6 +319,7 @@ string get_value_from_json(string &res){
     string nodeString1 = nodeString.substr(1);
     if(!reader.parse(nodeString1, node)){
         cout << "parse json error" << endl;
+        return "";
     }
     // cout << node["value"] << endl;
 
@@ -356,6 +358,7 @@ Fragment getFragFromEtcd(string tablename){
     fmt.name = tablename;
     fmt.fragtype = getTableFragType(tablename);
     fmt.fragnum = getTableFragNum(tablename);
+    cout <<"get Ftagment: "<<tablename << "  " <<" fmt.fragtype : "<<fmt.fragtype<<" fmt.fragnum : "<<fmt.fragnum;
     for(int i=1;i<=fmt.fragnum;i++){
         FragDef df;
         df.column = getTableFragCol(tablename,i);
@@ -364,7 +367,7 @@ Fragment getFragFromEtcd(string tablename){
         df.site = getTableFragSite(tablename,i);
         df.size = getTableFragSize(tablename,i);
         fmt.frags.push_back(df);
-        // cout << df.condition << endl;
+        cout <<" get frag : "<<i<<" "<<" df.condition : "<< df.condition <<" df.column : "<<df.column<<" df.site : "<<df.site<< endl;
     }
     return fmt;
 }
@@ -372,7 +375,7 @@ Fragment getFragFromEtcd(string tablename){
 // int main(){
 //     ZBase64 base64;
     
-//     // string t2 = "publisher";
+//     string t2 = "publisher";
 //     // vector<string> r = getTableAttri(t2);
 //     // cout << r[0] << endl;
 
@@ -417,12 +420,13 @@ Fragment getFragFromEtcd(string tablename){
 //         fmt.frags.push_back(fd);
 //         saveFragToEtcd(fmt);
 //     }
-    
-//     string t = "{\"key\":\""+base64.EncodeBase64("/part_column/publisher.1")+"\"}";
-//     string op = "GET";
-//     string res = etcd_op(t,op);  //res is json string
-//     string v = get_value_from_json(res);
-//     cout <<"show example:   key: /part_column/publisher.1   value: "<< v << endl;
+//     cout <<"hh"<< getFragFromEtcd(t2).fragtype << endl;
+
+//     // string t = "{\"key\":\""+base64.EncodeBase64("/part_column/publisher.1")+"\"}";
+//     // string op = "GET";
+//     // string res = etcd_op(t,op);  //res is json string
+//     // string v = get_value_from_json(res);
+//     // cout <<"show example:   key: /part_column/publisher.1   value: "<< v << endl;
 //     return 0;
     
 // }

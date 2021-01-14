@@ -1,5 +1,5 @@
 # 下载安装etcd
-ETCD_VER=v
+ETCD_VER=v3.4.2
 GITHUB_URL=https://github.com/etcd-io/etcd/releases/download
 DOWNLOAD_URL=${GITHUB_URL}
 
@@ -11,6 +11,7 @@ cp ./etcd-v3.4.2-linux-amd64/etcd* /usr/local/etcd
 # 设置环境变量
 sudo vi /etc/profile
 export PATH=$PATH:/usr/local/etcd
+source /etc/profile
 
 # curl依赖包
 sudo apt-get install curl

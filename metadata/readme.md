@@ -1,6 +1,12 @@
 # 生成可执行文件m
 g++ metadata.cc -lcurl -ljson -o m
 
+# 下载安装 ETCD 以及其他依赖
+env.sh
+
+# 配置ETCD集群
+set_etcd.sh
+
 # 函数调用说明
 
 ## 可能会经常用到：直接存取GDD，Fragment对象

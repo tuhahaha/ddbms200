@@ -87,12 +87,17 @@ typedef struct webInfo{
 extern WEB site_info[4];
 
 // RPC 调用接口声明
+// 在目标site 实现insert/delete操作
 string RPC_local_Insert_Delete(string sql, string site);
+// 在目标site 实现Load操作
 string RPC_local_Load(string sql_create, string sql_load, string site);
+// 在目标site 实现select操作，并传回结果
 string RPC_Local_Select(string sql, string res_name, string site);
+// 向目标site 传输数据，并传回结果
 string RPC_Local_Tmp_Load(string tmp_data, string site);
-
+// 传输执行树并传回结果
 exec_tree RPC_Data_Select_Execute(TREE tree, string site);
+// 获取目标site 的文件
 string RPC_GET_FILE(string filename, string site);
 
 #endif /*_TRANSFER_H_*/

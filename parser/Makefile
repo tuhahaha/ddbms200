@@ -22,7 +22,7 @@ endif
 
 
 all: main
-main: Parse.o Parse_INIT.o Parse_LOAD.o Parse_SELECT.o Tools.o ../executor/cpp/executor_multi.o ../executor/cpp/mysql_connector.o ../transfer/transfer/transfer.pb.o ../transfer/transfer/transfer.grpc.pb.o ../transfer/transfer/client.o ../metadata/metadata.o
+main: Parse.o Parse_INIT.o Parse_LOAD.o Parse_SELECT.o Parse_INSERT.o Parse_DELETE.o Tools.o ../executor/cpp/executor_multi.o ../executor/cpp/mysql_connector.o ../transfer/transfer/transfer.pb.o ../transfer/transfer/transfer.grpc.pb.o ../transfer/transfer/client.o ../metadata/metadata.o
 	$(CXX) $^ $(LDFLAGS) -o $@
 
 

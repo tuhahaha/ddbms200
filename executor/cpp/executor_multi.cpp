@@ -425,6 +425,12 @@ TREE get_sub_tree(TREE tree, int node_id){
 void RPC_Data_Select_Execute_Thread(TREE tree, string site, std::promise<exec_tree> &resultObj){
     /* RPC_Data_Select_Execute 只会调用Data_Select_Execute */
     exec_tree res_sub_tree = RPC_Data_Select_Execute(tree, site);
+    /* 把文件传过来 */
+    string res_name = "tree_" + to_string(tree.tree_id) + "_node_" + to_string(tree.root);
+    string transfer_res = RPC_GET_FILE(res_name, site);
+    if(transfer_res=="OK"){
+        printf("%s transfered success!\n", res_name);
+    }
     resultObj.set_value(res_sub_tree);
 }
 
@@ -671,7 +677,7 @@ exec_tree Data_Select_Execute(TREE tree){
         }
         else{
             /* 现在表示查询成功了 */
-            string filepath = TMPPATH + res_name + ".sql";
+            string filepath = TMPPATH + res_n  ame + ".sql";
             const char* p = filepath.data();
             size_t res_volume = get_filebytes(p);
             /* 计算所花时间 */

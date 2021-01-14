@@ -68,16 +68,6 @@ GDD InitGetGDDCreateTable(string sql_statement) {
     gdd.cols = InitGetColumnsCreateTable(sql_statement);
     return gdd;
 }
-void TraverseGDD(GDD gdd) {
-    cout << "TABLE NAME : " << gdd.name << endl;
-    cout << "THE SIZE OF GDD.COLS IS " << gdd.cols.size() << endl;
-    for (int i = 0; i < gdd.cols.size(); i++) {
-        cout << "   " << gdd.cols[i].name << endl;
-        cout << "   " << gdd.cols[i].type << endl;
-        cout << "   " << gdd.cols[i].key << endl;
-    }
-}
-
 // Create Fragment
 string InitGetTableCreateFragmentation(string sql_statement) {
     return GetBetween(sql_statement, "CREATE FRAGMENTATION", "(");
@@ -99,20 +89,22 @@ vector<FragDef> InitGetFragDefCreateFragmentation(string sql_statement) {
         frags_tmp.id = stoi(fragment_tmp_list[0]);
         frags_tmp.site = stoi(fragment_tmp_list[2]);
         frags_tmp.size = 0;
+        frags_tmp.column = InitGetFragsColumn(frags_tmp.condition);
         frags.push_back(frags_tmp);
     }
     return frags;
 }
 Fragment InitGetFragmentCreateFragment(string sql_statement) {
     Fragment fragment;
-    fragment.fragnum = InitGetFragNumCreateFragmentation(sql_statement);
-    cout << "fragnum :"<< fragment.fragnum << endl;
     fragment.fragtype = InitGetFragmentTypeCreateFragmentation(sql_statement);
-    cout << "fragtype :"<<fragment.fragtype << endl;
+    cout << "fragtype :"<<fragment.fragtype << "end" <<endl;
     fragment.name = InitGetTableCreateFragmentation(sql_statement);
-    cout << "name " << fragment.name << endl;
+    cout << "name " << fragment.name <<"end"<< endl;
     fragment.frags = InitGetFragDefCreateFragmentation(sql_statement); // Segmentation fault (core dumped)
-    // cout << fragment.frags << endl;
+    cout << "fragment.frags" << endl;
+    Traversefrags(fragment.frags);
+    fragment.fragnum = fragment.frags.size();
+    cout << "fragment.fragnum" << fragment.fragnum << endl; 
     return fragment;
 }
 int InitGetFragNumCreateFragmentation(string sql_statement) {
@@ -120,18 +112,36 @@ int InitGetFragNumCreateFragmentation(string sql_statement) {
     vector<string> fragment_list = GetList(fragment_line,",",")");
     return fragment_list.size()-1;
 }
-void Traversefrags(vector<FragDef> frags) {
-    for (int i = 0; i < frags.size(); i++) {
-        cout << frags[i].column << endl;
-        cout << frags[i].condition << endl;
-        cout << frags[i].id << endl;
-        cout << frags[i].site << endl;
-        cout << frags[i].size << endl;
+string InitGetFragsColumn(string condition) {
+    string column = "";
+    vector<string> condition_list = GetList(condition,"AND",";");
+    // cout << "condition_list IN InitGetFragsColumn :" << endl;
+    // Traverse(condition_list);
+    column += InitGetColumnFromCondition(condition_list[0]);
+    for (int i = 1; i < condition_list.size(); i++) {
+        column += "," + InitGetColumnFromCondition(condition_list[i]);
     }
+    return column;
 }
-void TraverseFragment(Fragment fragment) {
-    cout << fragment.name << endl;
-    cout << fragment.fragtype << endl;
-    cout << fragment.fragnum << endl;
-    Traversefrags(fragment.frags);
+string InitGetColumnFromCondition(string condition) {
+    string column;
+    if (condition.find(">=") != -1) {
+        column = GetBefore(condition,">=");
+    }
+    else if (condition.find("<=") != -1) {
+        column = GetBefore(condition,"<=");
+    }
+    else if (condition.find("=") != -1) {
+        column = GetBefore(condition,"=");
+    }// 将>= <= 调整到 = 前面去会避免之前的错误 Q1: Init Fragment中column中出现condition中的非column内容
+    else if (condition.find(">") != -1) {
+        column = GetBefore(condition,">");
+    }
+    else if (condition.find("<") != -1) {
+        column = GetBefore(condition,"<");
+    }
+    else {
+        column = condition;
+    }   
+    return column;
 }

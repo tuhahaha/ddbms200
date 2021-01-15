@@ -46,7 +46,7 @@ The 4 parts are
 - ETCD to manage metadata
 - cluster: 4 sites
 
-### metadata
+### transfer
 - gRPC to transfer object/data
 
 ### parser
